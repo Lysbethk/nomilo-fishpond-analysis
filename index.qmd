@@ -1,50 +1,69 @@
 ---
 title: "Nomilo Fishpond Biogoechemical Analysis"
+author: 
+  - name: "Lysbeth Koster"
+  - name: "Alemarie Ceria"
+date: "02/28/2024"
 execute: 
   warning: false
   messages: false
+  echo: fenced
+code-annotations: hover
+code-overflow: wrap
+format: 
+  html:
+    toc-title: "Data Analysis Workflow:"
+    toc-location: left
+
 ---
 
-## Install packages
+::: {.callout title="Interactive Code"}
+Throughout this document, hover over the numbered annotations to the right of code chunks to reveal detailed explanations and comments about the code. Where drop-down *italicized* text is present, expand to see tidying processes.
+:::
+
+## Install Packages
 
 ```{r}
-#| label: install packages
+#| label: Install Packages
 #| eval: false
-#| messages: false
-install.packages(c("rio", "tidyverse", "here", "janitor", "lubridate"))
+install.packages(c("rio", "tidyverse", "janitor", "lubridate", "DT"))
 ```
 
-## Load libraries
+## Load Libraries
 
 ```{r}
+#| label: Load Libraries
+
 library(rio) # <1>
-library(tidyverse) #<2>
-library(here) #<3>
-library(janitor) #<4>
-library(lubridate) #<5>
+library(tidyverse) # <2>
+library(janitor) # <3>
+library(lubridate) # <4>
+library(DT) # <5>
 ```
 
-1. for importing excel data
-2. for cleaning of data 
-3. for relative paths usage
-4. for cleaning variable names
-5. for cleaning dates
+1. For importing excel data
+2. For cleaning of data 
+3. For cleaning variable names
+4. For cleaning dates
+5. For displaying tables
 
-## Get data file names
+## Get Data File Names
 
 ```{bash}
+#| label: Get Data File Names
 cd "data/raw" # <1>
 ls # <2> 
 ```
 
-1. change directory to "data/raw"
-2. list files within directory 
+1. Change directory to "data/raw"
+2. List files within directory 
 
 ## Import data
 
-define vector of files to import by copying and pasting file names from above: 
+Define vector of files to import by copying and pasting file names from above: 
 
 ```{r}
+#| label: Create Vector of File Paths
 files_to_import <- c(
   "data/raw/2024-02-28_ksf-clam-growth.xlsx",
   "data/raw/2024-02-28_ksf-compiled-data.xlsx",
@@ -58,14 +77,16 @@ files_to_import <- c(
 Use the `purrr::map()` function to iteratively import all files in the `files_to_import` vector: 
 
 ```{r}
+#| label: Iteratively Import Data
 dfs <- map(files_to_import, import_list)
 ```
 
 Rename dataframes:
 
-We will always use snake case when naming our data objects and functions (e.g., `data_object_name` or `function_name()`)
+We will always use snakecase when naming our data objects and functions (e.g., `data_object_name` or `function_name()`).
 
 ```{r}
+#| label: Rename Datasets
 names(dfs) <- gsub("data/raw/2024-02-28_|\\.xlsx$|\\.xls$", "", files_to_import) # <1>
 names(dfs) <- gsub("-", "_", names(dfs)) # <2>
 names(dfs) # <3>
@@ -75,62 +96,87 @@ names(dfs) # <3>
 2. Replace hyphens with underscores
 3. Check if names were outputted correctly
 
-Rename each sheet within each data set to be lowercased and replace spaces with underscores:
+Rename each sheet within each dataset to be lowercased and replace spaces with underscores:
 
 ```{r}
+#| label: Rename Sheets Within Each Dataset
 dfs <- map(dfs, ~ set_names(.x, gsub(" ", "_", tolower(names(.x)))))
 ```
 
 ## Tidy Data
 
-1. Figure out what sheets within each data set need to be tidied
-
-create datasets:
+### Create Datasets
 
 ```{r}
-ksf_clam_growth_data <- dfs$ksf_clam_growth$sheet1
+#| label: Create Datasets
 ksf_compiled_data <- dfs$ksf_compiled_data$full_data
+ksf_clam_growth_data <- dfs$ksf_clam_growth$sheet1
 ksf_oyster_cylinder_growth_data <- dfs$ksf_oyster_cylinder_growth$sheet1
 profile_data <- dfs$profile_data$final_data
 water_samples_data <- dfs$water_samples$data_overview
 weather_data <- dfs$weather_data$weather_ksf
 ```
 
-2. Figure out steps to tidy the data
+### Tidying Processes
 
-ksf_compiled_data cleaning steps: 
-1. to_lower() variable names
-2. janitor::clean_names()
-3. Filter to desired variables
-4. Get the averages of variables per day
-5. Separate date and time
-6. Filter to 2023-11-20 to 2024-02-20
+::: {.panel-tabset}
+
+#### ksf_compiled_data
 
 ```{r}
-months <- c(1:12)
-years <- c(2023:2024)
-# ksf_compiled_data <- 
-ksf_compiled_data %>% 
-  rename_with(~gsub("\\s*\\([^\\)]+\\)", "", .x)) %>% 
-  janitor::clean_names() %>% 
-  rename(date = date_time) %>% 
-  mutate(date = as.Date(date)) %>% 
-  dplyr::select(-c(external_voltage, wk_num, wind_dir,
-                   spadd, outdoor_temperature, hourly_rain, 
-                   solar_radiation, resistivity, battery_capacity, 
-                   hour, daynum, data_pt, wind_sp, diradd, 
-                   wind_speed, wind_direction, tide)
-                ) %>% 
-  filter(
-    month %in% months,
-    year %in% years
-    ) %>% 
-  
+#| label: Tidy `ksf_compiled_data` Dataset
+#| code-fold: true
+#| code-summary: <i>Steps to clean data</i>
+ksf_compiled_data_tidied <- ksf_compiled_data %>% 
+  rename_with(~gsub("\\s*\\([^\\)]+\\)", "", .x)) %>% # <1>
+  janitor::clean_names() %>% # <1>
+  rename(date = date_time) %>%  # <2>
+  mutate(date = as.Date(date)) %>% # <2>
+  filter(date >= as.Date("2023-11-20") & date <= as.Date("2024-02-20")) %>% # <2>
+  arrange(date) %>%  # <2>
+  dplyr::select(-c(external_voltage, wk_num, wind_dir, # <3>
+                   spadd, outdoor_temperature, hourly_rain, # <3>
+                   solar_radiation, resistivity, battery_capacity, # <3>
+                   hour, daynum, data_pt, wind_sp, diradd, # <3>
+                   wind_speed, wind_direction, tide, day, month, year) # <3>
+                ) %>% # <3>
+  dplyr::select(where(~ !anyNA(.))) %>%  # <4>
+  group_by(date) %>% # <5>
+  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE))) # <5>
 
-
+datatable(ksf_compiled_data_tidied)
 ```
 
-3. Export tidied data sets to csv into `data/tidied` folder
-4. Export merged final data set into `data/outputs` folder
+1. Clean variable names by removing everything in parentheses, using lowercase 
+and underscores in place of spaces
+2. Rename the `date_time` variable to `date`, filter to desired date range and 
+sort by `date`
+3. Remove unnecessary variables
+4. Remove columns with containing all NA values
+5. Group by `date` and calculate the average of every variable for each day
+
+#### ksf_clam_growth_data
+
+#### ksf_oyster_cylinder_growth_data
+
+#### profile_data
+
+#### water_samples_data
+
+#### weather_data
+
+::: 
+
+### Export Tidied Datasets
+
+Export tidied data sets to csv into `data/tidied` folder.
+
+```{r}
+#| label: Export Tidied Datasets
+#| eval: false
+write.csv(ksf_compiled_data_tidied, file = "data/tidied/ksf_compiled_data_tidied.csv", row.names = FALSE)
+```
+
+Export merged final data set into `data/outputs` folder.
 
 

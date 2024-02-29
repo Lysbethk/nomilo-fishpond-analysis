@@ -13,14 +13,15 @@ website:
   navbar:
     left:
       - href: index.qmd
-        text: Home
-      
-
+        text: Correlational Analysis
+    
 format:
   html:
-    theme: darkly
-    css: styles.css
+    theme: united
+    css: styles.scss
     toc: true
+    fontsize: 14pt
+    page-layout: full
 
 
 
