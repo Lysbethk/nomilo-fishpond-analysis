@@ -16,6 +16,7 @@ website:
         text: Correlational Analysis
       - href: fieldwork-templates.qmd
         text: Fieldwork Templates
+  back-to-top-navigation: true
     
 format:
   html:
