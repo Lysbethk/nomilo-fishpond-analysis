@@ -1,0 +1,15 @@
+{
+  "hash": "5b4e3ccb92c27da884f24b938bd4d002",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Nomilo Fishpond Biogoechemical Analysis\"\nexecute: \n  warning: false\n  messages: false\n---\n\n\n## Install packages\n\n\n::: {.cell messages='false'}\n\n```{.r .cell-code}\ninstall.packages(c(\"rio\", \"tidyverse\", \"here\"))\n```\n:::\n\n\n## Load libraries\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(rio)\nlibrary(tidyverse)\nlibrary(here)\n```\n:::\n\n\n## Get data file names\n\n\n::: {.cell}\n\n```{.bash .cell-code}\ncd \"data/raw\" # <1>\nls # <2> \n```\n\n\n::: {.cell-output .cell-output-stdout}\n\n```\n2024-02-28_ksf-clam-growth.xlsx\n2024-02-28_ksf-compiled-data.xlsx\n2024-02-28_ksf-oyster-cylinder-growth.xlsx\n2024-02-28_profile-data.xlsx\n2024-02-28_water-samples.xlsx\n2024-02-28_weather-data.xlsx\n~$ksf_compiled_data.xlsx\n```\n\n\n:::\n:::\n\n\n1. change directory to \"data/raw\"\n2. list files within directory \n\n## Import data\n\ndefine vector of files to import by copying and pasting file names from above: \n\n\n::: {.cell}\n\n```{.r .cell-code}\nfiles_to_import <- c(\n  \"data/raw/2024-02-28_ksf-clam-growth.xlsx\",\n  \"data/raw/2024-02-28_ksf-compiled-data.xlsx\",\n  \"data/raw/2024-02-28_ksf-oyster-cylinder-growth.xlsx\",\n  \"data/raw/2024-02-28_profile-data.xlsx\",\n  \"data/raw/2024-02-28_water-samples.xlsx\",\n  \"data/raw/2024-02-28_weather-data.xlsx\"\n)\n```\n:::\n\n\nUse the `purrr::map()` function to iteratively import all files in the `files_to_import` vector: \n\n\n::: {.cell}\n\n```{.r .cell-code}\ndfs <- map(files_to_import, import_list)\n```\n:::\n\n\nRename dataframes:\n\nWe will always use snake case when naming our data objects and functions (e.g., `data_object_name` or `function_name()`)\n\n\n::: {.cell}\n\n```{.r .cell-code}\nnames(dfs) <- gsub(\"data/raw/2024-02-28_|\\\\.xlsx$|\\\\.xls$\", \"\", files_to_import) # <1>\nnames(dfs) <- gsub(\"-\", \"_\", names(dfs)) # <2>\nnames(dfs) # <3>\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"ksf_clam_growth\"            \"ksf_compiled_data\"         \n[3] \"ksf_oyster_cylinder_growth\" \"profile_data\"              \n[5] \"water_samples\"              \"weather_data\"              \n```\n\n\n:::\n:::\n\n\n1. Remove prefixes and file extensions\n2. Replace hyphens with underscores\n3. Check if names were outputted correctly\n\nRename each sheet within each data set to be lowercased and replace spaces with underscores:\n\n\n::: {.cell}\n\n```{.r .cell-code}\ndfs <- map(dfs, ~ set_names(.x, gsub(\" \", \"_\", tolower(names(.x)))))\n```\n:::\n\n\n## Tidy Data\n\n1. Figure out what sheets within each data set need to be tidied\n2. Figure out steps to tidy the data\n3. Export tidied datasets to csv into `data/tidied` folder\n4. Export merged final data set into `data/outputs` folder\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

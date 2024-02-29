@@ -1,7 +1,136 @@
 ---
 title: "Nomilo Fishpond Biogoechemical Analysis"
+execute: 
+  warning: false
+  messages: false
 ---
 
-This is a Quarto website.
+## Install packages
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+```{r}
+#| label: install packages
+#| eval: false
+#| messages: false
+install.packages(c("rio", "tidyverse", "here", "janitor", "lubridate"))
+```
+
+## Load libraries
+
+```{r}
+library(rio) # <1>
+library(tidyverse) #<2>
+library(here) #<3>
+library(janitor) #<4>
+library(lubridate) #<5>
+```
+
+1. for importing excel data
+2. for cleaning of data 
+3. for relative paths usage
+4. for cleaning variable names
+5. for cleaning dates
+
+## Get data file names
+
+```{bash}
+cd "data/raw" # <1>
+ls # <2> 
+```
+
+1. change directory to "data/raw"
+2. list files within directory 
+
+## Import data
+
+define vector of files to import by copying and pasting file names from above: 
+
+```{r}
+files_to_import <- c(
+  "data/raw/2024-02-28_ksf-clam-growth.xlsx",
+  "data/raw/2024-02-28_ksf-compiled-data.xlsx",
+  "data/raw/2024-02-28_ksf-oyster-cylinder-growth.xlsx",
+  "data/raw/2024-02-28_profile-data.xlsx",
+  "data/raw/2024-02-28_water-samples.xlsx",
+  "data/raw/2024-02-28_weather-data.xlsx"
+)
+```
+
+Use the `purrr::map()` function to iteratively import all files in the `files_to_import` vector: 
+
+```{r}
+dfs <- map(files_to_import, import_list)
+```
+
+Rename dataframes:
+
+We will always use snake case when naming our data objects and functions (e.g., `data_object_name` or `function_name()`)
+
+```{r}
+names(dfs) <- gsub("data/raw/2024-02-28_|\\.xlsx$|\\.xls$", "", files_to_import) # <1>
+names(dfs) <- gsub("-", "_", names(dfs)) # <2>
+names(dfs) # <3>
+```
+
+1. Remove prefixes and file extensions
+2. Replace hyphens with underscores
+3. Check if names were outputted correctly
+
+Rename each sheet within each data set to be lowercased and replace spaces with underscores:
+
+```{r}
+dfs <- map(dfs, ~ set_names(.x, gsub(" ", "_", tolower(names(.x)))))
+```
+
+## Tidy Data
+
+1. Figure out what sheets within each data set need to be tidied
+
+create datasets:
+
+```{r}
+ksf_clam_growth_data <- dfs$ksf_clam_growth$sheet1
+ksf_compiled_data <- dfs$ksf_compiled_data$full_data
+ksf_oyster_cylinder_growth_data <- dfs$ksf_oyster_cylinder_growth$sheet1
+profile_data <- dfs$profile_data$final_data
+water_samples_data <- dfs$water_samples$data_overview
+weather_data <- dfs$weather_data$weather_ksf
+```
+
+2. Figure out steps to tidy the data
+
+ksf_compiled_data cleaning steps: 
+1. to_lower() variable names
+2. janitor::clean_names()
+3. Filter to desired variables
+4. Get the averages of variables per day
+5. Separate date and time
+6. Filter to 2023-11-20 to 2024-02-20
+
+```{r}
+months <- c(1:12)
+years <- c(2023:2024)
+# ksf_compiled_data <- 
+ksf_compiled_data %>% 
+  rename_with(~gsub("\\s*\\([^\\)]+\\)", "", .x)) %>% 
+  janitor::clean_names() %>% 
+  rename(date = date_time) %>% 
+  mutate(date = as.Date(date)) %>% 
+  dplyr::select(-c(external_voltage, wk_num, wind_dir,
+                   spadd, outdoor_temperature, hourly_rain, 
+                   solar_radiation, resistivity, battery_capacity, 
+                   hour, daynum, data_pt, wind_sp, diradd, 
+                   wind_speed, wind_direction, tide)
+                ) %>% 
+  filter(
+    month %in% months,
+    year %in% years
+    ) %>% 
+  
+
+
+```
+
+3. Export tidied data sets to csv into `data/tidied` folder
+4. Export merged final data set into `data/outputs` folder
+
+
