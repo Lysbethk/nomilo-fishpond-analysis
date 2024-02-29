@@ -1,0 +1,26 @@
+project:
+  type: website
+  output-dir: docs
+  preview: 
+    port: 5240
+    browser: true
+    
+execute:
+  freeze: auto
+
+website:
+  title: "Nomilo Fishpond Biogeochemical Analysis"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      
+
+format:
+  html:
+    theme: darkly
+    css: styles.css
+    toc: true
+
+
+

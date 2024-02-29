@@ -1,0 +1,24 @@
+---
+title: "GitHub Project Repository Overview"
+format: gfm
+---
+
+```{.python .code-overflow-wrap}
+📦/g/path/to/rename-github-repo
+ ┣ 📂outputs
+ ┃ ┣ 📂tables
+ ┃ ┗ 📂plots
+ ┣ 📂documentation
+ ┣ 📂code
+ ┃ ┣ 📂functions
+ ┃ ┗ 📂models
+ ┣ 📂data
+ ┃ ┣ 📂exploratory
+ ┃ ┣ 📂raw
+ ┃ ┣ 📂tidied
+ ┃ ┗ 📂output
+ ┣ 📜LICENSE
+ ┣ 📜.gitignore
+ ┣ 📜README.qmd
+ ┗ 📜README.md
+```
