@@ -42,3 +42,4 @@ renv/
 .RProfile
 .DS_Store
 /.quarto/
+_freeze/
