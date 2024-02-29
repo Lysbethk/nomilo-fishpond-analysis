@@ -17,10 +17,11 @@ website:
     
 format:
   html:
-    theme: united
-    css: styles.scss
+    theme: 
+      - lumen
+      - styles.scss
     toc: true
-    fontsize: 14pt
+    fontsize: 15pt
     page-layout: full
 
 

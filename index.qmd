@@ -18,27 +18,28 @@ format:
 ---
 
 ::: {.callout title="Interactive Code"}
-Throughout this document, hover over the numbered annotations to the right of code chunks to reveal detailed explanations and comments about the code. Where drop-down *italicized* text is present, expand to see tidying processes.
+Throughout this document, hover over the numbered annotations to the right of code chunks to reveal detailed explanations and comments about the code. Where drop-down *italicized* text is present, expand by pressing
+on arrow to see code.
 :::
 
 ## Install Packages
 
 ```{r}
-#| label: Install Packages
+#| label: install-packages
 #| eval: false
-install.packages(c("rio", "tidyverse", "janitor", "lubridate", "DT"))
+install.packages(c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown"))
 ```
 
 ## Load Libraries
 
 ```{r}
-#| label: Load Libraries
+#| label: load-libraries
 
 library(rio) # <1>
 library(tidyverse) # <2>
 library(janitor) # <3>
 library(lubridate) # <4>
-library(DT) # <5>
+library(rmarkdown) # <5>
 ```
 
 1. For importing excel data
@@ -47,10 +48,10 @@ library(DT) # <5>
 4. For cleaning dates
 5. For displaying tables
 
-## Get Data File Names
+## Get Raw Data File Names
 
 ```{bash}
-#| label: Get Data File Names
+#| label: get-raw-data-file-names
 cd "data/raw" # <1>
 ls # <2> 
 ```
@@ -58,12 +59,12 @@ ls # <2>
 1. Change directory to "data/raw"
 2. List files within directory 
 
-## Import data
+## Import Raw Data
 
 Define vector of files to import by copying and pasting file names from above: 
 
 ```{r}
-#| label: Create Vector of File Paths
+#| label: create-vector-file-paths
 files_to_import <- c(
   "data/raw/2024-02-28_ksf-clam-growth.xlsx",
   "data/raw/2024-02-28_ksf-compiled-data.xlsx",
@@ -77,16 +78,30 @@ files_to_import <- c(
 Use the `purrr::map()` function to iteratively import all files in the `files_to_import` vector: 
 
 ```{r}
-#| label: Iteratively Import Data
-dfs <- map(files_to_import, import_list)
+#| label: iteratively-import-raw-data
+#| messages: false
+#| warnings: false
+#| eval: false
+dfs <- map(files_to_import, import_list) # <1>
+save(dfs, file = "data/raw/dfs.RData") # <1>
 ```
 
-Rename dataframes:
+1. It takes a while to import these dataframes, so we're going to only import
+it once and then export it as a .RData file to load it back in more efficiently
+
+Efficiently load import raw data:
+
+```{r}
+#| label: efficiently-load-raw-data
+load("data/raw/dfs.RData")
+```
+
+Rename datasets:
 
 We will always use snakecase when naming our data objects and functions (e.g., `data_object_name` or `function_name()`).
 
 ```{r}
-#| label: Rename Datasets
+#| label: rename-raw-datasets
 names(dfs) <- gsub("data/raw/2024-02-28_|\\.xlsx$|\\.xls$", "", files_to_import) # <1>
 names(dfs) <- gsub("-", "_", names(dfs)) # <2>
 names(dfs) # <3>
@@ -96,21 +111,21 @@ names(dfs) # <3>
 2. Replace hyphens with underscores
 3. Check if names were outputted correctly
 
-Rename each sheet within each dataset to be lowercased and replace spaces with underscores:
+Rename each sheet within each raw dataset to be lowercased and replace spaces with underscores:
 
 ```{r}
-#| label: Rename Sheets Within Each Dataset
+#| label: rename-sheets-within-each-raw-dataset
 dfs <- map(dfs, ~ set_names(.x, gsub(" ", "_", tolower(names(.x)))))
 ```
 
-## Tidy Data
+## Tidy Raw Data
 
-### Create Datasets
+### Create Separate Datasets
 
 ```{r}
-#| label: Create Datasets
-ksf_compiled_data <- dfs$ksf_compiled_data$full_data
+#| label: create-separate-datasets
 ksf_clam_growth_data <- dfs$ksf_clam_growth$sheet1
+ksf_compiled_data <- dfs$ksf_compiled_data$full_data
 ksf_oyster_cylinder_growth_data <- dfs$ksf_oyster_cylinder_growth$sheet1
 profile_data <- dfs$profile_data$final_data
 water_samples_data <- dfs$water_samples$data_overview
@@ -121,10 +136,21 @@ weather_data <- dfs$weather_data$weather_ksf
 
 ::: {.panel-tabset}
 
+#### ksf_clam_growth_data
+
+```{r}
+#| label: tidy-ksf-clam-growth-data-dataset
+#| code-fold: true
+#| code-summary: <i>Steps to clean data</i>
+ksf_clam_growth_data_tidied <- ksf_clam_growth_data
+
+paged_table(ksf_clam_growth_data)
+```
+
 #### ksf_compiled_data
 
 ```{r}
-#| label: Tidy `ksf_compiled_data` Dataset
+#| label: tidy-ksf-compiled-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
 ksf_compiled_data_tidied <- ksf_compiled_data %>% 
@@ -144,7 +170,7 @@ ksf_compiled_data_tidied <- ksf_compiled_data %>%
   group_by(date) %>% # <5>
   summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE))) # <5>
 
-datatable(ksf_compiled_data_tidied)
+paged_table(ksf_compiled_data_tidied)
 ```
 
 1. Clean variable names by removing everything in parentheses, using lowercase 
@@ -155,15 +181,50 @@ sort by `date`
 4. Remove columns with containing all NA values
 5. Group by `date` and calculate the average of every variable for each day
 
-#### ksf_clam_growth_data
-
 #### ksf_oyster_cylinder_growth_data
+
+```{r}
+#| label: tidy-ksf-oyster-cylinder-growth-data-dataset
+#| code-fold: true
+#| code-summary: <i>Steps to clean data</i>
+
+ksf_oyster_cylinder_growth_data_tidied <- ksf_oyster_cylinder_growth_data
+
+paged_table(ksf_oyster_cylinder_growth_data)
+```
 
 #### profile_data
 
+```{r}
+#| label: tidy-profile-data-dataset
+#| code-fold: true
+#| code-summary: <i>Steps to clean data</i>
+profile_data_tidied <- profile_data
+
+paged_table(profile_data)
+```
+
 #### water_samples_data
 
+```{r}
+#| label: tidy-water-samples-data-dataset
+#| code-fold: true
+#| code-summary: <i>Steps to clean data</i>
+water_samples_data_tidied <- water_samples_data
+
+paged_table(water_samples_data)
+```
+
 #### weather_data
+
+```{r}
+#| label: tidy-weather-data-dataset
+#| code-fold: true
+#| code-summary: <i>Steps to clean data</i>
+weather_data_tidied <- weather_data
+
+paged_table(weather_data)
+```
 
 ::: 
 
@@ -172,7 +233,7 @@ sort by `date`
 Export tidied data sets to csv into `data/tidied` folder.
 
 ```{r}
-#| label: Export Tidied Datasets
+#| label: export-tidied-datasets
 #| eval: false
 write.csv(ksf_compiled_data_tidied, file = "data/tidied/ksf_compiled_data_tidied.csv", row.names = FALSE)
 ```
