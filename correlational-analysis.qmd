@@ -1,9 +1,5 @@
 ---
 title: "Nomilo Fishpond Biogoechemical Analysis"
-author: 
-  - name: "Lysbeth Koster"
-  - name: "Alemarie Ceria"
-date: "02/28/2024"
 execute: 
   warning: false
   messages: false
