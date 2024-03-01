@@ -120,7 +120,7 @@ dfs <- map(dfs, ~ set_names(.x, gsub(" ", "_", tolower(names(.x)))))
 
 ```{r}
 #| label: create-separate-datasets
-ksf_clam_growth_data <- dfs$ksf_clam_growth$sheet1
+
 ksf_compiled_data <- dfs$ksf_compiled_data$full_data
 ksf_oyster_cylinder_growth_data <- dfs$ksf_oyster_cylinder_growth$sheet1
 profile_data <- dfs$profile_data$final_data
@@ -132,8 +132,11 @@ weather_data <- dfs$weather_data$weather_ksf
 
 ::: {.panel-tabset}
 
+<<<<<<< HEAD:correlational-analysis.qmd
 
 
+=======
+>>>>>>> cc67da9c47b11ab41c091f49426d9b85a5fafe5c:index.qmd
 #### ksf_compiled_data
 
 ```{r}
@@ -175,10 +178,37 @@ sort by `date`
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
 
-ksf_oyster_cylinder_growth_data_tidied <- ksf_oyster_cylinder_growth_data
+oyster_var_names <- c("date", "oyster_large_weight", "oyster_large_gain", "oyster_small_weight", "oyster_small_gain", "oyster_chlorophyll") #<1>
+
+ksf_oyster_cylinder_growth_data_tidied <- ksf_oyster_cylinder_growth_data %>% 
+  dplyr::select(c(1, 4, 5, 8, 9, 12)) %>% #<2> 
+  slice(-1) %>% #<2>
+  setNames(oyster_var_names) %>% #<1>
+  pivot_longer( #<3>
+    cols = c(oyster_large_weight, oyster_large_gain, #<3>
+             oyster_small_gain, #<3>
+             oyster_small_weight), #<3>
+    names_to = c("oyster_size", ".value"), #<3>
+    names_prefix = "oyster_", #<3>
+    names_sep = "_", #<3>
+    values_to = "value" #<3>
+  ) %>% #<3>
+  mutate(oyster_size = if_else(str_detect(oyster_size, "small"), "Small", "Large")) %>% #<4>
+  mutate(oyster_size = as.factor(oyster_size), #<5>
+         across(c(weight, gain), as.numeric) #<5>
+        ) %>% #<5>
+  filter(date >= as.Date("2023-11-20") & date <= #<6>
+           as.Date("2024-02-14")) #<6>
 
 paged_table(ksf_oyster_cylinder_growth_data_tidied)
 ```
+
+1. Manually set variable names
+2. Select desired columns and remove first row
+3. Convert from wide to long format
+4. Create a new variable that differentiates oyster size
+5. Adjust data types to numeric and factor
+6. Filter to desired date range
 
 #### profile_data
 
