@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.543">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -270,14 +270,14 @@ Interactive Code
 </dl>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>~$ksf_compiled_data.xlsx
-2024-02-28_ksf-clam-growth.xlsx
+<pre><code>2024-02-28_ksf-clam-growth.xlsx
 2024-02-28_ksf-compiled-data.xlsx
 2024-02-28_ksf-oyster-cylinder-growth.xlsx
 2024-02-28_profile-data.xlsx
 2024-02-28_water-samples.xlsx
 2024-02-28_weather-data.xlsx
-dfs.RData</code></pre>
+dfs.RData
+~$ksf_compiled_data.xlsx</code></pre>
 </div>
 </div>
 </section>
@@ -369,7 +369,7 @@ dfs.RData</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: create-separate-datasets</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="in">ksf_clam_growth_data &lt;- dfs$ksf_clam_growth$sheet1</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="in">ksf_compiled_data &lt;- dfs$ksf_compiled_data$full_data</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="in">ksf_oyster_cylinder_growth_data &lt;- dfs$ksf_oyster_cylinder_growth$sheet1</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="in">profile_data &lt;- dfs$profile_data$final_data</span></span>
@@ -381,79 +381,57 @@ dfs.RData</code></pre>
 <section id="tidying-processes" class="level3">
 <h3 class="anchored" data-anchor-id="tidying-processes">Tidying Processes</h3>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">ksf_clam_growth_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">ksf_compiled_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">ksf_oyster_cylinder_growth_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">profile_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">water_samples_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">weather_data</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">ksf_compiled_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">ksf_oyster_cylinder_growth_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">profile_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">water_samples_data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">weather_data</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-ksf-clam-growth-data-dataset</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="in">ksf_clam_growth_data_tidied &lt;- ksf_clam_growth_data</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(ksf_clam_growth_data_tidied)</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sort date"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Clams IN"],"name":[2],"type":["chr"],"align":["left"]},{"label":["...3"],"name":[3],"type":["chr"],"align":["left"]},{"label":["...4"],"name":[4],"type":["chr"],"align":["left"]},{"label":["...5"],"name":[5],"type":["chr"],"align":["left"]},{"label":["Clams OUT"],"name":[6],"type":["chr"],"align":["left"]},{"label":["...7"],"name":[7],"type":["chr"],"align":["left"]},{"label":["...8"],"name":[8],"type":["chr"],"align":["left"]},{"label":["Growth"],"name":[9],"type":["chr"],"align":["left"]},{"label":["...10"],"name":[10],"type":["chr"],"align":["left"]},{"label":["SR"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["Days btwn Sort"],"name":[12],"type":["dbl"],"align":["right"]}],"data":[{"1":"NA","2":"Color","3":"#","4":"lbs","5":"avg./lb","6":"#","7":"lbs","8":"avg./lb","9":"lbs","10":"%","11":"NA","12":"NA","_rn_":"1"},{"1":"17/10/2023","2":"Blue","3":"9600","4":"211.45374449339207","5":"45.4","6":"7503.6399999999994","7":"231.96035242290748","8":"35.487666666666669","9":"20.506607929515411","10":"9.697916666666663E-2","11":"0.7816292","12":"34","_rn_":"2"},{"1":"45089","2":"Yellow","3":"9600","4":"52.863436123348016","5":"181.6","6":"9600","7":"52.863436123348016","8":"181.60000000000002","9":"0","10":"0","11":"1.0000000","12":"85","_rn_":"3"},{"1":"12/12/23","2":"Yellow","3":"9990","4":"14.669603524229075","5":"681","6":"9780","7":"93.612334801762117","8":"99.88","9":"78.942731277533042","10":"5.3813813813813818","11":"0.9789790","12":"42","_rn_":"4"},{"1":"45323","2":"Blue","3":"8568","4":"104.84581497797357","5":"81.72","6":"2717.5840000000003","7":"93.215859030837009","8":"25.878","9":"-11.629955947136565","10":"-0.11092436974789917","11":"0.3171783","12":"33","_rn_":"5"},{"1":"45566","2":"Yellow","3":"6003","4":"15.198237885462555","5":"394.98","6":"9000","7":"19.823788546255507","8":"454","9":"4.6255506607929515","10":"0.30434782608695649","11":"1.4992504","12":"36","_rn_":"6"},{"1":"24/01/2024","2":"Blue","3":"2303.2800000000002","4":"72.475770925110126","5":"31.780000000000005","6":"3306.9535999999998","7":"31.842466960352422","8":"93.070000000000007","9":"-40.633303964757701","10":"-0.5606467298808655","11":"1.4357584","12":"22","_rn_":"7"},{"1":"31/01/2024","2":"Yellow","3":"24576","4":"16.916299559471366","5":"1452.8000000000002","6":"36924.300000000003","7":"65.766519823788542","8":"663.97499999999991","9":"48.850220264317173","10":"2.8877604166666662","11":"1.5024536","12":"57","_rn_":"8"},{"1":"45140","2":"Yellow","3":"40000","4":"44.052863436123346","5":"908","6":"50939.3","7":"74.779735682819378","8":"555.24200000000008","9":"30.726872246696033","10":"0.69750000000000001","11":"1.2734825","12":"44","_rn_":"9"},{"1":"13/02/2024","2":"Yellow","3":"9000","4":"19.823788546255507","5":"454","6":"9949.5","7":"39.537444933920703","8":"276.94","9":"19.713656387665196","10":"0.99444444444444435","11":"1.1055000","12":"34","_rn_":"10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="cell">
-<details class="code-fold">
-<summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="annotated-cell-14"><pre class="sourceCode markdown code-annotation-code code-with-copy code-annotated"><code class="sourceCode markdown"><span id="annotated-cell-14-1"><a href="#annotated-cell-14-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="annotated-cell-14-2"><a href="#annotated-cell-14-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-ksf-compiled-data-dataset</span></span>
-<span id="annotated-cell-14-3"><a href="#annotated-cell-14-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
-<span id="annotated-cell-14-4"><a href="#annotated-cell-14-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
-<span id="annotated-cell-14-5"><a href="#annotated-cell-14-5" aria-hidden="true" tabindex="-1"></a><span class="in">ksf_compiled_data_tidied &lt;- ksf_compiled_data %&gt;% </span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="1">1</button><span id="annotated-cell-14-6" class="code-annotation-target"><a href="#annotated-cell-14-6" aria-hidden="true" tabindex="-1"></a><span class="in">  rename_with(~gsub("\\s*\\([^\\)]+\\)", "", .x)) %&gt;%</span></span>
-<span id="annotated-cell-14-7"><a href="#annotated-cell-14-7" aria-hidden="true" tabindex="-1"></a><span class="in">  janitor::clean_names() %&gt;%</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="2">2</button><span id="annotated-cell-14-8" class="code-annotation-target"><a href="#annotated-cell-14-8" aria-hidden="true" tabindex="-1"></a><span class="in">  rename(date = date_time) %&gt;%</span></span>
-<span id="annotated-cell-14-9"><a href="#annotated-cell-14-9" aria-hidden="true" tabindex="-1"></a><span class="in">  mutate(date = as.Date(date)) %&gt;%</span></span>
-<span id="annotated-cell-14-10"><a href="#annotated-cell-14-10" aria-hidden="true" tabindex="-1"></a><span class="in">  filter(date &gt;= as.Date("2023-11-20") &amp; date &lt;= as.Date("2024-02-20")) %&gt;%</span></span>
-<span id="annotated-cell-14-11"><a href="#annotated-cell-14-11" aria-hidden="true" tabindex="-1"></a><span class="in">  arrange(date) %&gt;%</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="3">3</button><span id="annotated-cell-14-12" class="code-annotation-target"><a href="#annotated-cell-14-12" aria-hidden="true" tabindex="-1"></a><span class="in">  dplyr::select(-c(external_voltage, wk_num, wind_dir,</span></span>
-<span id="annotated-cell-14-13"><a href="#annotated-cell-14-13" aria-hidden="true" tabindex="-1"></a><span class="in">                   spadd, outdoor_temperature, hourly_rain,</span></span>
-<span id="annotated-cell-14-14"><a href="#annotated-cell-14-14" aria-hidden="true" tabindex="-1"></a><span class="in">                   solar_radiation, resistivity, battery_capacity,</span></span>
-<span id="annotated-cell-14-15"><a href="#annotated-cell-14-15" aria-hidden="true" tabindex="-1"></a><span class="in">                   hour, daynum, data_pt, wind_sp, diradd,</span></span>
-<span id="annotated-cell-14-16"><a href="#annotated-cell-14-16" aria-hidden="true" tabindex="-1"></a><span class="in">                   wind_speed, wind_direction, tide, day, month, year)</span></span>
-<span id="annotated-cell-14-17"><a href="#annotated-cell-14-17" aria-hidden="true" tabindex="-1"></a><span class="in">                ) %&gt;%</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="4">4</button><span id="annotated-cell-14-18" class="code-annotation-target"><a href="#annotated-cell-14-18" aria-hidden="true" tabindex="-1"></a><span class="in">  dplyr::select(where(~ !anyNA(.))) %&gt;%</span></span>
-<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="5">5</button><span id="annotated-cell-14-19" class="code-annotation-target"><a href="#annotated-cell-14-19" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(date) %&gt;%</span></span>
-<span id="annotated-cell-14-20"><a href="#annotated-cell-14-20" aria-hidden="true" tabindex="-1"></a><span class="in">  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE)))</span></span>
-<span id="annotated-cell-14-21"><a href="#annotated-cell-14-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-14-22"><a href="#annotated-cell-14-22" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(ksf_compiled_data_tidied)</span></span>
-<span id="annotated-cell-14-23"><a href="#annotated-cell-14-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-13"><pre class="sourceCode markdown code-annotation-code code-with-copy code-annotated"><code class="sourceCode markdown"><span id="annotated-cell-13-1"><a href="#annotated-cell-13-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="annotated-cell-13-2"><a href="#annotated-cell-13-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-ksf-compiled-data-dataset</span></span>
+<span id="annotated-cell-13-3"><a href="#annotated-cell-13-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
+<span id="annotated-cell-13-4"><a href="#annotated-cell-13-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
+<span id="annotated-cell-13-5"><a href="#annotated-cell-13-5" aria-hidden="true" tabindex="-1"></a><span class="in">ksf_compiled_data_tidied &lt;- ksf_compiled_data %&gt;% </span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="1">1</button><span id="annotated-cell-13-6" class="code-annotation-target"><a href="#annotated-cell-13-6" aria-hidden="true" tabindex="-1"></a><span class="in">  rename_with(~gsub("\\s*\\([^\\)]+\\)", "", .x)) %&gt;%</span></span>
+<span id="annotated-cell-13-7"><a href="#annotated-cell-13-7" aria-hidden="true" tabindex="-1"></a><span class="in">  janitor::clean_names() %&gt;%</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="2">2</button><span id="annotated-cell-13-8" class="code-annotation-target"><a href="#annotated-cell-13-8" aria-hidden="true" tabindex="-1"></a><span class="in">  rename(date = date_time) %&gt;%</span></span>
+<span id="annotated-cell-13-9"><a href="#annotated-cell-13-9" aria-hidden="true" tabindex="-1"></a><span class="in">  mutate(date = as.Date(date)) %&gt;%</span></span>
+<span id="annotated-cell-13-10"><a href="#annotated-cell-13-10" aria-hidden="true" tabindex="-1"></a><span class="in">  filter(date &gt;= as.Date("2023-11-20") &amp; date &lt;= as.Date("2024-02-20")) %&gt;%</span></span>
+<span id="annotated-cell-13-11"><a href="#annotated-cell-13-11" aria-hidden="true" tabindex="-1"></a><span class="in">  arrange(date) %&gt;%</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="3">3</button><span id="annotated-cell-13-12" class="code-annotation-target"><a href="#annotated-cell-13-12" aria-hidden="true" tabindex="-1"></a><span class="in">  dplyr::select(-c(external_voltage, wk_num, wind_dir,</span></span>
+<span id="annotated-cell-13-13"><a href="#annotated-cell-13-13" aria-hidden="true" tabindex="-1"></a><span class="in">                   spadd, outdoor_temperature, hourly_rain,</span></span>
+<span id="annotated-cell-13-14"><a href="#annotated-cell-13-14" aria-hidden="true" tabindex="-1"></a><span class="in">                   solar_radiation, resistivity, battery_capacity,</span></span>
+<span id="annotated-cell-13-15"><a href="#annotated-cell-13-15" aria-hidden="true" tabindex="-1"></a><span class="in">                   hour, daynum, data_pt, wind_sp, diradd,</span></span>
+<span id="annotated-cell-13-16"><a href="#annotated-cell-13-16" aria-hidden="true" tabindex="-1"></a><span class="in">                   wind_speed, wind_direction, tide, day, month, year)</span></span>
+<span id="annotated-cell-13-17"><a href="#annotated-cell-13-17" aria-hidden="true" tabindex="-1"></a><span class="in">                ) %&gt;%</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="4">4</button><span id="annotated-cell-13-18" class="code-annotation-target"><a href="#annotated-cell-13-18" aria-hidden="true" tabindex="-1"></a><span class="in">  dplyr::select(where(~ !anyNA(.))) %&gt;%</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="5">5</button><span id="annotated-cell-13-19" class="code-annotation-target"><a href="#annotated-cell-13-19" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(date) %&gt;%</span></span>
+<span id="annotated-cell-13-20"><a href="#annotated-cell-13-20" aria-hidden="true" tabindex="-1"></a><span class="in">  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE)))</span></span>
+<span id="annotated-cell-13-21"><a href="#annotated-cell-13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-13-22"><a href="#annotated-cell-13-22" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(ksf_compiled_data_tidied)</span></span>
+<span id="annotated-cell-13-23"><a href="#annotated-cell-13-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-annotation">
 <dl class="code-annotation-container-hidden code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-14" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-13" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-14" data-code-lines="6,7" data-code-annotation="1">Clean variable names by removing everything in parentheses, using lowercase and underscores in place of spaces</span>
+<span data-code-cell="annotated-cell-13" data-code-lines="6,7" data-code-annotation="1">Clean variable names by removing everything in parentheses, using lowercase and underscores in place of spaces</span>
 </dd>
-<dt data-target-cell="annotated-cell-14" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-13" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-14" data-code-lines="8,9,10,11" data-code-annotation="2">Rename the <code>date_time</code> variable to <code>date</code>, filter to desired date range and sort by <code>date</code></span>
+<span data-code-cell="annotated-cell-13" data-code-lines="8,9,10,11" data-code-annotation="2">Rename the <code>date_time</code> variable to <code>date</code>, filter to desired date range and sort by <code>date</code></span>
 </dd>
-<dt data-target-cell="annotated-cell-14" data-target-annotation="3">3</dt>
+<dt data-target-cell="annotated-cell-13" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-14" data-code-lines="12,13,14,15,16,17" data-code-annotation="3">Remove unnecessary variables</span>
+<span data-code-cell="annotated-cell-13" data-code-lines="12,13,14,15,16,17" data-code-annotation="3">Remove unnecessary variables</span>
 </dd>
-<dt data-target-cell="annotated-cell-14" data-target-annotation="4">4</dt>
+<dt data-target-cell="annotated-cell-13" data-target-annotation="4">4</dt>
 <dd>
-<span data-code-cell="annotated-cell-14" data-code-lines="18" data-code-annotation="4">Remove columns with containing all NA values</span>
+<span data-code-cell="annotated-cell-13" data-code-lines="18" data-code-annotation="4">Remove columns with containing all NA values</span>
 </dd>
-<dt data-target-cell="annotated-cell-14" data-target-annotation="5">5</dt>
+<dt data-target-cell="annotated-cell-13" data-target-annotation="5">5</dt>
 <dd>
-<span data-code-cell="annotated-cell-14" data-code-lines="19,20" data-code-annotation="5">Group by <code>date</code> and calculate the average of every variable for each day</span>
+<span data-code-cell="annotated-cell-13" data-code-lines="19,20" data-code-annotation="5">Group by <code>date</code> and calculate the average of every variable for each day</span>
 </dd>
 </dl>
 </div>
@@ -466,41 +444,89 @@ dfs.RData</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-ksf-oyster-cylinder-growth-data-dataset</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="in">ksf_oyster_cylinder_growth_data_tidied &lt;- ksf_oyster_cylinder_growth_data</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(ksf_oyster_cylinder_growth_data_tidied)</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-14"><pre class="sourceCode markdown code-annotation-code code-with-copy code-annotated"><code class="sourceCode markdown"><span id="annotated-cell-14-1"><a href="#annotated-cell-14-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="annotated-cell-14-2"><a href="#annotated-cell-14-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-ksf-oyster-cylinder-growth-data-dataset</span></span>
+<span id="annotated-cell-14-3"><a href="#annotated-cell-14-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
+<span id="annotated-cell-14-4"><a href="#annotated-cell-14-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
+<span id="annotated-cell-14-5"><a href="#annotated-cell-14-5" aria-hidden="true" tabindex="-1"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="1">1</button><span id="annotated-cell-14-6" class="code-annotation-target"><a href="#annotated-cell-14-6" aria-hidden="true" tabindex="-1"></a><span class="in">oyster_var_names &lt;- c("date", "oyster_large_weight", "oyster_large_gain", "oyster_small_weight", "oyster_small_gain", "oyster_chlorophyll")</span></span>
+<span id="annotated-cell-14-7"><a href="#annotated-cell-14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-14-8"><a href="#annotated-cell-14-8" aria-hidden="true" tabindex="-1"></a><span class="in">ksf_oyster_cylinder_growth_data_tidied &lt;- ksf_oyster_cylinder_growth_data %&gt;% </span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="2">2</button><span id="annotated-cell-14-9" class="code-annotation-target"><a href="#annotated-cell-14-9" aria-hidden="true" tabindex="-1"></a><span class="in">  dplyr::select(c(1, 4, 5, 8, 9, 12)) %&gt;%</span></span>
+<span id="annotated-cell-14-10"><a href="#annotated-cell-14-10" aria-hidden="true" tabindex="-1"></a><span class="in">  slice(-1) %&gt;%</span></span>
+<span id="annotated-cell-14-11"><a href="#annotated-cell-14-11" aria-hidden="true" tabindex="-1"></a><span class="in">  setNames(oyster_var_names) %&gt;%</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="3">3</button><span id="annotated-cell-14-12" class="code-annotation-target"><a href="#annotated-cell-14-12" aria-hidden="true" tabindex="-1"></a><span class="in">  pivot_longer(</span></span>
+<span id="annotated-cell-14-13"><a href="#annotated-cell-14-13" aria-hidden="true" tabindex="-1"></a><span class="in">    cols = c(oyster_large_weight, oyster_large_gain,</span></span>
+<span id="annotated-cell-14-14"><a href="#annotated-cell-14-14" aria-hidden="true" tabindex="-1"></a><span class="in">             oyster_small_gain,</span></span>
+<span id="annotated-cell-14-15"><a href="#annotated-cell-14-15" aria-hidden="true" tabindex="-1"></a><span class="in">             oyster_small_weight),</span></span>
+<span id="annotated-cell-14-16"><a href="#annotated-cell-14-16" aria-hidden="true" tabindex="-1"></a><span class="in">    names_to = c("oyster_size", ".value"),</span></span>
+<span id="annotated-cell-14-17"><a href="#annotated-cell-14-17" aria-hidden="true" tabindex="-1"></a><span class="in">    names_prefix = "oyster_",</span></span>
+<span id="annotated-cell-14-18"><a href="#annotated-cell-14-18" aria-hidden="true" tabindex="-1"></a><span class="in">    names_sep = "_",</span></span>
+<span id="annotated-cell-14-19"><a href="#annotated-cell-14-19" aria-hidden="true" tabindex="-1"></a><span class="in">    values_to = "value"</span></span>
+<span id="annotated-cell-14-20"><a href="#annotated-cell-14-20" aria-hidden="true" tabindex="-1"></a><span class="in">  ) %&gt;%</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="4">4</button><span id="annotated-cell-14-21" class="code-annotation-target"><a href="#annotated-cell-14-21" aria-hidden="true" tabindex="-1"></a><span class="in">  mutate(oyster_size = if_else(str_detect(oyster_size, "small"), "Small", "Large")) %&gt;%</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="5">5</button><span id="annotated-cell-14-22" class="code-annotation-target"><a href="#annotated-cell-14-22" aria-hidden="true" tabindex="-1"></a><span class="in">  mutate(oyster_size = as.factor(oyster_size),</span></span>
+<span id="annotated-cell-14-23"><a href="#annotated-cell-14-23" aria-hidden="true" tabindex="-1"></a><span class="in">         across(c(weight, gain), as.numeric)</span></span>
+<span id="annotated-cell-14-24"><a href="#annotated-cell-14-24" aria-hidden="true" tabindex="-1"></a><span class="in">        ) %&gt;%</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="6">6</button><span id="annotated-cell-14-25" class="code-annotation-target"><a href="#annotated-cell-14-25" aria-hidden="true" tabindex="-1"></a><span class="in">  filter(date &gt;= as.Date("2023-11-20") &amp; date &lt;=</span></span>
+<span id="annotated-cell-14-26"><a href="#annotated-cell-14-26" aria-hidden="true" tabindex="-1"></a><span class="in">           as.Date("2024-02-14"))</span></span>
+<span id="annotated-cell-14-27"><a href="#annotated-cell-14-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-14-28"><a href="#annotated-cell-14-28" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(ksf_oyster_cylinder_growth_data_tidied)</span></span>
+<span id="annotated-cell-14-29"><a href="#annotated-cell-14-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-annotation">
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-14" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="6,11" data-code-annotation="1">Manually set variable names</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="9,10" data-code-annotation="2">Select desired columns and remove first row</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="12,13,14,15,16,17,18,19,20" data-code-annotation="3">Convert from wide to long format</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="21" data-code-annotation="4">Create a new variable that differentiates oyster size</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="22,23,24" data-code-annotation="5">Adjust data types to numeric and factor</span>
+</dd>
+<dt data-target-cell="annotated-cell-14" data-target-annotation="6">6</dt>
+<dd>
+<span data-code-cell="annotated-cell-14" data-code-lines="25,26" data-code-annotation="6">Filter to desired date range</span>
+</dd>
+</dl>
+</div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Date"],"name":[1],"type":["dttm"],"align":["right"]},{"label":["Large Oyster Cylinder"],"name":[2],"type":["chr"],"align":["left"]},{"label":["...3"],"name":[3],"type":["chr"],"align":["left"]},{"label":["...4"],"name":[4],"type":["chr"],"align":["left"]},{"label":["...5"],"name":[5],"type":["chr"],"align":["left"]},{"label":["...6"],"name":[6],"type":["chr"],"align":["left"]},{"label":["...7"],"name":[7],"type":["chr"],"align":["left"]},{"label":["Small Oyster Cylinder"],"name":[8],"type":["chr"],"align":["left"]},{"label":["...9"],"name":[9],"type":["chr"],"align":["left"]},{"label":["...10"],"name":[10],"type":["chr"],"align":["left"]},{"label":["...11"],"name":[11],"type":["chr"],"align":["left"]},{"label":["Avg. Chlorophyll"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["Year"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["Week"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["...15"],"name":[15],"type":["lgl"],"align":["right"]},{"label":["...16"],"name":[16],"type":["chr"],"align":["left"]},{"label":["...17"],"name":[17],"type":["chr"],"align":["left"]},{"label":["...18"],"name":[18],"type":["chr"],"align":["left"]}],"data":[{"1":"<NA>","2":"g added","3":"g removed","4":"Weight (g)","5":"% gain","6":"#","7":"#/g","8":"Weight (g)","9":"% gain","10":"#","11":"#/g","12":"NA","13":"NA","14":"NA","15":"NA","16":"week","17":"year","18":"chl","_rn_":"1"},{"1":"2023-06-01","2":"NA","3":"NA","4":"8300","5":"NA","6":"34860","7":"4.2","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"2023","14":"22","15":"NA","16":"22","17":"2023","18":"NA","_rn_":"2"},{"1":"2023-06-10","2":"NA","3":"NA","4":"10050","5":"0.21084337349397592","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"2023","14":"23","15":"NA","16":"23","17":"2023","18":"NA","_rn_":"3"},{"1":"2023-06-19","2":"NA","3":"NA","4":"10800","5":"7.4626865671641784E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"2023","14":"25","15":"NA","16":"24","17":"2023","18":"NA","_rn_":"4"},{"1":"2023-06-23","2":"NA","3":"NA","4":"11800","5":"9.2592592592592587E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"2023","14":"25","15":"NA","16":"25","17":"2023","18":"NA","_rn_":"5"},{"1":"2023-07-01","2":"NA","3":"NA","4":"11750","5":"-4.2372881355932203E-3","6":"31255","7":"2.66","8":"NA","9":"NA","10":"NA","11":"NA","12":"5.6544575","13":"2023","14":"26","15":"NA","16":"26","17":"2023","18":"5.654457513157892","_rn_":"6"},{"1":"2023-07-07","2":"NA","3":"NA","4":"12500","5":"6.3829787234042548E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"5.5715920","13":"2023","14":"27","15":"NA","16":"27","17":"2023","18":"5.5715919761904757","_rn_":"7"},{"1":"2023-07-13","2":"NA","3":"NA","4":"13550","5":"8.4000000000000005E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"5.0697938","13":"2023","14":"28","15":"NA","16":"28","17":"2023","18":"5.0697937857142854","_rn_":"8"},{"1":"2023-07-20","2":"NA","3":"NA","4":"15800","5":"0.16605166051660517","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"3.5546179","13":"2023","14":"29","15":"NA","16":"29","17":"2023","18":"3.55461786861314","_rn_":"9"},{"1":"2023-07-26","2":"NA","3":"NA","4":"17200","5":"8.8607594936708861E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"3.5358853","13":"2023","14":"30","15":"NA","16":"30","17":"2023","18":"3.5358852857142851","_rn_":"10"},{"1":"2023-08-02","2":"NA","3":"NA","4":"17500","5":"1.7441860465116279E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"3.6464586","13":"2023","14":"31","15":"NA","16":"31","17":"2023","18":"3.6464586229508202","_rn_":"11"},{"1":"2023-08-08","2":"NA","3":"NA","4":"18100","5":"3.4285714285714287E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"0.7499425","13":"2023","14":"32","15":"NA","16":"32","17":"2023","18":"0.74994247307692308","_rn_":"12"},{"1":"2023-08-25","2":"NA","3":"NA","4":"19000","5":"4.9723756906077346E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"2.5729755","13":"2023","14":"34","15":"NA","16":"33","17":"2023","18":"1.5716935097767848","_rn_":"13"},{"1":"2023-09-25","2":"NA","3":"NA","4":"22100","5":"0.16315789473684211","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"1.2516819","13":"2023","14":"39","15":"NA","16":"34","17":"2023","18":"2.5729754851190472","_rn_":"14"},{"1":"2023-10-12","2":"NA","3":"NA","4":"22200","5":"4.5248868778280547E-3","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"4.0890574","13":"2023","14":"41","15":"NA","16":"35","17":"2023","18":"3.401928181547619","_rn_":"15"},{"1":"2023-10-23","2":"NA","3":"NA","4":"22200","5":"0","6":"24420.000000000004","7":"1.1000000000000001","8":"NA","9":"NA","10":"NA","11":"NA","12":"6.5248397","13":"2023","14":"43","15":"NA","16":"36","17":"2023","18":"4.6889159910714255","_rn_":"16"},{"1":"2023-11-06","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"468","9":"NA","10":"NA","11":"NA","12":"2.7461929","13":"2023","14":"45","15":"NA","16":"37","17":"2023","18":"2.9254281160714277","_rn_":"17"},{"1":"2023-11-09","2":"NA","3":"NA","4":"22500","5":"1.3513513513513514E-2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"2.7461929","13":"2023","14":"45","15":"NA","16":"38","17":"2023","18":"2.1152617886904759","_rn_":"18"},{"1":"2023-11-20","2":"NA","3":"NA","4":"23050","5":"2.4444444444444446E-2","6":"21667","7":"0.94","8":"480","9":"2.564102564102564E-2","10":"NA","11":"NA","12":"1.7043141","13":"2023","14":"47","15":"NA","16":"39","17":"2023","18":"1.2516819177083329","_rn_":"19"},{"1":"2023-11-27","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"530","9":"0.10416666666666667","10":"NA","11":"NA","12":"0.5911654","13":"2023","14":"48","15":"NA","16":"40","17":"2023","18":"1.2013228905654765","_rn_":"20"},{"1":"2023-12-08","2":"NA","3":"NA","4":"25640","5":"0.11236442516268981","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"1.1020505","13":"2023","14":"49","15":"NA","16":"41","17":"2023","18":"4.0890574453869055","_rn_":"21"},{"1":"2023-12-11","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"571","9":"7.7358490566037733E-2","10":"NA","11":"NA","12":"1.5433366","13":"2023","14":"50","15":"NA","16":"42","17":"2023","18":"7.8536540797619052","_rn_":"22"},{"1":"2023-12-18","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"660","9":"0.15586690017513136","10":"NA","11":"NA","12":"1.4462227","13":"2023","14":"51","15":"NA","16":"43","17":"2023","18":"6.5248396556547599","_rn_":"23"},{"1":"2023-12-28","2":"NA","3":"NA","4":"22100","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"2.1080875","13":"2023","14":"52","15":"NA","16":"44","17":"2023","18":"4.1256212321428603","_rn_":"24"},{"1":"2024-01-01","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"846","9":"0.2818181818181818","10":"NA","11":"NA","12":"2.6269800","13":"2024","14":"1","15":"NA","16":"45","17":"2023","18":"2.7461928867559533","_rn_":"25"},{"1":"2024-01-05","2":"NA","3":"NA","4":"18100","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"2.6269800","13":"2024","14":"1","15":"NA","16":"46","17":"2023","18":"1.8935640029761931","_rn_":"26"},{"1":"2024-01-08","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"869","9":"2.7186761229314422E-2","10":"NA","11":"NA","12":"2.6027392","13":"2024","14":"2","15":"NA","16":"47","17":"2023","18":"1.704314074553573","_rn_":"27"},{"1":"2024-01-12","2":"2300","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"2.6027392","13":"2024","14":"2","15":"NA","16":"48","17":"2023","18":"0.59116542142857254","_rn_":"28"},{"1":"2024-01-17","2":"NA","3":"NA","4":"21100","5":"NA","6":"NA","7":"NA","8":"941","9":"8.2853855005753735E-2","10":"NA","11":"NA","12":"2.9111404","13":"2024","14":"3","15":"NA","16":"49","17":"2023","18":"1.102050497573221","_rn_":"29"},{"1":"2024-01-23","2":"NA","3":"5700","4":"17000","5":"NA","6":"9010","7":"0.53","8":"995","9":"NA","10":"NA","11":"NA","12":"1.6261581","13":"2024","14":"4","15":"NA","16":"50","17":"2023","18":"1.5433366433035713","_rn_":"30"},{"1":"2024-02-14","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"1080","9":"NA","10":"NA","11":"NA","12":"NA","13":"2024","14":"7","15":"NA","16":"51","17":"2023","18":"1.446222726380368","_rn_":"31"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"52","17":"2023","18":"2.1080875220238102","_rn_":"32"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"1","17":"2024","18":"2.6269799947916668","_rn_":"33"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"2","17":"2024","18":"2.6027391651785741","_rn_":"34"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"3","17":"2024","18":"2.9111403973214314","_rn_":"35"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"4","17":"2024","18":"1.6261581206489677","_rn_":"36"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","_rn_":"37"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","_rn_":"38"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","_rn_":"39"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","_rn_":"40"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","_rn_":"41"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","_rn_":"42"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","_rn_":"43"},{"1":"<NA>","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","_rn_":"44"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["date"],"name":[1],"type":["dttm"],"align":["right"]},{"label":["oyster_chlorophyll"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["oyster_size"],"name":[3],"type":["fct"],"align":["left"]},{"label":["weight"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["gain"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2023-11-20","2":"1.7043141","3":"Large","4":"23050","5":"0.02444444"},{"1":"2023-11-20","2":"1.7043141","3":"Small","4":"480","5":"0.02564103"},{"1":"2023-11-27","2":"0.5911654","3":"Large","4":"NA","5":"NA"},{"1":"2023-11-27","2":"0.5911654","3":"Small","4":"530","5":"0.10416667"},{"1":"2023-12-08","2":"1.1020505","3":"Large","4":"25640","5":"0.11236443"},{"1":"2023-12-08","2":"1.1020505","3":"Small","4":"NA","5":"NA"},{"1":"2023-12-11","2":"1.5433366","3":"Large","4":"NA","5":"NA"},{"1":"2023-12-11","2":"1.5433366","3":"Small","4":"571","5":"0.07735849"},{"1":"2023-12-18","2":"1.4462227","3":"Large","4":"NA","5":"NA"},{"1":"2023-12-18","2":"1.4462227","3":"Small","4":"660","5":"0.15586690"},{"1":"2023-12-28","2":"2.1080875","3":"Large","4":"22100","5":"NA"},{"1":"2023-12-28","2":"2.1080875","3":"Small","4":"NA","5":"NA"},{"1":"2024-01-01","2":"2.6269800","3":"Large","4":"NA","5":"NA"},{"1":"2024-01-01","2":"2.6269800","3":"Small","4":"846","5":"0.28181818"},{"1":"2024-01-05","2":"2.6269800","3":"Large","4":"18100","5":"NA"},{"1":"2024-01-05","2":"2.6269800","3":"Small","4":"NA","5":"NA"},{"1":"2024-01-08","2":"2.6027392","3":"Large","4":"NA","5":"NA"},{"1":"2024-01-08","2":"2.6027392","3":"Small","4":"869","5":"0.02718676"},{"1":"2024-01-12","2":"2.6027392","3":"Large","4":"NA","5":"NA"},{"1":"2024-01-12","2":"2.6027392","3":"Small","4":"NA","5":"NA"},{"1":"2024-01-17","2":"2.9111404","3":"Large","4":"21100","5":"NA"},{"1":"2024-01-17","2":"2.9111404","3":"Small","4":"941","5":"0.08285386"},{"1":"2024-01-23","2":"1.6261581","3":"Large","4":"17000","5":"NA"},{"1":"2024-01-23","2":"1.6261581","3":"Small","4":"995","5":"NA"},{"1":"2024-02-14","2":"NA","3":"Large","4":"NA","5":"NA"},{"1":"2024-02-14","2":"NA","3":"Small","4":"1080","5":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 </div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-profile-data-dataset</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="in">profile_data_tidied &lt;- profile_data</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(profile_data_tidied)</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-profile-data-dataset</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="in">profile_data_tidied &lt;- profile_data</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(profile_data_tidied)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -511,18 +537,18 @@ dfs.RData</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-water-samples-data-dataset</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="in">water_samples_data_tidied &lt;- water_samples_data</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(water_samples_data_tidied)</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-water-samples-data-dataset</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="in">water_samples_data_tidied &lt;- water_samples_data</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(water_samples_data_tidied)</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -533,18 +559,18 @@ dfs.RData</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-weather-data-dataset</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="in">weather_data_tidied &lt;- weather_data</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(weather_data_tidied)</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tidy-weather-data-dataset</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-fold: true</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| code-summary: &lt;i&gt;Steps to clean data&lt;/i&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="in">weather_data_tidied &lt;- weather_data</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="in">paged_table(weather_data_tidied)</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -562,11 +588,11 @@ dfs.RData</code></pre>
 <h3 class="anchored" data-anchor-id="export-tidied-datasets">Export Tidied Datasets</h3>
 <p>Export tidied data sets to csv into <code>data/tidied</code> folder.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: export-tidied-datasets</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="in">write.csv(ksf_compiled_data_tidied, file = "data/tidied/ksf_compiled_data_tidied.csv", row.names = FALSE)</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: export-tidied-datasets</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="in">write.csv(ksf_compiled_data_tidied, file = "data/tidied/ksf_compiled_data_tidied.csv", row.names = FALSE)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Export merged final data set into <code>data/outputs</code> folder.</p>
 </section>
