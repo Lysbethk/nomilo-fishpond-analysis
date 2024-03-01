@@ -12,7 +12,7 @@ website:
   title: "Nomilo Fishpond Biogeochemical Analysis"
   navbar:
     left:
-      - href: correlational-analysis.qmd
+      - href: index.qmd
         text: Correlational Analysis
       - href: fieldwork-templates.qmd
         text: Fieldwork Templates
