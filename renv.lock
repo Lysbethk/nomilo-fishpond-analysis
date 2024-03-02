@@ -110,30 +110,6 @@
       ],
       "Hash": "45f0398006e83a5b10b72a90663d8d8c"
     },
-    "Rcpp": {
-      "Package": "Rcpp",
-      "Version": "1.0.9",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "methods",
-        "utils"
-      ],
-      "Hash": "e9c08b94391e9f3f97355841229124f2"
-    },
-    "V8": {
-      "Package": "V8",
-      "Version": "4.4.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "Rcpp",
-        "curl",
-        "jsonlite",
-        "utils"
-      ],
-      "Hash": "435359b59b8a9b8f9235135da471ea3c"
-    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
@@ -174,16 +150,6 @@
       ],
       "Hash": "543776ae6848fde2f48ff3816d0628bc"
     },
-    "bigD": {
-      "Package": "bigD",
-      "Version": "0.2.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "93637e906f3fe962413912c956eb44db"
-    },
     "bit": {
       "Package": "bit",
       "Version": "4.0.5",
@@ -207,13 +173,6 @@
         "utils"
       ],
       "Hash": "9fe98599ca456d6552421db0d6772d8f"
-    },
-    "bitops": {
-      "Package": "bitops",
-      "Version": "1.0-7",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "b7d8d8ee39869c18d8846a184dd8a1af"
     },
     "blob": {
       "Package": "blob",
@@ -338,13 +297,6 @@
         "stats"
       ],
       "Hash": "bb4341986bc8b914f0f0acf2e4a3f2f7"
-    },
-    "commonmark": {
-      "Package": "commonmark",
-      "Version": "1.9.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "d691c61bff84bd63c383874d2d0c3307"
     },
     "conflicted": {
       "Package": "conflicted",
@@ -532,6 +484,18 @@
       "Repository": "CRAN",
       "Hash": "77bd60a6157420d4ffa93b27cf6a58b8"
     },
+    "fontawesome": {
+      "Package": "fontawesome",
+      "Version": "0.5.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "htmltools",
+        "rlang"
+      ],
+      "Hash": "e80750aec5717dedc019ad7ee40e4a7c"
+    },
     "forcats": {
       "Package": "forcats",
       "Version": "1.0.0",
@@ -692,36 +656,6 @@
       ],
       "Hash": "3b449d5292327880fc6cb61d0b2e9063"
     },
-    "gt": {
-      "Package": "gt",
-      "Version": "0.10.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "base64enc",
-        "bigD",
-        "bitops",
-        "cli",
-        "commonmark",
-        "dplyr",
-        "fs",
-        "glue",
-        "htmltools",
-        "htmlwidgets",
-        "juicyjuice",
-        "magrittr",
-        "markdown",
-        "reactable",
-        "rlang",
-        "sass",
-        "scales",
-        "tidyselect",
-        "vctrs",
-        "xml2"
-      ],
-      "Hash": "03009c105dfae79460b8eb9d8cf791e4"
-    },
     "gtable": {
       "Package": "gtable",
       "Version": "0.3.1",
@@ -797,21 +731,6 @@
       ],
       "Hash": "9d27e99cc90bd701c0a7a63e5923f9b7"
     },
-    "htmlwidgets": {
-      "Package": "htmlwidgets",
-      "Version": "1.6.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "grDevices",
-        "htmltools",
-        "jsonlite",
-        "knitr",
-        "rmarkdown",
-        "yaml"
-      ],
-      "Hash": "b677ee5954471eaa974c0d099a343a1a"
-    },
     "httr": {
       "Package": "httr",
       "Version": "1.4.7",
@@ -851,12 +770,13 @@
     },
     "janitor": {
       "Package": "janitor",
-      "Version": "2.1.0",
+      "Version": "2.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "dplyr",
+        "hms",
         "lifecycle",
         "lubridate",
         "magrittr",
@@ -868,7 +788,7 @@
         "tidyr",
         "tidyselect"
       ],
-      "Hash": "6de84a8c67fb247e721166049c84695f"
+      "Hash": "5baae149f1082f466df9d1442ba7aa65"
     },
     "jquerylib": {
       "Package": "jquerylib",
@@ -889,16 +809,6 @@
         "methods"
       ],
       "Hash": "a4269a09a9b865579b2635c77e572374"
-    },
-    "juicyjuice": {
-      "Package": "juicyjuice",
-      "Version": "0.1.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "V8"
-      ],
-      "Hash": "3bcd11943da509341838da9399e18bce"
     },
     "knitr": {
       "Package": "knitr",
@@ -977,19 +887,6 @@
         "R"
       ],
       "Hash": "7ce2733a9826b3aeb1775d56fd305472"
-    },
-    "markdown": {
-      "Package": "markdown",
-      "Version": "1.12",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "commonmark",
-        "utils",
-        "xfun"
-      ],
-      "Hash": "765cf53992401b3b6c297b69e1edb8bd"
     },
     "memoise": {
       "Package": "memoise",
@@ -1189,31 +1086,6 @@
       ],
       "Hash": "5e3c5dc0b071b21fa128676560dbe94d"
     },
-    "reactR": {
-      "Package": "reactR",
-      "Version": "0.4.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "htmltools"
-      ],
-      "Hash": "75389c8091eb14ee21c6bc87a88b3809"
-    },
-    "reactable": {
-      "Package": "reactable",
-      "Version": "0.4.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "digest",
-        "htmltools",
-        "htmlwidgets",
-        "jsonlite",
-        "reactR"
-      ],
-      "Hash": "6069eb2a6597963eae0605c1875ff14c"
-    },
     "readr": {
       "Package": "readr",
       "Version": "2.1.4",
@@ -1337,13 +1209,14 @@
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.20",
+      "Version": "2.25",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "bslib",
         "evaluate",
+        "fontawesome",
         "htmltools",
         "jquerylib",
         "jsonlite",
@@ -1356,7 +1229,7 @@
         "xfun",
         "yaml"
       ],
-      "Hash": "716fde5382293cc94a71f68c85b78d19"
+      "Hash": "d65e35823c817f09f4de424fcdfa812a"
     },
     "rstudioapi": {
       "Package": "rstudioapi",
