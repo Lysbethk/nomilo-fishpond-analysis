@@ -1,5 +1,5 @@
 ---
-title: "GitHub Project Repository Overview"
+title: "Nomilo Fishpond Biogoechemical Analysis <br> Project Overview"
 format: gfm
 ---
 
@@ -8,25 +8,30 @@ format: gfm
  ┣ 📂data
  ┃ ┣ 📂output
  ┃ ┣ 📂raw
+ ┃ ┃ ┣ 📜2024-02-28_dfs.RData
  ┃ ┃ ┣ 📜2024-02-28_ksf-clam-growth.xlsx
  ┃ ┃ ┣ 📜2024-02-28_ksf-compiled-data.xlsx
  ┃ ┃ ┣ 📜2024-02-28_ksf-oyster-cylinder-growth.xlsx
  ┃ ┃ ┣ 📜2024-02-28_profile-data.xlsx
  ┃ ┃ ┣ 📜2024-02-28_water-samples.xlsx
  ┃ ┃ ┣ 📜2024-02-28_weather-data.xlsx
- ┃ ┃ ┗ 📜~$ksf_compiled_data.xlsx
+ ┃ ┃ ┣ 📜2024-03-01_dfs-no-profiles.RData
+ ┃ ┃ ┣ 📜~$2024-02-28_profile-data.xlsx
+ ┃ ┃ ┗ 📜~$2024-02-28_water-samples.xlsx
  ┃ ┗ 📂tidied
- ┃ ┃ ┗ 📜ksf_compiled_data_tidied.csv
+ ┃ ┃ ┣ 📜2024-03-01_ksf-clam-growth-data-tidied.csv
+ ┃ ┃ ┣ 📜2024-03-01_ksf-compiled-data-tidied.csv
+ ┃ ┃ ┗ 📜2024-03-01_ksf-oyster-cylinder-growth-data-tidied.csv
  ┣ 📂docs
+ ┣ 📜_quarto.yml
  ┣ 📜.gitignore
  ┣ 📜.nojekyll
- ┣ 📜about.qmd
+ ┣ 📜fieldwork-templates.qmd
  ┣ 📜index.qmd
  ┣ 📜LICENSE.md
  ┣ 📜nomilo-fishpond-analysis.Rproj
  ┣ 📜README.md
  ┣ 📜README.qmd
  ┣ 📜renv.lock
- ┣ 📜styles.scss
- ┗ 📜_quarto.yml
+ ┗ 📜styles.scss
 ```

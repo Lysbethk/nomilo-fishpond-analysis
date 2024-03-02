@@ -2,8 +2,7 @@
 title: "Nomilo Fishpond Biogoechemical Analysis"
 execute: 
   warning: false
-  messages: false
-  echo: fenced
+  message: false
 code-annotations: hover
 code-overflow: wrap
 format: 
@@ -12,7 +11,7 @@ format:
     toc-location: left
 ---
 
-::: {.callout title="Interactive Code"}
+::: {.callout-note title="Interactive Code"}
 Throughout this document, hover over the numbered annotations to the right of code chunks to reveal detailed explanations and comments about the code. Where drop-down *italicized* text is present, expand by pressing
 on arrow to see code.
 :::
@@ -22,7 +21,7 @@ on arrow to see code.
 ```{r}
 #| label: install-packages
 #| eval: false
-install.packages(c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown"))
+install.packages(c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs"))
 ```
 
 ## Load Libraries
@@ -35,6 +34,7 @@ library(tidyverse) # <2>
 library(janitor) # <3>
 library(lubridate) # <4>
 library(rmarkdown) # <5>
+library(fs) # <6>
 ```
 
 1. For importing excel data
@@ -42,62 +42,50 @@ library(rmarkdown) # <5>
 3. For cleaning variable names
 4. For cleaning dates
 5. For displaying tables
-
-## Get Raw Data File Names
-
-```{bash}
-#| label: get-raw-data-file-names
-cd "data/raw" # <1>
-ls # <2> 
-```
-
-1. Change directory to "data/raw"
-2. List files within directory 
+6. For file path usage
 
 ## Import Raw Data
 
-Define vector of files to import by copying and pasting file names from above: 
+### Procedure
+
+Define vector of files to import: 
 
 ```{r}
 #| label: create-vector-file-paths
-files_to_import <- c(
-  "data/raw/2024-02-28_ksf-clam-growth.xlsx",
-  "data/raw/2024-02-28_ksf-compiled-data.xlsx",
-  "data/raw/2024-02-28_ksf-oyster-cylinder-growth.xlsx",
-  "data/raw/2024-02-28_profile-data.xlsx",
-  "data/raw/2024-02-28_water-samples.xlsx",
-  "data/raw/2024-02-28_weather-data.xlsx"
-)
+files_to_import <- dir_ls(path = "data/raw") # <1>
+
+for (i in seq_along(files_to_import)) { # <2>
+  cat(i, "= ", files_to_import[i], "\n") # <2>
+} # <2>
 ```
 
-Use the `purrr::map()` function to iteratively import all files in the `files_to_import` vector: 
+1. Store the file paths of our raw data within the `data/raw` directory in `files_to_import`
+2. Print each file path with its index
+
+Use the `purrr::map()` function to iteratively import files in the `files_to_import` vector 
+except for the profiles data and .RData files: 
+
+::: {.callout-caution title="@iteratively-import-raw-data Code Chunk Execution Warning"}
+The @iteratively-import-raw-data code chunk should only be ran once when raw data is updated
+because it takes long to execute. Therefore, run the @efficiently-load-raw-data code chunk
+instead to easily import up-to-date raw data.
+:::
 
 ```{r}
 #| label: iteratively-import-raw-data
 #| messages: false
 #| warnings: false
-
-dfs_no_profiles <- map(files_to_import[c(1:3, 5, 6)], import_list) # <1>
-
-save(dfs_no_profiles, file = "data/raw/2024-03-01_dfs_no_profiles.RData") # <1>
+#| eval: false
+dfs_no_profiles <- map(files_to_import[c(2:4, 6, 7)], import_list) # <1>
+current_date <- format(Sys.Date(), "%Y-%m-%d")
+save(dfs_no_profiles, file = paste0("data/raw/", current_date, "_dfs-no-profiles.RData")) # <1>
 ```
 
-```{r}
-sheets_to_import <- c("L1", "L2", "L3", "L4")
-profiles_data <- profiles_data <- map_dfr(sheets_to_import, function(sheet_name) {
-  import(files_to_import[4], which = sheet_name)
-}) %>% 
-  bind_rows()
-```
-
-1. It takes a while to import these dataframes, so we're going to only import.
-it once and then export it as a .RData file to load it back in more efficiently
-
-Efficiently load import raw data:
+Efficiently import up-to-date raw data:
 
 ```{r}
 #| label: efficiently-load-raw-data
-# load("data/raw/2024-03-dfs_no_profiles.RData") 
+load(files_to_import[8])
 ```
 
 Rename datasets:
@@ -106,7 +94,8 @@ We will always use snakecase when naming our data objects and functions (e.g., `
 
 ```{r}
 #| label: rename-raw-datasets
-names(dfs_no_profiles) <- gsub("data/raw/2024-02-28_|\\.xlsx$|\\.xls$", "", files_to_import[c(1:3, 5, 6)]) # <1>
+names(dfs_no_profiles) <- gsub("data/raw/2024-02-28_|\\.xlsx$|\\.xls$", "", 
+                               files_to_import[c(2:4, 6, 7)]) # <1>
 names(dfs_no_profiles) <- gsub("-", "_", names(dfs_no_profiles)) # <2>
 names(dfs_no_profiles) # <3>
 ```
@@ -122,9 +111,7 @@ Rename each sheet within each raw dataset to be lowercased and replace spaces wi
 dfs_no_profiles <- map(dfs_no_profiles, ~ set_names(.x, gsub(" ", "_", tolower(names(.x)))))
 ```
 
-## Tidy Raw Data
-
-### Create Separate Datasets
+Create separate datasets by specifying the Excel sheet from each spreadsheet we want to tidy:
 
 ```{r}
 #| label: create-separate-datasets
@@ -135,21 +122,93 @@ water_samples_data <- dfs_no_profiles$water_samples$data_overview
 weather_data <- dfs_no_profiles$weather_data$weather_ksf
 ```
 
-### Tidying Processes
+We want to combine multiple sheets within the profiles Excel spreadsheet into one, therefore,
+we will import it separately:
+
+```{r}
+#| label: import-raw-profiles-data
+sheets_to_import <- c("L1", "L2", "L3", "L4") # <1>
+
+profiles_data <- profiles_data <- map_dfr(sheets_to_import, function(sheet_name) { # <2>
+  import(files_to_import[5], which = sheet_name) # <2>
+}) %>%  # <2>
+  bind_rows() # <3>
+```
+
+1. [code annotation]
+2. [code annotation]
+3. [code annotation]
+
+### View Raw Data
 
 ::: {.panel-tabset}
 
 #### ksf_clam_growth_data
 
 ```{r}
+#| echo: false
+paged_table(ksf_clam_growth_data)
+```
+
+#### ksf_compiled_data
+
+```{r}
+#| echo: false
+paged_table(ksf_compiled_data)
+```
+
+#### ksf_oyster_cylinder_growth_data
+
+```{r}
+#| echo: false
+paged_table(ksf_oyster_cylinder_growth_data)
+```
+
+#### water_samples_data
+
+```{r}
+#| echo: false
+paged_table(water_samples_data)
+```
+
+#### weather_data
+
+```{r}
+#| echo: false
+paged_table(weather_data)
+```
+
+#### profiles_data
+
+```{r}
+#| echo: false
+paged_table(profiles_data)
+```
+
+:::
+
+## Tidy Raw Data
+
+### Tidying Processes
+
+::: {.panel-tabset}
+
+#### ksf_clam_growth_data_tidied
+
+```{r}
 #| label: tidy-ksf-clam-growth-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
-new_var_names <- c("sort_date", "color", "clams_in_count", "clams_in_lbs", "clams_in_avg_per_lb",
-                   "clams_out_count", "clams_out_lbs", "clams_out_avg_per_lb", "growth_in_lbs",
-                   "growth_pct", "sr", "days_btwn_sort")
+new_var_names <- c(
+  "sort_date", "color", "clams_in_count", "clams_in_lbs", "clams_in_avg_per_lb", 
+  "clams_out_count", "clams_out_lbs", "clams_out_avg_per_lb", "growth_in_lbs",
+  "growth_pct", "sr", "days_btwn_sort"
+  )
 
-new_date_col <- c("2023-10-17", "2023-12-06", "2023-12-12", "2024-01-02", "2024-01-10", "2024-01-24", "2024-01-31", "2024-02-08", "2024-02-13") 
+new_date_col <- c(
+  "2023-10-17", "2023-12-06", "2023-12-12", "2024-01-02", "2024-01-10", "2024-01-24", 
+  "2024-01-31", "2024-02-08", "2024-02-13"
+  ) 
 
 ksf_clam_growth_data_tidied <- ksf_clam_growth_data %>%
   slice(-1) %>%
@@ -157,8 +216,10 @@ ksf_clam_growth_data_tidied <- ksf_clam_growth_data %>%
   mutate(date = as.Date(new_date_col)) %>% 
   dplyr::select(-sort_date) %>% 
    pivot_longer(
-    cols = c(clams_in_count, clams_in_lbs, clams_in_avg_per_lb,
-             clams_out_count, clams_out_lbs, clams_out_avg_per_lb),
+    cols = c(
+      clams_in_count, clams_in_lbs, clams_in_avg_per_lb, clams_out_count, 
+      clams_out_lbs, clams_out_avg_per_lb
+      ),
     names_to = c("stage", ".value"),
     names_prefix = "clams_", 
     names_sep = "_", 
@@ -167,7 +228,8 @@ ksf_clam_growth_data_tidied <- ksf_clam_growth_data %>%
   mutate(stage = if_else(str_detect(stage, "in"), "In", "Out")) %>%
   rename(avg_per_lbs = avg) %>% 
   mutate(across(c(color, stage), as.factor)) %>%
-  mutate(across(c(count, lbs, avg_per_lbs, growth_in_lbs, growth_pct, sr), ~as.numeric(gsub("%", "", .)))) %>% 
+  mutate(across(c(count, lbs, avg_per_lbs, growth_in_lbs, growth_pct, sr), 
+                ~as.numeric(gsub("%", "", .)))) %>% 
   arrange(date, color, stage) %>% 
   dplyr::select(date, days_btwn_sort, color, stage, count, lbs, avg_per_lbs, 
                 growth_in_lbs, growth_pct, sr)
@@ -182,7 +244,7 @@ paged_table(ksf_clam_growth_data_tidied)
 5.
 6.
 
-#### ksf_compiled_data
+#### ksf_compiled_data_tidied
 
 ```{r}
 #| label: tidy-ksf-compiled-data-dataset
@@ -216,14 +278,17 @@ sort by `date`
 4. Remove columns with containing all NA values
 5. Group by `date` and calculate the average of every variable for each day
 
-#### ksf_oyster_cylinder_growth_data
+#### ksf_oyster_cylinder_growth_data_tidied
 
 ```{r}
 #| label: tidy-ksf-oyster-cylinder-growth-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
 
-oyster_var_names <- c("date", "oyster_large_weight", "oyster_large_gain", "oyster_small_weight", "oyster_small_gain", "oyster_chlorophyll") #<1>
+oyster_var_names <- c(
+  "date", "oyster_large_weight", "oyster_large_gain", "oyster_small_weight",
+  "oyster_small_gain", "oyster_chlorophyll"
+  ) #<1>
 
 ksf_oyster_cylinder_growth_data_tidied <- ksf_oyster_cylinder_growth_data %>% 
   dplyr::select(c(1, 4, 5, 8, 9, 12)) %>% #<2> 
@@ -255,43 +320,42 @@ paged_table(ksf_oyster_cylinder_growth_data_tidied)
 5. Adjust data types to numeric and factor
 6. Filter to desired date range
 
-#### profile_data
+*Address the NA values before merge*
 
-```{r}
-#| label: tidy-profile-data-dataset
-#| code-fold: true
-#| code-summary: <i>Steps to clean data</i>
-profiles_data_tidied <- profiles_data
-
-paged_table(profiles_data_tidied)
-```
-
-#### water_samples_data
+#### water_samples_data_tidied
 
 ```{r}
 #| label: tidy-water-samples-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
 water_samples_data_tidied <- water_samples_data %>%
-   rename_with(~gsub("\\s*\\([^\\)]+\\)", "", .x)) %>% # <1>
+  slice(-c(44:52)) %>% 
+  rename_with(~gsub("\\s*\\([^\\)]+\\)", "", .x)) %>% # <1>
   janitor::clean_names() %>% # <1>
-   mutate(
-    date = case_when(
-      grepl("^\\d{2}/\\d{2}/\\d{4}$", date) ~ ymd(date),
-     date == "44074" ~ as.Date("2024-01-09"),
-     TRUE ~ as.Date(date, format = "%Y-%m-%d")
-    )
+  mutate(
+    date = if_else(date == "44074", 
+                   as.character(as.Date("2024-01-09")),
+                   format(dmy(date), "%Y-%m-%d")) 
   )
 
 paged_table(water_samples_data_tidied)
 ```
 
-Date format
-Date number conversion
-Names clean up
-Add numbers to sample ID
+Done: 
+- Date format
+- Date number conversion
 
-#### weather_data
+The reason why it wasn't working was because the date column was of a character
+data type, therefore we can easily convert 44074 but we were assuming that R knew
+the other dates were of a date type. So to fix this, we first needed to convert it 
+into a date in the original format of DD-MM-YYYY, then convert it to our desired format
+of YYYY-MM-DD.
+
+Need to do:
+- Names clean up
+- Add numbers to sample ID
+
+#### weather_data_tidied
 
 ```{r}
 #| label: tidy-weather-data-dataset
@@ -302,17 +366,44 @@ weather_data_tidied <- weather_data
 paged_table(weather_data_tidied)
 ```
 
+#### profile_data_tidied
+
+```{r}
+#| label: tidy-profile-data-dataset
+#| code-fold: true
+#| code-summary: <i>Steps to clean data</i>
+profiles_data_tidied <- profiles_data
+
+paged_table(profiles_data_tidied)
+```
+
 ::: 
+
+### Merge Tidied Datasets
 
 ### Export Tidied Datasets
 
-Export tidied data sets to csv into `data/tidied` folder.
+Export tidied datasets to CSV into `data/tidied` folder:
 
 ```{r}
 #| label: export-tidied-datasets
 #| eval: false
-write.csv(ksf_compiled_data_tidied, file = "data/tidied/ksf_compiled_data_tidied.csv", row.names = FALSE)
+source("code/functions/export_to_csv.R")
+
+dfs_to_export <- list( # <1>
+  ksf_clam_growth_data_tidied = ksf_clam_growth_data_tidied, # <1>
+  ksf_compiled_data_tidied = ksf_compiled_data_tidied, # <1>
+  ksf_oyster_cylinder_growth_data_tidied = ksf_oyster_cylinder_growth_data_tidied # <1>
+) # <1>
+
+imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied")) # <2>
 ```
+
+1. List of dataframes we want to export as CSV files
+2. Iterate the `export_to_csv(df, df_name, dir_path)` function over each dataframe. 
+`.x` refers to the dataframe. `.y` refers to the name of the dataframe. These are 
+passed to `export_to_csv()` function along with the desired directory path.
+
 
 Export merged final data set into `data/outputs` folder.
 
