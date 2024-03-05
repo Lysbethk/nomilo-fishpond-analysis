@@ -87,7 +87,7 @@ Efficiently import up-to-date raw data:
 
 ```{r}
 #| label: efficiently-load-raw-data
-load(files_to_import[8])
+load(files_to_import[10])
 ```
 
 Rename datasets:
@@ -201,23 +201,21 @@ paged_table(profiles_data)
 #| label: tidy-ksf-clam-growth-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
-new_var_names <- c(
+new_clam_var_names <- c(
   "sort_date", "color", "clams_in_count", "clams_in_lbs", "clams_in_avg_per_lb", 
   "clams_out_count", "clams_out_lbs", "clams_out_avg_per_lb", "growth_in_lbs",
   "growth_pct", "sr", "days_btwn_sort"
   )
 
-new_date_col <- c(
+new_clam_date_col <- c(
   "2023-10-17", "2023-12-06", "2023-12-12", "2024-01-02", "2024-01-10", "2024-01-24", 
   "2024-01-31", "2024-02-08", "2024-02-13"
   ) 
 
-new_date_col <- c("2023-10-17", "2023-12-06", "2023-12-12", "2024-01-02", "2024-01-10", "2024-01-24", "2024-01-31", "2024-02-08", "2024-02-13") 
-
 ksf_clam_growth_data_tidied <- ksf_clam_growth_data %>%
   slice(-1) %>%
-  setNames(new_var_names) %>%
-  mutate(date = as.Date(new_date_col)) %>% 
+  setNames(new_clam_var_names) %>%
+  mutate(date = as.Date(new_clam_date_col)) %>% 
   dplyr::select(-sort_date) %>% 
    pivot_longer(
     cols = c(
@@ -340,7 +338,11 @@ water_samples_data_tidied <- water_samples_data %>%
     date = if_else(date == "44074", 
                    as.character(as.Date("2024-01-09")),
                    format(dmy(date), "%Y-%m-%d")) 
-  )
+  ) %>% 
+  mutate(sample_id = 1:nrow(.)) %>% 
+   mutate(across(c(location, tube_name), as.factor),
+          date = as.Date(date)) %>% 
+   mutate_if(is.numeric, ~replace_na(as.numeric(.), 0))
 
 paged_table(water_samples_data_tidied)
 ```
@@ -376,7 +378,26 @@ paged_table(weather_data_tidied)
 #| label: tidy-profile-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
-profiles_data_tidied <- profiles_data
+
+new_profile_var_names <- c("depth", "temperature", "dissolved_oxygen", "salinity", "conductivity", "visibility", "location", "date") 
+
+new_profile_location_col <- c("back buoy", "mid buoy", "production dock", "auwei")
+
+fill_date_col <- c("2023-11-28", "2023-12-22", "2024-01-09", "2024-01-30", "2024-02-20", "2023-11-28", "2023-12-22", "2024-01-09", "2024-01-30", "2024-02-20", "2023-11-28", "2023-12-22", "2024-01-09", "2024-01-30", "2024-02-20", "2023-11-28", "2023-12-22", "2024-01-09", "2024-01-30", "2024-02-20")
+fill_date_rows <- c(1:12, 13:24, 25:36, 37:48, 49:57, 58:78, 79:96, 97:114, 115:132, 133:151, 152:159, 160:167, 168:175, 176:183, 184:192, 193:197, 198:202, 203:207, 208:212, 213:214)
+
+profiles_data_tidied <- profiles_data %>% 
+  select(-c(6, 8)) %>%
+  slice(-c(1:4)) %>% 
+  mutate(location = "", 
+         date = "") %>% 
+  setNames(new_profile_var_names) %>% 
+  mutate(conductivity = case_when(
+    row_number() %in% c(1:9) ~ NA_character_, 
+    TRUE ~ conductivity
+  ),
+  date = ifelse(row_number() %in% fill_date_rows, fill_date_col[match(row_number(), fill_date_rows)], date)
+  )
 
 paged_table(profiles_data_tidied)
 ```
