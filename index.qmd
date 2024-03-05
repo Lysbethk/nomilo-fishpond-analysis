@@ -1,5 +1,7 @@
 ---
 title: "Nomilo Fishpond Biogoechemical Analysis"
+author: "Lysbeth Koster"
+date: "02/28/2024"
 execute: 
   warning: false
   messages: false
