@@ -83,6 +83,11 @@ current_date <- format(Sys.Date(), "%Y-%m-%d")
 save(dfs_no_profiles, file = paste0("data/raw/", current_date, "_dfs-no-profiles.RData")) # <1>
 ```
 
+::: {.callout-warning title="Ensure the Correct Index Value is Inputted Below"}
+Refer to the output of the `files_to_import` data object to ensure you are inputting the correct
+index value corresponding to the file path that needs to be loaded.
+:::
+
 Efficiently import up-to-date raw data:
 
 ```{r}
@@ -306,7 +311,8 @@ ksf_oyster_cylinder_growth_data_tidied <- ksf_oyster_cylinder_growth_data %>%
     values_to = "value" #<3>
   ) %>% #<3>
   mutate(oyster_size = if_else(str_detect(oyster_size, "small"), "Small", "Large")) %>% #<4>
-  mutate(oyster_size = as.factor(oyster_size), #<5>
+  mutate(date = as.Date(date), #<5>
+         oyster_size = as.factor(oyster_size), #<5>
          across(c(weight, gain), as.numeric) #<5>
         ) %>% #<5>
   filter(date >= as.Date("2023-11-20") & date <= #<6>
@@ -340,26 +346,15 @@ water_samples_data_tidied <- water_samples_data %>%
                    format(dmy(date), "%Y-%m-%d")) 
   ) %>% 
   mutate(sample_id = 1:nrow(.)) %>% 
-   mutate(across(c(location, tube_name), as.factor),
-          date = as.Date(date)) %>% 
-   mutate_if(is.numeric, ~replace_na(as.numeric(.), 0))
+  mutate(date = as.Date(date),
+         across(c(nomilo_id, location, round, depth), as.factor),
+         tube_name = as.character(tube_name), 
+         tube_name = ifelse(is.na(tube_name), "No Name", tube_name), 
+         tube_name = as.factor(tube_name)) %>% 
+  mutate_if(is.numeric, ~replace_na(., 0))
 
 paged_table(water_samples_data_tidied)
 ```
-
-Done: 
-- Date format
-- Date number conversion
-
-The reason why it wasn't working was because the date column was of a character
-data type, therefore we can easily convert 44074 but we were assuming that R knew
-the other dates were of a date type. So to fix this, we first needed to convert it 
-into a date in the original format of DD-MM-YYYY, then convert it to our desired format
-of YYYY-MM-DD.
-
-Need to do:
-- Names clean up
-- Add numbers to sample ID
 
 #### weather_data_tidied
 
@@ -381,26 +376,54 @@ paged_table(weather_data_tidied)
 
 new_profile_var_names <- c("depth", "temperature", "dissolved_oxygen", "salinity", "conductivity", "visibility", "location", "date") 
 
-new_profile_location_col <- c("back buoy", "mid buoy", "production dock", "auwei")
-
-fill_date_col <- c("2023-11-28", "2023-12-22", "2024-01-09", "2024-01-30", "2024-02-20", "2023-11-28", "2023-12-22", "2024-01-09", "2024-01-30", "2024-02-20", "2023-11-28", "2023-12-22", "2024-01-09", "2024-01-30", "2024-02-20", "2023-11-28", "2023-12-22", "2024-01-09", "2024-01-30", "2024-02-20")
-fill_date_rows <- c(1:12, 13:24, 25:36, 37:48, 49:57, 58:78, 79:96, 97:114, 115:132, 133:151, 152:159, 160:167, 168:175, 176:183, 184:192, 193:197, 198:202, 203:207, 208:212, 213:214)
-
-profiles_data_tidied <- profiles_data %>% 
+profiles_data_tidied <- profiles_data %>%
   select(-c(6, 8)) %>%
-  slice(-c(1:4)) %>% 
-  mutate(location = "", 
-         date = "") %>% 
-  setNames(new_profile_var_names) %>% 
-  mutate(conductivity = case_when(
-    row_number() %in% c(1:9) ~ NA_character_, 
-    TRUE ~ conductivity
-  ),
-  date = ifelse(row_number() %in% fill_date_rows, fill_date_col[match(row_number(), fill_date_rows)], date)
-  )
+  mutate(
+    temp_column1 = NA_character_,
+    temp_column2 = NA_character_
+  ) %>%
+  setNames(new_profile_var_names) %>%
+  mutate(
+    location = ifelse(depth == "Location", temperature, NA_character_),
+    date = ifelse(depth == "Date", temperature, NA_character_)
+  ) %>%
+  fill(location, date, .direction = "down") %>%
+  filter(depth != "Location", depth != "Date") %>%
+  mutate(
+    location = case_when(
+      location == "L1 Northwest buoy" ~ "back buoy",
+      location == "L2 Middle Buoy" ~ "mid buoy",
+      location == "L3 Production Dock" ~ "production dock",
+      location == "L4 Auwai" ~ "auwei",
+      TRUE ~ location
+    ),
+    date = case_when(
+      date %in% c("45258", "2023-11-28") ~ "2023-11-28",
+      date %in% c("45282", "2023-12-22") ~ "2023-12-22",
+      date %in% c("45536", "2024-01-09") ~ "2024-01-09",
+      date %in% c("30/1/24", "30/01/24") ~ "2024-01-30",
+      date %in% c("20/02/24", "20/2/24") ~ "2024-02-20",
+      TRUE ~ date
+    )
+  ) %>%
+  mutate(
+    date = as.Date(date, format = "%Y-%m-%d"),
+    conductivity = case_when(
+      row_number() %in% c(1:11) ~ NA_character_,
+      TRUE ~ as.character(conductivity)
+    )
+  ) %>% 
+  filter(!(depth %in% c("Samples", "Depth"))) %>% 
+  mutate(date = as.Date(date),
+         across(c(depth, location), as.factor),
+         across(c(temperature, dissolved_oxygen, salinity, 
+                  conductivity,visibility), as.numeric))
+    
 
 paged_table(profiles_data_tidied)
 ```
+
+*Address the NA values before merge*
 
 ::: 
 
@@ -418,7 +441,9 @@ source("code/functions/export_to_csv.R")
 dfs_to_export <- list( # <1>
   ksf_clam_growth_data_tidied = ksf_clam_growth_data_tidied, # <1>
   ksf_compiled_data_tidied = ksf_compiled_data_tidied, # <1>
-  ksf_oyster_cylinder_growth_data_tidied = ksf_oyster_cylinder_growth_data_tidied # <1>
+  ksf_oyster_cylinder_growth_data_tidied = ksf_oyster_cylinder_growth_data_tidied, # <1>
+  water_samples_data_tidied = water_samples_data_tidied, # <1>
+  profiles_data_tidied = profiles_data_tidied # <1>
 ) # <1>
 
 imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied")) # <2>
