@@ -23,7 +23,7 @@ on arrow to see code.
 ```{r}
 #| label: install-packages
 #| eval: false
-install.packages(c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs"))
+install.packages(c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", "hms"))
 ```
 
 ## Load Libraries
@@ -37,6 +37,7 @@ library(janitor) # <3>
 library(lubridate) # <4>
 library(rmarkdown) # <5>
 library(fs) # <6>
+library(hms)
 ```
 
 1. For importing excel data
@@ -127,6 +128,7 @@ ksf_compiled_data <- dfs_no_profiles$ksf_compiled_data$full_data
 ksf_oyster_cylinder_growth_data <- dfs_no_profiles$ksf_oyster_cylinder_growth$sheet1
 water_samples_data <- dfs_no_profiles$water_samples$data_overview
 weather_data <- dfs_no_profiles$weather_data$weather_ksf
+tidal_data <- dfs_no_profiles$ksf_compiled_data$tides
 ```
 
 We want to combine multiple sheets within the profiles Excel spreadsheet into one, therefore,
@@ -190,6 +192,13 @@ paged_table(weather_data)
 ```{r}
 #| echo: false
 paged_table(profiles_data)
+```
+
+#### tidal_data
+
+```{r}
+#| echo: false
+paged_table(tidal_data)
 ```
 
 :::
@@ -443,6 +452,26 @@ paged_table(profiles_data_tidied)
 ```
 
 *Address the NA values before merge*
+
+#### tidal_data_tidied
+
+```{r}
+#| label: tidy-tidal-data-dataset
+#| code-fold: true
+#| code-summary: <i>Steps to clean data</i>
+
+tidal_data_tidied <- tidal_data %>% 
+
+janitor::clean_names() %>% 
+  mutate(date = as.Date(date, format = "%Y-%m-%d")) %>% 
+   filter(date >= as.Date("2023-11-20") & date <= as.Date("2024-02-20")) %>% 
+  select(-2) %>% 
+  mutate(time = as_hms(format(time, "%H:%M:%S")),
+         high_low = as.factor(high_low))
+  
+paged_table(tidal_data_tidied)
+```
+
 
 ::: 
 
