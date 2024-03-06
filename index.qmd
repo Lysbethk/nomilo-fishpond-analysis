@@ -215,50 +215,53 @@ paged_table(tidal_data)
 #| label: tidy-ksf-clam-growth-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
-new_clam_var_names <- c(
-  "sort_date", "color", "clams_in_count", "clams_in_lbs", "clams_in_avg_per_lb", 
-  "clams_out_count", "clams_out_lbs", "clams_out_avg_per_lb", "growth_in_lbs",
-  "growth_pct", "sr", "days_btwn_sort"
-  )
+new_clam_var_names <- c( #<1>
+  "sort_date", "color", "clams_in_count", "clams_in_lbs",  "clams_in_avg_per_lb",
+  "clams_out_count", "clams_out_lbs", "clams_out_avg_per_lb", "growth_in_lbs", 
+  "growth_pct", "sr", "days_btwn_sort" #<1>
+  ) #<1>
 
-new_clam_date_col <- c(
-  "2023-10-17", "2023-12-06", "2023-12-12", "2024-01-02", "2024-01-10", "2024-01-24", 
-  "2024-01-31", "2024-02-08", "2024-02-13"
-  ) 
+new_clam_date_col <- c( #<2>
+  "2023-10-17", "2023-12-06", "2023-12-12", "2024-01-02",  "2024-01-10", "2024-01-24",
+  "2024-01-31", "2024-02-08", "2024-02-13" #<2>
+  ) #<2>
 
 ksf_clam_growth_data_tidied <- ksf_clam_growth_data %>%
-  slice(-1) %>%
-  setNames(new_clam_var_names) %>%
-  mutate(date = as.Date(new_clam_date_col)) %>% 
-  dplyr::select(-sort_date) %>% 
-   pivot_longer(
-    cols = c(
-      clams_in_count, clams_in_lbs, clams_in_avg_per_lb, clams_out_count, 
-      clams_out_lbs, clams_out_avg_per_lb
-      ),
-    names_to = c("stage", ".value"),
-    names_prefix = "clams_", 
-    names_sep = "_", 
-    values_to = "value"
-  ) %>%
-  mutate(stage = if_else(str_detect(stage, "in"), "In", "Out")) %>%
-  rename(avg_per_lbs = avg) %>% 
-  mutate(across(c(color, stage), as.factor)) %>%
-  mutate(across(c(count, lbs, avg_per_lbs, growth_in_lbs, growth_pct, sr), 
-                ~as.numeric(gsub("%", "", .)))) %>% 
-  arrange(date, color, stage) %>% 
-  dplyr::select(date, days_btwn_sort, color, stage, count, lbs, avg_per_lbs, 
-                growth_in_lbs, growth_pct, sr)
+  slice(-1) %>% #<3>
+  setNames(new_clam_var_names) %>% #<4>
+  mutate(date = as.Date(new_clam_date_col)) %>% #<4>
+  dplyr::select(-sort_date) %>% #<4>
+   pivot_longer( #<4>
+    cols = c( #<4>
+      clams_in_count, clams_in_lbs, clams_in_avg_per_lb,   clams_out_count, 
+      clams_out_lbs, clams_out_avg_per_lb #<4>
+      ), #<4>
+    names_to = c("stage", ".value"), #<4>
+    names_prefix = "clams_", #<4>
+    names_sep = "_", #<4>
+    values_to = "value" #<4>
+  ) %>% #<4>
+  mutate(stage = if_else(str_detect(stage, "in"), "In", "Out")) %>% #<5>
+  rename(avg_per_lbs = avg) %>% #<6>
+  mutate(across(c(color, stage), as.factor)) %>% #<7>
+  mutate(across(c(count, lbs, avg_per_lbs, growth_in_lbs, growth_pct, sr), #<8>
+                ~as.numeric(gsub("%", "", .)))) %>% #<8>
+  arrange(date, color, stage) %>% #<9>
+  dplyr::select(date, days_btwn_sort, color, stage, count, lbs, avg_per_lbs, #<9>
+                growth_in_lbs, growth_pct, sr) #<9>
 
 paged_table(ksf_clam_growth_data_tidied)
 ```
 
-1.
-2.
-3.
-4.
-5.
-6.
+1. Manually set variable names
+2. Assign dates to new date column
+3. Delete first row
+4. Set date as correct variable type and pivot data set based on date range.
+5. Assign In and Out to stage
+6. Rename variable of average to average per lbs
+7. Set stage and color as factor variable types
+8. Set variables as numeric variable types
+9. Arrange values by date, color, and stage 
 
 #### ksf_compiled_data_tidied
 
@@ -286,8 +289,7 @@ ksf_compiled_data_tidied <- ksf_compiled_data %>%
 paged_table(ksf_compiled_data_tidied)
 ```
 
-1. Clean variable names by removing everything in parentheses, using lowercase 
-and underscores in place of spaces
+1. Clean variable names by removing everything in parentheses, using lowercase and underscores in place of spaces
 2. Rename the `date_time` variable to `date`, filter to desired date range and 
 sort by `date`
 3. Remove unnecessary variables
@@ -347,25 +349,32 @@ paged_table(ksf_oyster_cylinder_growth_data_tidied)
 #| label: tidy-water-samples-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
+
 water_samples_data_tidied <- water_samples_data %>%
   slice(-c(44:52)) %>% 
   rename_with(~gsub("\\s*\\([^\\)]+\\)", "", .x)) %>% # <1>
   janitor::clean_names() %>% # <1>
-  mutate(
-    date = if_else(date == "44074", 
-                   as.character(as.Date("2024-01-09")),
-                   format(dmy(date), "%Y-%m-%d")) 
-  ) %>% 
-  mutate(sample_id = 1:nrow(.)) %>% 
-  mutate(date = as.Date(date),
-         across(c(nomilo_id, location, round, depth), as.factor),
-         tube_name = as.character(tube_name), 
-         tube_name = ifelse(is.na(tube_name), "No Name", tube_name), 
-         tube_name = as.factor(tube_name)) %>% 
-  mutate_if(is.numeric, ~replace_na(., 0))
+  mutate( # <2>
+    date = if_else(date == "44074", # <2>
+            as.character(as.Date("2024-01-09")), # <2>
+            format(dmy(date), "%Y-%m-%d")) # <2>
+  ) %>% # <2>
+  mutate(sample_id = 1:nrow(.)) %>% # <3>
+  mutate(date = as.Date(date), # <4>
+         across(c(nomilo_id, location, round, depth), as.factor), # <4>
+         tube_name = as.character(tube_name), # <4>
+         tube_name = ifelse(is.na(tube_name), "No Name", tube_name), # <4>
+         tube_name = as.factor(tube_name)) %>% # <4>
+  mutate_if(is.numeric, ~replace_na(., 0)) # <5>
 
 paged_table(water_samples_data_tidied)
 ```
+
+1. Clean variable names by removing everything in parentheses, using lowercase and underscores in place of spaces
+2. Replaces incorrect date values and format as YYYY-MM-DD
+3. Add values for sample ID
+4. Set correct variable types
+5. Replaces NA values with 0
 
 #### weather_data_tidied
 
@@ -376,22 +385,24 @@ paged_table(water_samples_data_tidied)
 weather_data_tidied <- weather_data %>% 
 
 janitor::clean_names() %>%  #<1>
-   unite(date, year, month, day, sep = "-") %>%
-  mutate(date = ymd(date)) %>% 
-   select(-c(1, 3)) %>% 
-  rename("outdoor_temperature" = outdoor_temp_f) %>%
-   mutate(outdoor_temperature = (outdoor_temperature - 32) * (5/9)) %>% 
-  group_by(date) %>%
-  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE))) %>% 
-  slice(-1) 
+   unite(date, year, month, day, sep = "-") %>% #<2>
+  mutate(date = ymd(date)) %>% #<2>
+   select(-c(1, 3)) %>% #<3>
+  rename("outdoor_temperature" = outdoor_temp_f) %>% #<4>
+   mutate(outdoor_temperature = (outdoor_temperature - 32) * (5/9)) %>% #<4>
+  group_by(date) %>% #<5>
+  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE))) %>% #<5>
+  slice(-1) #<6>
 
 paged_table(weather_data_tidied)
 ```
-janitor names
-Date fromat + YYYY/MM/DD
-cut 2:6
-temp F > C
-summarize data per date (daily av)
+
+1. Clean variable names
+2. Merge separate day, month, year columns into one column variable and format as YYYY-MM-DD.
+3. Cut columns
+4. Rename outdoor temperature and convert from Fahrenheit to Celcius
+5. Group by date and then take average values per day
+6. Cut first row
 
 #### profile_data_tidied
 
@@ -400,58 +411,70 @@ summarize data per date (daily av)
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
 
-new_profile_var_names <- c("depth", "water_temperature", "dissolved_oxygen", "salinity", "conductivity", "visibility", "location", "date") 
+new_profile_var_names <- c("depth", "water_temperature", "dissolved_oxygen", "salinity", "conductivity", "visibility", "location", "date") #<1>
 
-profiles_data_tidied <- profiles_data %>%
-  select(-c(6, 8)) %>% # delete time log and column 8
-  mutate(
-    temp_column1 = NA_character_, #temporarily create new columns to set the names in next section. We took out 2 so need to fill back in.
-    temp_column2 = NA_character_
+profiles_data_tidied <- profiles_data %>% #<2>
+  select(-c(6, 8)) %>% #<2>
+  mutate( #<3>
+    temp_column1 = NA_character_,  #<3> 
+    temp_column2 = NA_character_  #<3>
   ) %>%
-  setNames(new_profile_var_names) %>% # assigned new profile var names to rename variables in dataset. 
-  mutate(
+  setNames(new_profile_var_names) %>% #<4> 
+  mutate( #<5>
     location = ifelse(depth == "Location", water_temperature, NA_character_), 
-    date = ifelse(depth == "Date", water_temperature, NA_character_) # in depth column there was location and date data. It takes the location from one column and corresponding value from other column.
+    date = ifelse(depth == "Date",  water_temperature, NA_character_) #<5> 
   ) %>%
-  fill(location, date, .direction = "down") %>% # wihtin the location and date column we created, it fills the values from the temperature downwards into the newly created columns for date and location.
-  filter(depth != "Location", depth != "Date") %>% # gets rid of the 'location' and 'date' rows. 
-  mutate(
-    location = case_when(
+  fill(location, date, .direction = "down") %>% #<6>
+  filter(depth != "Location", depth != "Date") %>% #<7>  
+  mutate( #<8>
+    location = case_when( #<8>
       location == "L1 Northwest buoy" ~ "back buoy",
       location == "L2 Middle Buoy" ~ "mid buoy",
-      location == "L3 Production Dock" ~ "production dock",
-      location == "L4 Auwai" ~ "auwei",
-      TRUE ~ location # within location column, replace LX value with the correct name. Renaming values. 
-    ),
-    date = case_when( # same for dates, assigns correct format. 
-      date %in% c("45258", "2023-11-28") ~ "2023-11-28",
-      date %in% c("45282", "2023-12-22") ~ "2023-12-22",
-      date %in% c("45536", "2024-01-09") ~ "2024-01-09",
-      date %in% c("30/1/24", "30/01/24") ~ "2024-01-30",
-      date %in% c("20/02/24", "20/2/24") ~ "2024-02-20",
-      TRUE ~ date
-    )) %>%
-  mutate(
-    date = as.Date(date, format = "%Y-%m-%d"), # change the date type into date format.
-    conductivity = case_when(
-      row_number() %in% c(1:11) ~ NA_character_,
-      TRUE ~ as.character(conductivity) # removes the 1:11 tubidity data. 
-    ) 
-  ) %>% 
-  filter(!(depth %in% c("Samples", "Depth"))) %>% # same as before, looks for rows containing samples and depth names, you filter on that and negate these values through !
-  mutate(date = as.Date(date), # correcting data types
+      location == "L3 Production Dock" ~ "production dock", #<8>
+      location == "L4 Auwai" ~ "auwei", #<8>
+      TRUE ~ location #<8>
+    ), #<8>
+    date = case_when( #<8>
+      date %in% c("45258", "2023-11-28") ~ "2023-11-28", #<8>
+      date %in% c("45282", "2023-12-22") ~ "2023-12-22", #<8>
+      date %in% c("45536", "2024-01-09") ~ "2024-01-09", #<8>
+      date %in% c("30/1/24", "30/01/24") ~ "2024-01-30", #<8>
+      date %in% c("20/02/24", "20/2/24") ~ "2024-02-20", #<8>
+      TRUE ~ date #<8>
+    )) %>% #<8>
+  mutate( #<8>
+    date = as.Date(date, format = "%Y-%m-%d"), #<8> 
+    conductivity = case_when( #<9> 
+      row_number() %in% c(1:11) ~ NA_character_, #<9> 
+      TRUE ~ as.character(conductivity) #<9>
+    ) #<9>
+  ) %>% #<9>
+  filter(!(depth %in% c("Samples", "Depth"))) %>% #<10> 
+  mutate(date = as.Date(date), #<11> 
          across(c(depth, location), as.factor),
-         across(c(water_temperature, dissolved_oxygen, salinity, 
-                  conductivity,visibility), as.numeric)) %>% 
-   fill(visibility, .direction = "down") %>% # wihtin the location and date column we created, it fills the values from the temperature downwards into the newly created columns for date and location.
-  mutate(visibility = if_else(date == "2023-11-28", 0, visibility)) %>% 
-   mutate_if(is.numeric, ~replace_na(., 0))
+         across(c(water_temperature,  dissolved_oxygen, salinity, 
+                  conductivity,visibility),  as.numeric)) %>% #<11>
+   fill(visibility, .direction = "down") %>% #<12>
+  mutate(visibility = if_else(date == "2023-11-28",  0, visibility)) %>% #<13>
+   mutate_if(is.numeric, ~replace_na(., 0)) #<12>
     
 
 paged_table(profiles_data_tidied)
 ```
 
-*Address the NA values before merge*
+1. Set new variable names manually
+2. Delete unnecessary columns
+3. Temporarily create two new columns to replace the ones we deleted
+4. Assign new profile variable names to rename variables in data set
+5. Takes location from one column of location and date data, and assigns it to corresponding data of another column.
+6. Fill values of temperature downwards in newly created date and location column.
+7. Gets rid of the 'location' and 'date' rows that had empty values.
+8. Renames values
+9. Removes turbidity data rows 1:11
+10. Looks for rows containing samples and depth names and negate these values.
+11. Sets correct data types for each variable
+12. Fills  values from the temperature downwards into the newly created columns for date and location
+13. Sets missing data and NA values as 0
 
 #### tidal_data_tidied
 
@@ -462,16 +485,22 @@ paged_table(profiles_data_tidied)
 
 tidal_data_tidied <- tidal_data %>% 
 
-janitor::clean_names() %>% 
-  mutate(date = as.Date(date, format = "%Y-%m-%d")) %>% 
-   filter(date >= as.Date("2023-11-20") & date <= as.Date("2024-02-20")) %>% 
-  select(-2) %>% 
-  mutate(time = as_hms(format(time, "%H:%M:%S")),
-         high_low = as.factor(high_low))
+janitor::clean_names() %>% #<1>
+  mutate(date = as.Date(date, format = "%Y-%m-%d"))  %>% #<2>
+   filter(date >= as.Date("2023-11-20") & date <= as.Date("2024-02-20")) %>% #<3>
+  select(-2) %>% #<4>
+  mutate(time = as_hms(format(time, "%H:%M:%S")), #<5>
+         high_low = as.factor(high_low)) #<6>
   
 paged_table(tidal_data_tidied)
 ```
 
+1. Clean variable names 
+2. Set date as correct variable type and format YYYY-MM-DD
+3. ???
+4. Cut column
+5. Set time as time variable type
+6. Set variable as factor type
 
 ::: 
 
