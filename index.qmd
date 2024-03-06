@@ -388,7 +388,7 @@ profiles_data_tidied <- profiles_data %>%
     date = ifelse(depth == "Date", temperature, NA_character_)
   ) %>%
   fill(location, date, .direction = "down") %>%
-  filter(!(depth %in% c("Location", "Date"))) %>%
+  filter(depth != "Location", depth != "Date") %>%
   mutate(
     location = case_when(
       location == "L1 Northwest buoy" ~ "back buoy",
