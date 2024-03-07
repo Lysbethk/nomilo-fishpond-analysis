@@ -248,7 +248,16 @@ ksf_clam_growth_data_tidied <- ksf_clam_growth_data %>%
                 ~as.numeric(gsub("%", "", .)))) %>% #<8>
   arrange(date, color, stage) %>% #<9>
   dplyr::select(date, days_btwn_sort, color, stage, count, lbs, avg_per_lbs, #<9>
-                growth_in_lbs, growth_pct, sr) #<9>
+                growth_in_lbs, growth_pct, sr) %>%  #<9>
+  rename("days_btwn_clams_sort" = days_btwn_sort,
+         "clams_color" = color,
+         "clams_stage" = stage,
+         "clams_count" = count,
+         "weight" = lbs,
+         "avg_weight" = avg_per_lbs,
+         "clams_growth" = growth_in_lbs,
+         "clams_sr" = sr)
+         
 
 paged_table(ksf_clam_growth_data_tidied)
 ```
@@ -284,7 +293,19 @@ ksf_compiled_data_tidied <- ksf_compiled_data %>%
                 ) %>% # <3>
   dplyr::select(where(~ !anyNA(.))) %>%  # <4>
   group_by(date) %>% # <5>
-  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE))) # <5>
+  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE))) %>% # <5>
+  rename("ksf_salinity" = salinity,
+         "ksf_rdo_saturation" = rdo_saturation,
+         "ksf_rdo_concentration" = rdo_concentration,
+         "ksf_actual_conductivity" = actual_conductivity,
+         "ksf_total_dissolved_solids" = total_dissolved_solids,
+         "ksf_ammonium" = ammonium,
+         "ksf_barometric_pressure" = barometric_pressure,
+         "ksf_oxygen_partial_pressure" = oxygen_partial_pressure,
+         "ksf_specific_conductivity" = specific_conductivity,
+         "ksf_density" = density,
+         "ksf_chlorophyll_a_fluorescence" = chlorophyll_a_fluorescence,
+         "ksf_ammonium_m_v" = ammonium_m_v)
 
 paged_table(ksf_compiled_data_tidied)
 ```
@@ -328,7 +349,9 @@ ksf_oyster_cylinder_growth_data_tidied <- ksf_oyster_cylinder_growth_data %>%
         ) %>% #<5>
   filter(date >= as.Date("2023-11-20") & date <= #<6>
            as.Date("2024-02-14")) %>%  #<6>
-   mutate_if(is.numeric, ~replace_na(., 0)) #<7>
+   mutate_if(is.numeric, ~replace_na(., 0)) %>% #<7>
+mutate(weight = weight * 0.00220462) %>% 
+  rename("growth_pct" = gain)
 
 paged_table(ksf_oyster_cylinder_growth_data_tidied)
 ```
@@ -365,7 +388,8 @@ water_samples_data_tidied <- water_samples_data %>%
          tube_name = as.character(tube_name), # <4>
          tube_name = ifelse(is.na(tube_name), "No Name", tube_name), # <4>
          tube_name = as.factor(tube_name)) %>% # <4>
-  mutate_if(is.numeric, ~replace_na(., 0)) # <5>
+  mutate_if(is.numeric, ~replace_na(., 0)) %>%  # <5>
+  select(-c(1,2))
 
 paged_table(water_samples_data_tidied)
 ```
@@ -436,7 +460,7 @@ profiles_data_tidied <- profiles_data %>% #<2>
     ), #<8>
     date = case_when( #<8>
       date %in% c("45258", "2023-11-28") ~ "2023-11-28", #<8>
-      date %in% c("45282", "2023-12-22") ~ "2023-12-22", #<8>
+      date %in% c("45282", "2023-12-21") ~ "2023-12-22", #<8>
       date %in% c("45536", "2024-01-09") ~ "2024-01-09", #<8>
       date %in% c("30/1/24", "30/01/24") ~ "2024-01-30", #<8>
       date %in% c("20/02/24", "20/2/24") ~ "2024-02-20", #<8>
@@ -487,7 +511,7 @@ tidal_data_tidied <- tidal_data %>%
 
 janitor::clean_names() %>% #<1>
   mutate(date = as.Date(date, format = "%Y-%m-%d"))  %>% #<2>
-   filter(date >= as.Date("2023-11-20") & date <= as.Date("2024-02-20")) %>% #<3>
+   filter(date >= as.Date("2023-11-20") & date <=  as.Date("2024-02-20")) %>% #<3>
   select(-2) %>% #<4>
   mutate(time = as_hms(format(time, "%H:%M:%S")), #<5>
          high_low = as.factor(high_low)) #<6>
@@ -497,7 +521,7 @@ paged_table(tidal_data_tidied)
 
 1. Clean variable names 
 2. Set date as correct variable type and format YYYY-MM-DD
-3. ???
+3. Filter to desired date range
 4. Cut column
 5. Set time as time variable type
 6. Set variable as factor type
@@ -505,6 +529,17 @@ paged_table(tidal_data_tidied)
 ::: 
 
 ### Merge Tidied Datasets
+
+```{r}
+first_merge <- reduce(list(ksf_clam_growth_data_tidied, ksf_oyster_cylinder_growth_data_tidied), 
+                      full_join, by = c("date", "weight", "growth_pct"))
+
+second_merge <- reduce(list(first_merge, profiles_data_tidied, water_samples_data_tidied), 
+                       full_join)
+
+final_merge <- reduce(list(second_merge, ksf_compiled_data_tidied, tidal_data_tidied, weather_data_tidied), 
+                      full_join, by = "date")
+```
 
 ### Export Tidied Datasets
 
