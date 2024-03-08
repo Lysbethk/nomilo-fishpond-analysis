@@ -23,7 +23,7 @@ on arrow to see code.
 ```{r}
 #| label: install-packages
 #| eval: false
-install.packages(c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", "hms"))
+install.packages(c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", "hms", "zoo", "corrplot", "kableExtra"))
 ```
 
 ## Load Libraries
@@ -38,6 +38,9 @@ library(lubridate) # <4>
 library(rmarkdown) # <5>
 library(fs) # <6>
 library(hms)
+library(zoo)
+library(corrplot)
+library(kableExtra)
 ```
 
 1. For importing excel data
@@ -123,7 +126,7 @@ Create separate datasets by specifying the Excel sheet from each spreadsheet we 
 
 ```{r}
 #| label: create-separate-datasets
-ksf_clam_growth_data <- dfs_no_profiles$ksf_clam_growth$sheet1
+ksf_clams_growth_data <- dfs_no_profiles$ksf_clam_growth$sheet1
 ksf_compiled_data <- dfs_no_profiles$ksf_compiled_data$full_data
 ksf_oyster_cylinder_growth_data <- dfs_no_profiles$ksf_oyster_cylinder_growth$sheet1
 water_samples_data <- dfs_no_profiles$water_samples$data_overview
@@ -152,11 +155,11 @@ profiles_data <- profiles_data <- map_dfr(sheets_to_import, function(sheet_name)
 
 ::: {.panel-tabset}
 
-#### ksf_clam_growth_data
+#### ksf_clams_growth_data
 
 ```{r}
 #| echo: false
-paged_table(ksf_clam_growth_data)
+paged_table(ksf_clams_growth_data)
 ```
 
 #### ksf_compiled_data
@@ -209,7 +212,7 @@ paged_table(tidal_data)
 
 ::: {.panel-tabset}
 
-#### ksf_clam_growth_data_tidied
+#### ksf_clams_growth_data_tidied
 
 ```{r}
 #| label: tidy-ksf-clam-growth-data-dataset
@@ -226,7 +229,7 @@ new_clam_date_col <- c( #<2>
   "2024-01-31", "2024-02-08", "2024-02-13" #<2>
   ) #<2>
 
-ksf_clam_growth_data_tidied <- ksf_clam_growth_data %>%
+ksf_clams_growth_data_tidied <- ksf_clams_growth_data %>%
   slice(-1) %>% #<3>
   setNames(new_clam_var_names) %>% #<4>
   mutate(date = as.Date(new_clam_date_col)) %>% #<4>
@@ -259,7 +262,7 @@ ksf_clam_growth_data_tidied <- ksf_clam_growth_data %>%
          "clams_sr" = sr)
          
 
-paged_table(ksf_clam_growth_data_tidied)
+paged_table(ksf_clams_growth_data_tidied)
 ```
 
 1. Manually set variable names
@@ -349,8 +352,7 @@ ksf_oyster_cylinder_growth_data_tidied <- ksf_oyster_cylinder_growth_data %>%
         ) %>% #<5>
   filter(date >= as.Date("2023-11-20") & date <= #<6>
            as.Date("2024-02-14")) %>%  #<6>
-   mutate_if(is.numeric, ~replace_na(., 0)) %>% #<7>
-mutate(weight = weight * 0.00220462) %>% 
+  mutate(weight = weight * 0.00220462) %>% 
   rename("growth_pct" = gain)
 
 paged_table(ksf_oyster_cylinder_growth_data_tidied)
@@ -362,9 +364,6 @@ paged_table(ksf_oyster_cylinder_growth_data_tidied)
 4. Create a new variable that differentiates oyster size
 5. Adjust data types to numeric and factor
 6. Filter to desired date range
-7. Fill NA values as 0
-
-*Address the NA values before merge*
 
 #### water_samples_data_tidied
 
@@ -384,12 +383,8 @@ water_samples_data_tidied <- water_samples_data %>%
   ) %>% # <2>
   mutate(sample_id = 1:nrow(.)) %>% # <3>
   mutate(date = as.Date(date), # <4>
-         across(c(nomilo_id, location, round, depth), as.factor), # <4>
-         tube_name = as.character(tube_name), # <4>
-         tube_name = ifelse(is.na(tube_name), "No Name", tube_name), # <4>
-         tube_name = as.factor(tube_name)) %>% # <4>
-  mutate_if(is.numeric, ~replace_na(., 0)) %>%  # <5>
-  select(-c(1,2))
+         across(c(nomilo_id, location, round, depth), as.factor)) %>% # <4>
+  select(-c(sample_id, nomilo_id, tube_name))
 
 paged_table(water_samples_data_tidied)
 ```
@@ -398,7 +393,6 @@ paged_table(water_samples_data_tidied)
 2. Replaces incorrect date values and format as YYYY-MM-DD
 3. Add values for sample ID
 4. Set correct variable types
-5. Replaces NA values with 0
 
 #### weather_data_tidied
 
@@ -428,7 +422,7 @@ paged_table(weather_data_tidied)
 5. Group by date and then take average values per day
 6. Cut first row
 
-#### profile_data_tidied
+#### profiles_data_tidied
 
 ```{r}
 #| label: tidy-profile-data-dataset
@@ -460,7 +454,7 @@ profiles_data_tidied <- profiles_data %>% #<2>
     ), #<8>
     date = case_when( #<8>
       date %in% c("45258", "2023-11-28") ~ "2023-11-28", #<8>
-      date %in% c("45282", "2023-12-21") ~ "2023-12-22", #<8>
+      date %in% c("45282", "2023-12-21") ~ "2023-12-21", #<8>
       date %in% c("45536", "2024-01-09") ~ "2024-01-09", #<8>
       date %in% c("30/1/24", "30/01/24") ~ "2024-01-30", #<8>
       date %in% c("20/02/24", "20/2/24") ~ "2024-02-20", #<8>
@@ -479,9 +473,7 @@ profiles_data_tidied <- profiles_data %>% #<2>
          across(c(water_temperature,  dissolved_oxygen, salinity, 
                   conductivity,visibility),  as.numeric)) %>% #<11>
    fill(visibility, .direction = "down") %>% #<12>
-  mutate(visibility = if_else(date == "2023-11-28",  0, visibility)) %>% #<13>
-   mutate_if(is.numeric, ~replace_na(., 0)) #<12>
-    
+  mutate(visibility = if_else(date == "2023-11-28",  NA_real_, visibility)) #<13>
 
 paged_table(profiles_data_tidied)
 ```
@@ -498,7 +490,6 @@ paged_table(profiles_data_tidied)
 10. Looks for rows containing samples and depth names and negate these values.
 11. Sets correct data types for each variable
 12. Fills  values from the temperature downwards into the newly created columns for date and location
-13. Sets missing data and NA values as 0
 
 #### tidal_data_tidied
 
@@ -528,17 +519,79 @@ paged_table(tidal_data_tidied)
 
 ::: 
 
-### Merge Tidied Datasets
+### Merge and Interpolate Tidied Datasets
 
 ```{r}
-first_merge <- reduce(list(ksf_clam_growth_data_tidied, ksf_oyster_cylinder_growth_data_tidied), 
-                      full_join, by = c("date", "weight", "growth_pct"))
+#| code-summary: Environmental Variables Merged and Interpolated
+#| code-fold: true
+water_samples_profiles_data_merged <- reduce(list(profiles_data_tidied, water_samples_data_tidied), 
+                       full_join, by = c("date", "location", "depth")) %>% 
+  mutate(closest_date = case_when(
+    date == "2023-12-21" ~ as.Date("2023-12-12"),
+    date == "2024-01-09" ~ as.Date("2024-01-10"),
+    date == "2024-01-30" ~ as.Date("2024-01-31"),
+    date == "2024-02-20" ~ as.Date("2024-02-13")
+  )) %>%
+  rename("actual_data_collection_date" = date) %>% 
+  relocate(closest_date, actual_data_collection_date, round, location, depth, .before = water_temperature) %>%
+  arrange(closest_date) %>% 
+  filter(actual_data_collection_date != "2023-11-28")
 
-second_merge <- reduce(list(first_merge, profiles_data_tidied, water_samples_data_tidied), 
-                       full_join)
 
-final_merge <- reduce(list(second_merge, ksf_compiled_data_tidied, tidal_data_tidied, weather_data_tidied), 
-                      full_join, by = "date")
+compiled_tidal_weather_data_merged <- reduce(list(ksf_compiled_data_tidied, tidal_data_tidied, weather_data_tidied),
+                                             full_join, by = "date")
+
+continuous_vars <- c(
+  "water_temperature", "dissolved_oxygen", "conductivity", "visibility", "chlorophyll_a", "phosphate", "silicate", "nitrate_nitrite", "ammonia", "heterotrophic_bacteria", "large_phytoplankton", "synechococcus_population_1", "synechococcus_population_2", "prochlorococcus", "lysbeths_mystery_cells_events", "ksf_rdo_concentration", "ksf_rdo_saturation", "ksf_oxygen_partial_pressure", "ksf_actual_conductivity", "ksf_specific_conductivity", "ksf_salinity", "ksf_density", "ksf_total_dissolved_solids", "ksf_ammonium", "ksf_ammonium_m_v", "ksf_barometric_pressure", "pred","outdoor_temperature", "wind_speed_mph", "hourly_rain_inch_hr", "wind_direction", "weight", "growth_pct", "oyster_chlorophyll" 
+)
+
+env_vars <- reduce(list(profiles_data_tidied, water_samples_data_tidied), full_join, by = c("date", "location", "depth")) %>%
+  mutate(closest_date = case_when(
+    date == "2023-12-21" ~ as.Date("2023-12-12"),
+    date == "2024-01-09" ~ as.Date("2024-01-10"),
+    date == "2024-01-30" ~ as.Date("2024-01-31"),
+    date == "2024-02-20" ~ as.Date("2024-02-13")
+  )) %>%
+  select(-date) %>%
+  relocate(closest_date, round, location, depth, .before = water_temperature) %>%
+  arrange(closest_date) %>%
+  fill(round, .direction = "down") %>%
+  mutate(round = if_else(is.na(round), "2", round),
+         round = as.factor(round)) %>%
+  mutate(across(any_of(continuous_vars), ~na.fill(na.approx(.x, na.rm = FALSE), "extend"), .names = "interp_{.col}")) %>%
+  # Join on a common column present in both datasets, assuming 'date' is the correct column
+  left_join(reduce(list(ksf_compiled_data_tidied, weather_data_tidied), full_join, by = "date"), by = c("closest_date" = "date")) %>% 
+  select(-c(5:20)) %>% 
+  na.omit()
+
+paged_table(env_vars)
+```
+
+```{r}
+#| code-summary: Clams Growth Merged with Environmental Variables
+#| code-fold: true
+clams_growth_env_vars_merged <- left_join(env_vars, ksf_clams_growth_data_tidied, by = c("closest_date" = "date"))
+paged_table(clams_growth_env_vars_merged)
+```
+
+```{r}
+#| code-summary: Oyster Growth Interpolated and Merged with Environmental Variables
+#| code-fold: true
+oyster_growth_env_vars_merged <- ksf_oyster_cylinder_growth_data_tidied %>% 
+  mutate(closest_date = case_when(
+    date == "2023-12-11" ~ as.Date("2023-12-12"),
+    date == "2024-01-08" ~ as.Date("2024-01-10"),
+    date == "2024-01-23" ~ as.Date("2024-01-31"),
+    date == "2024-02-14" ~ as.Date("2024-02-13")
+  )) %>%
+  mutate(across(any_of(continuous_vars), ~na.fill(na.approx(.x, na.rm = FALSE), "extend"), .names = "interp_{.col}")) %>% 
+  select(-c(date, oyster_chlorophyll, weight, growth_pct)) %>% 
+  filter(!is.na(closest_date)) %>% 
+  right_join(., env_vars, by = "closest_date")  %>%
+  relocate(closest_date, round, location, depth, .before = oyster_size) %>%
+  arrange(closest_date)
+
+paged_table(oyster_growth_env_vars_merged)
 ```
 
 ### Export Tidied Datasets
@@ -551,7 +604,7 @@ Export tidied datasets to CSV into `data/tidied` folder:
 source("code/functions/export_to_csv.R")
 
 dfs_to_export <- list( # <1>
-  ksf_clam_growth_data_tidied = ksf_clam_growth_data_tidied, # <1>
+  ksf_clams_growth_data_tidied = ksf_clams_growth_data_tidied, # <1>
   ksf_compiled_data_tidied = ksf_compiled_data_tidied, # <1>
   ksf_oyster_cylinder_growth_data_tidied = ksf_oyster_cylinder_growth_data_tidied, # <1>
   water_samples_data_tidied = water_samples_data_tidied, # <1>
@@ -571,6 +624,70 @@ Export merged final data set into `data/outputs` folder.
 
 ## Data Dictionary
 
-## Exploratory Data Analysis
-
 ## Correlational Analysis
+
+::: {.panel-tabset}
+
+### Clams
+
+```{r}
+#| echo: false
+# Select only numeric columns for correlation analysis
+clams_growth_env_vars_numeric_data <- clams_growth_env_vars_merged %>% select_if(is.numeric)
+
+# Compute the correlation matrix
+clams_growth_env_vars_corr_matrix <- cor(clams_growth_env_vars_numeric_data, use = "complete.obs")
+```
+
+```{r}
+#| echo: false
+kable(clams_growth_env_vars_corr_matrix, caption = "KSF Clams Growth and Environmental Variables Correlation Matrix") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-width: 20
+#| fig-height: 20
+corrplot(clams_growth_env_vars_corr_matrix, method = "circle",
+         tl.cex = 2, # Text label size, change as needed
+         tl.col = "black", # Text label color
+         tl.srt = 90, # Text label rotation in degrees
+         tl.offset = 0.5, 
+         cl.pos = "b"
+        )
+```
+
+### Oysters 
+
+```{r}
+#| echo: false
+# Select only numeric columns for correlation analysis
+oyster_growth_env_vars_numeric_data <- oyster_growth_env_vars_merged %>% select_if(is.numeric)
+
+# Compute the correlation matrix
+oyster_growth_env_vars_corr_matrix <- cor(oyster_growth_env_vars_numeric_data, use = "complete.obs")
+```
+
+```{r}
+#| echo: false
+kable(oyster_growth_env_vars_corr_matrix, caption = "KSF Oyster Cylinder Growth and Environmental Variables Correlation Matrix") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-width: 20
+#| fig-height: 20
+corrplot(oyster_growth_env_vars_corr_matrix, method = "circle",
+         tl.cex = 2, # Text label size, change as needed
+         tl.col = "black", # Text label color
+         tl.srt = 90, # Text label rotation in degrees
+         tl.offset = 0.5, 
+         cl.pos = "b"
+        )
+```
+
+:::
