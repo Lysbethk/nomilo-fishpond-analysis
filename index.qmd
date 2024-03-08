@@ -524,9 +524,16 @@ paged_table(tidal_data_tidied)
 ```{r}
 #| code-summary: Environmental Variables Merged and Interpolated
 #| code-fold: true
-#| echo: false
 continuous_vars <- c(
-  "water_temperature", "dissolved_oxygen", "conductivity", "visibility", "chlorophyll_a", "phosphate", "silicate", "nitrate_nitrite", "ammonia", "heterotrophic_bacteria", "large_phytoplankton", "synechococcus_population_1", "synechococcus_population_2", "prochlorococcus", "lysbeths_mystery_cells_events", "ksf_rdo_concentration", "ksf_rdo_saturation", "ksf_oxygen_partial_pressure", "ksf_actual_conductivity", "ksf_specific_conductivity", "ksf_salinity", "ksf_density", "ksf_total_dissolved_solids", "ksf_ammonium", "ksf_ammonium_m_v", "ksf_barometric_pressure", "pred","outdoor_temperature", "wind_speed_mph", "hourly_rain_inch_hr", "wind_direction", "weight", "growth_pct", "oyster_chlorophyll" 
+  "water_temperature", "dissolved_oxygen", "conductivity", "visibility", 
+  "chlorophyll_a", "phosphate", "silicate", "nitrate_nitrite", "ammonia", 
+  "heterotrophic_bacteria", "large_phytoplankton", "synechococcus_population_1",
+  "synechococcus_population_2", "prochlorococcus", "lysbeths_mystery_cells_events", 
+  "ksf_rdo_concentration", "ksf_rdo_saturation", "ksf_oxygen_partial_pressure", 
+  "ksf_actual_conductivity", "ksf_specific_conductivity", "ksf_salinity", "ksf_density", 
+  "ksf_total_dissolved_solids", "ksf_ammonium", "ksf_ammonium_m_v",
+  "ksf_barometric_pressure", "pred","outdoor_temperature", "wind_speed_mph", 
+  "hourly_rain_inch_hr", "wind_direction", "weight", "growth_pct", "oyster_chlorophyll" 
 )
 
 env_vars <- reduce(list(profiles_data_tidied, water_samples_data_tidied), full_join, by = c("date", "location", "depth")) %>%
@@ -542,8 +549,10 @@ env_vars <- reduce(list(profiles_data_tidied, water_samples_data_tidied), full_j
   fill(round, .direction = "down") %>%
   mutate(round = if_else(is.na(round), "2", round),
          round = as.factor(round)) %>%
-  mutate(across(any_of(continuous_vars), ~na.fill(na.approx(.x, na.rm = FALSE), "extend"), .names = "interp_{.col}")) %>%
-  left_join(reduce(list(ksf_compiled_data_tidied, weather_data_tidied), full_join, by = "date"), by = c("closest_date" = "date")) %>% 
+  mutate(across(any_of(continuous_vars), ~na.fill(na.approx(.x, na.rm = FALSE), "extend"), 
+                .names = "interp_{.col}")) %>%
+  left_join(reduce(list(ksf_compiled_data_tidied, weather_data_tidied), full_join, by = "date"), 
+            by = c("closest_date" = "date")) %>% 
   select(-c(5:20)) %>% 
   na.omit()
 
