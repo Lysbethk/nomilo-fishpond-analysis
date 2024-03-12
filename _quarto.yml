@@ -21,10 +21,10 @@ website:
 format:
   html:
     theme: 
-      - lumen
-      - styles.scss
+      - simplex
+      # - styles.scss
     toc: true
-    fontsize: 15pt
+    fontsize: 12pt
     page-layout: full
 
 

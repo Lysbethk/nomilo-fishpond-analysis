@@ -13,6 +13,14 @@ format:
     toc-location: left
 ---
 
+## Introduction
+
+[Explain the purpose of this website]
+
+### Research Questions
+
+1. How do changes in the Nomilo fishpond over time correlate with 
+
 ::: {.callout-note title="Interactive Code"}
 Throughout this document, hover over the numbered annotations to the right of code chunks to reveal detailed explanations and comments about the code. Where drop-down *italicized* text is present, expand by pressing
 on arrow to see code.
@@ -22,8 +30,14 @@ on arrow to see code.
 
 ```{r}
 #| label: install-packages
-#| eval: false
-install.packages(c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", "hms", "zoo", "corrplot", "kableExtra"))
+packages <- c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", "hms", "zoo", "corrplot", "kableExtra",
+              "psych", "DescTools", "ggplot2")
+
+for (pkg in packages) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg)
+  }
+}
 ```
 
 ## Load Libraries
@@ -41,6 +55,9 @@ library(hms)
 library(zoo)
 library(corrplot)
 library(kableExtra)
+library(psych)
+library(DescTools)
+library(ggplot2)
 ```
 
 1. For importing excel data
@@ -519,72 +536,75 @@ paged_table(tidal_data_tidied)
 
 ::: 
 
-### Merge and Interpolate Tidied Datasets
+### Merge and Impute Tidied Datasets
+
+::: {.panel-tabset}
+
+#### Environmental Variables
 
 ```{r}
-#| code-summary: Environmental Variables Merged and Interpolated
-#| code-fold: true
-continuous_vars <- c(
-  "water_temperature", "dissolved_oxygen", "conductivity", "visibility", 
-  "chlorophyll_a", "phosphate", "silicate", "nitrate_nitrite", "ammonia", 
-  "heterotrophic_bacteria", "large_phytoplankton", "synechococcus_population_1",
-  "synechococcus_population_2", "prochlorococcus", "lysbeths_mystery_cells_events", 
-  "ksf_rdo_concentration", "ksf_rdo_saturation", "ksf_oxygen_partial_pressure", 
-  "ksf_actual_conductivity", "ksf_specific_conductivity", "ksf_salinity", "ksf_density", 
-  "ksf_total_dissolved_solids", "ksf_ammonium", "ksf_ammonium_m_v",
-  "ksf_barometric_pressure", "pred","outdoor_temperature", "wind_speed_mph", 
-  "hourly_rain_inch_hr", "wind_direction", "weight", "growth_pct", "oyster_chlorophyll" 
-)
-
-env_vars <- reduce(list(profiles_data_tidied, water_samples_data_tidied), full_join, by = c("date", "location", "depth")) %>%
-  mutate(closest_date = case_when(
-    date == "2023-12-21" ~ as.Date("2023-12-12"),
-    date == "2024-01-09" ~ as.Date("2024-01-10"),
-    date == "2024-01-30" ~ as.Date("2024-01-31"),
-    date == "2024-02-20" ~ as.Date("2024-02-13")
-  )) %>%
-  select(-date) %>%
-  relocate(closest_date, round, location, depth, .before = water_temperature) %>%
-  arrange(closest_date) %>%
+# Merging
+profiles_water_samples_merged <- reduce(list(profiles_data_tidied, water_samples_data_tidied), full_join, by = c("date", "location", "depth")) %>% 
+  relocate(date, round, location, depth, .before = water_temperature) %>%
+  arrange(date) %>% 
   fill(round, .direction = "down") %>%
-  mutate(round = if_else(is.na(round), "2", round),
-         round = as.factor(round)) %>%
-  mutate(across(any_of(continuous_vars), ~na.fill(na.approx(.x, na.rm = FALSE), "extend"), 
-                .names = "interp_{.col}")) %>%
-  left_join(reduce(list(ksf_compiled_data_tidied, weather_data_tidied), full_join, by = "date"), 
-            by = c("closest_date" = "date")) %>% 
-  select(-c(5:20)) %>% 
-  na.omit()
+  mutate(round = if_else(is.na(round), "1", round),
+         round = as.factor(round))
+```
 
+```{r}
+# Interpolating
+profiles_water_samples_interp <- profiles_water_samples_merged %>% 
+  # Selects numeric columns with missing values, linearly interpolates NAs by 
+  # drawing straight lines between existing points, and extends the outermost 
+  # values to fill NAs at the start or end
+  mutate(across(where(~is.numeric(.x) && any(is.na(.x))),
+                ~na.approx(.x, na.rm = FALSE, rule = 2)))
+```
+
+```{r}
+# Complete dataset
+compiled_weather_merged <- reduce(list(ksf_compiled_data_tidied, weather_data_tidied), full_join, by = "date")
+```
+
+```{r}
+# Merging interpolated and completed datasets
+env_vars <- left_join(profiles_water_samples_interp, compiled_weather_merged, by = "date")
 paged_table(env_vars)
 ```
+
+#### Clams
 
 ```{r}
 #| code-summary: Clams Growth Merged with Environmental Variables
 #| code-fold: true
-clams_growth_env_vars_merged <- left_join(env_vars, ksf_clams_growth_data_tidied, by = c("closest_date" = "date"))
-paged_table(clams_growth_env_vars_merged)
+
+# Merging
+clams_growth_env_vars_merged <- full_join(ksf_clams_growth_data_tidied, env_vars, by = "date")
+
+# Interpolating -- other option is to aggregate to weekly or monthly, but dates 
+# are very mismatched to aggregate to monthly and dataset would be very small if 
+# aggregated to monthly
+clams_growth_env_vars_interp <- clams_growth_env_vars_merged %>% 
+ mutate(across(
+    .cols = setdiff(names(.)[sapply(., function(col) is.numeric(col) &&
+                                      any(is.na(col)))], "days_btwn_clams_sort"),
+    .fns = ~na.approx(.x, na.rm = FALSE, rule = 2)
+  )) %>%
+  relocate(date, round, location, depth, clams_color, clams_stage, .before = days_btwn_clams_sort) %>% 
+  arrange(date)
 ```
+
+#### Oysters
 
 ```{r}
 #| code-summary: Oyster Growth Interpolated and Merged with Environmental Variables
 #| code-fold: true
-oyster_growth_env_vars_merged <- ksf_oyster_cylinder_growth_data_tidied %>% 
-  mutate(closest_date = case_when(
-    date == "2023-12-11" ~ as.Date("2023-12-12"),
-    date == "2024-01-08" ~ as.Date("2024-01-10"),
-    date == "2024-01-23" ~ as.Date("2024-01-31"),
-    date == "2024-02-14" ~ as.Date("2024-02-13")
-  )) %>%
-  mutate(across(any_of(continuous_vars), ~na.fill(na.approx(.x, na.rm = FALSE), "extend"), .names = "interp_{.col}")) %>% 
-  select(-c(date, oyster_chlorophyll, weight, growth_pct)) %>% 
-  filter(!is.na(closest_date)) %>% 
-  right_join(., env_vars, by = "closest_date")  %>%
-  relocate(closest_date, round, location, depth, .before = oyster_size) %>%
-  arrange(closest_date)
-
-paged_table(oyster_growth_env_vars_merged)
 ```
+
+:::
+
+## Processed Datasets
 
 ### Export Tidied Datasets
 
@@ -611,10 +631,9 @@ imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied")) # <2>
 `.x` refers to the dataframe. `.y` refers to the name of the dataframe. These are 
 passed to `export_to_csv()` function along with the desired directory path.
 
-
 Export merged final data set into `data/outputs` folder.
 
-## Data Dictionary
+### Data Dictionaries
 
 ## Correlational Analysis
 
@@ -622,13 +641,17 @@ Export merged final data set into `data/outputs` folder.
 
 ### Clams
 
+#### All Relationships
+
 ```{r}
 #| echo: false
 # Select only numeric columns for correlation analysis
-clams_growth_env_vars_numeric_data <- clams_growth_env_vars_merged %>% select_if(is.numeric)
+clams_growth_env_vars_numeric_data <- clams_growth_env_vars_interp %>%
+  select_if(is.numeric) %>% 
+  select(-days_btwn_clams_sort)
 
 # Compute the correlation matrix
-clams_growth_env_vars_corr_matrix <- cor(clams_growth_env_vars_numeric_data, use = "complete.obs")
+clams_growth_env_vars_corr_matrix <- cor(clams_growth_env_vars_numeric_data)
 ```
 
 ```{r}
@@ -636,6 +659,8 @@ clams_growth_env_vars_corr_matrix <- cor(clams_growth_env_vars_numeric_data, use
 kable(clams_growth_env_vars_corr_matrix, caption = "KSF Clams Growth and Environmental Variables Correlation Matrix") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 ```
+
+</br>
 
 ```{r}
 #| echo: false
@@ -651,35 +676,55 @@ corrplot(clams_growth_env_vars_corr_matrix, method = "circle",
         )
 ```
 
+#### Specific Relationship
+
+```{r}
+#| code-fold: true
+#| code-summary: Correlation Between Interpolated Weight and Interpolated Dissolved Oxygen
+results <- corr.test(x = clams_growth_env_vars_interp$clams_count, 
+                     y = clams_growth_env_vars_interp$dissolved_oxygen,
+                     method = "pearson", ci = TRUE)
+
+print(results, short=FALSE)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: Adjusted P-Value
+adjusted_p_values <- results$p.adj
+print(adjusted_p_values)
+```
+
 ### Oysters 
 
-```{r}
-#| echo: false
-# Select only numeric columns for correlation analysis
-oyster_growth_env_vars_numeric_data <- oyster_growth_env_vars_merged %>% select_if(is.numeric)
+#### All Relationships
 
-# Compute the correlation matrix
-oyster_growth_env_vars_corr_matrix <- cor(oyster_growth_env_vars_numeric_data, use = "complete.obs")
-```
+#### Specific Relationship
 
-```{r}
-#| echo: false
-kable(oyster_growth_env_vars_corr_matrix, caption = "KSF Oyster Cylinder Growth and Environmental Variables Correlation Matrix") %>%
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
-```
+:::
+
+### Visualizations
 
 ```{r}
 #| echo: false
 #| fig-align: center
-#| fig-width: 20
-#| fig-height: 20
-corrplot(oyster_growth_env_vars_corr_matrix, method = "circle",
-         tl.cex = 2, # Text label size, change as needed
-         tl.col = "black", # Text label color
-         tl.srt = 90, # Text label rotation in degrees
-         tl.offset = 0.5, 
-         cl.pos = "b"
-        )
-```
 
-:::
+ggplot() +
+  geom_line(data = clams_growth_env_vars_interp, aes(x = date, y = clams_count, color = "Interpolated")) +
+  geom_point(data = clams_growth_env_vars_interp, aes(x = date, y = clams_count, color = "Interpolated")) +
+  
+  geom_line(data = clams_growth_env_vars_merged, aes(x = date, y = clams_count, color = "Actual")) +
+  geom_point(data = clams_growth_env_vars_merged, aes(x = date, y = clams_count, color = "Actual")) +
+  
+  labs(x = "Date", y = "Number of Clams", title = "Clam Count Over Time", color = "Legend") +
+  scale_color_manual(values = c("Interpolated" = "black", "Actual" = "red")) +
+  theme_minimal() +
+  
+  scale_x_date(date_breaks = "1 week", date_labels = "%b %d") +
+  
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 10),  face = "bold"),
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        axis.title.y = element_text(face = "bold"),
+        legend.title = element_text(face = "bold"))
+```
