@@ -635,6 +635,8 @@ Export merged final data set into `data/outputs` folder.
 
 ### Data Dictionaries
 
+## Exploratory Data Analysis
+
 ## Correlational Analysis
 
 ::: {.panel-tabset}
@@ -702,29 +704,3 @@ print(adjusted_p_values)
 #### Specific Relationship
 
 :::
-
-### Visualizations
-
-```{r}
-#| echo: false
-#| fig-align: center
-
-ggplot() +
-  geom_line(data = clams_growth_env_vars_interp, aes(x = date, y = clams_count, color = "Interpolated")) +
-  geom_point(data = clams_growth_env_vars_interp, aes(x = date, y = clams_count, color = "Interpolated")) +
-  
-  geom_line(data = clams_growth_env_vars_merged, aes(x = date, y = clams_count, color = "Actual")) +
-  geom_point(data = clams_growth_env_vars_merged, aes(x = date, y = clams_count, color = "Actual")) +
-  
-  labs(x = "Date", y = "Number of Clams", title = "Clam Count Over Time", color = "Legend") +
-  scale_color_manual(values = c("Interpolated" = "black", "Actual" = "red")) +
-  theme_minimal() +
-  
-  scale_x_date(date_breaks = "1 week", date_labels = "%b %d") +
-  
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
-        axis.title.x = element_text(margin = margin(t = 10),  face = "bold"),
-        plot.title = element_text(hjust = 0.5, face = "bold"),
-        axis.title.y = element_text(face = "bold"),
-        legend.title = element_text(face = "bold"))
-```
