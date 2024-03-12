@@ -31,7 +31,8 @@ on arrow to see code.
 ```{r}
 #| label: install-packages
 packages <- c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", "hms", "zoo", "corrplot", "kableExtra",
-              "psych", "DescTools", "ggplot2")
+              "psych", "ggplot2")
+
 
 for (pkg in packages) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
@@ -56,7 +57,6 @@ library(zoo)
 library(corrplot)
 library(kableExtra)
 library(psych)
-library(DescTools)
 library(ggplot2)
 ```
 
@@ -540,7 +540,7 @@ paged_table(tidal_data_tidied)
 
 ::: {.panel-tabset}
 
-#### Environmental Variables
+#### Biogeochemical & Physical Variables
 
 ```{r}
 # Merging
@@ -553,8 +553,15 @@ profiles_water_samples_merged <- reduce(list(profiles_data_tidied, water_samples
 ```
 
 ```{r}
+# Complete dataset
+compiled_weather_merged <- reduce(list(ksf_compiled_data_tidied, weather_data_tidied), full_join, by = "date")
+
+biogeochem_vars_merged <- full_join(compiled_weather_merged, profiles_water_samples_merged)
+```
+
+```{r}
 # Interpolating
-profiles_water_samples_interp <- profiles_water_samples_merged %>% 
+biogeochem_vars_interp <- biogeochem_vars_merged %>% 
   # Selects numeric columns with missing values, linearly interpolates NAs by 
   # drawing straight lines between existing points, and extends the outermost 
   # values to fill NAs at the start or end
@@ -563,14 +570,7 @@ profiles_water_samples_interp <- profiles_water_samples_merged %>%
 ```
 
 ```{r}
-# Complete dataset
-compiled_weather_merged <- reduce(list(ksf_compiled_data_tidied, weather_data_tidied), full_join, by = "date")
-```
-
-```{r}
-# Merging interpolated and completed datasets
-env_vars <- left_join(profiles_water_samples_interp, compiled_weather_merged, by = "date")
-paged_table(env_vars)
+paged_table(biogeochem_vars_interp)
 ```
 
 #### Clams
@@ -580,12 +580,12 @@ paged_table(env_vars)
 #| code-fold: true
 
 # Merging
-clams_growth_env_vars_merged <- full_join(ksf_clams_growth_data_tidied, env_vars, by = "date")
+clams_growth_biogeochem_vars_merged <- full_join(ksf_clams_growth_data_tidied, biogeochem_vars_interp, by = "date")
 
 # Interpolating -- other option is to aggregate to weekly or monthly, but dates 
 # are very mismatched to aggregate to monthly and dataset would be very small if 
 # aggregated to monthly
-clams_growth_env_vars_interp <- clams_growth_env_vars_merged %>% 
+clams_growth_biogeochem_vars_interp <- clams_growth_biogeochem_vars_merged %>% 
  mutate(across(
     .cols = setdiff(names(.)[sapply(., function(col) is.numeric(col) &&
                                       any(is.na(col)))], "days_btwn_clams_sort"),
@@ -600,6 +600,19 @@ clams_growth_env_vars_interp <- clams_growth_env_vars_merged %>%
 ```{r}
 #| code-summary: Oyster Growth Interpolated and Merged with Environmental Variables
 #| code-fold: true
+
+oyster_growth_biogeochem_vars_merged <- full_join(ksf_oyster_cylinder_growth_data_tidied, biogeochem_vars_interp, by = "date")
+
+# Interpolating -- other option is to aggregate to weekly or monthly, but dates 
+# are very mismatched to aggregate to monthly and dataset would be very small if 
+# aggregated to monthly
+
+oyster_growth_biogeochem_vars_interp <- oyster_growth_biogeochem_vars_merged %>% 
+ mutate(across(where(~is.numeric(.x) && any(is.na(.x))),
+                ~na.approx(.x, na.rm = FALSE, rule = 2))) %>% 
+ # relocate(date, round, location, depth, clams_color, clams_stage, .before = days_btwn_clams_sort) %>% 
+  arrange(date)
+
 ```
 
 :::
@@ -636,6 +649,33 @@ Export merged final data set into `data/outputs` folder.
 ### Data Dictionaries
 
 ## Exploratory Data Analysis
+### Profiles
+How is [salinity, dissolved oxygen, conductivity] distributed over the pond?
+
+Get a visual per Location of how [variable] changes with depth over time
+
+```{r}
+# Assuming profiles_data_tidied is your dataset
+ggplot(profiles_data_tidied, aes(x = date, y = conductivity, color = as.numeric(as.character(depth)))) +
+  geom_point(size = 3, alpha = 0.8) + # Larger points with slight transparency
+  geom_line(size = 1, alpha = 0.8) + # Thicker lines with slight transparency
+  labs(x = "Date", y = "Conductivity", title = "Conductivity Change Over Time") +
+  theme_minimal() +
+  facet_wrap(~location) +
+  scale_color_gradient(low = "blue", high = "red", name = "Depth") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 10), face = "bold"),
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        axis.title.y = element_text(face = "bold"),
+        legend.title = element_text(face = "bold")) +
+  ylim(35, 55)
+```
+
+How is [salinity, dissolved oxygen, conductivity] distributed over depth profiles?
+
+How do [salinity, dissolved oxygen, conductivity] change over time for each location? 
+
+
 
 ## Correlational Analysis
 
@@ -648,17 +688,17 @@ Export merged final data set into `data/outputs` folder.
 ```{r}
 #| echo: false
 # Select only numeric columns for correlation analysis
-clams_growth_env_vars_numeric_data <- clams_growth_env_vars_interp %>%
+clams_growth_biogeochem_vars_numeric_data <- clams_growth_biogeochem_vars_interp %>%
   select_if(is.numeric) %>% 
   select(-days_btwn_clams_sort)
 
 # Compute the correlation matrix
-clams_growth_env_vars_corr_matrix <- cor(clams_growth_env_vars_numeric_data)
+clams_growth_biogeochem_vars_corr_matrix <- cor(clams_growth_biogeochem_vars_numeric_data)
 ```
 
 ```{r}
 #| echo: false
-kable(clams_growth_env_vars_corr_matrix, caption = "KSF Clams Growth and Environmental Variables Correlation Matrix") %>%
+kable(clams_growth_biogeochem_vars_corr_matrix, caption = "KSF Clams Growth and Environmental Variables Correlation Matrix") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
@@ -669,7 +709,7 @@ kable(clams_growth_env_vars_corr_matrix, caption = "KSF Clams Growth and Environ
 #| fig-align: center
 #| fig-width: 20
 #| fig-height: 20
-corrplot(clams_growth_env_vars_corr_matrix, method = "circle",
+corrplot(clams_growth_biogeochem_vars_corr_matrix, method = "circle",
          tl.cex = 2, # Text label size, change as needed
          tl.col = "black", # Text label color
          tl.srt = 90, # Text label rotation in degrees
@@ -683,8 +723,8 @@ corrplot(clams_growth_env_vars_corr_matrix, method = "circle",
 ```{r}
 #| code-fold: true
 #| code-summary: Correlation Between Interpolated Weight and Interpolated Dissolved Oxygen
-results <- corr.test(x = clams_growth_env_vars_interp$clams_count, 
-                     y = clams_growth_env_vars_interp$dissolved_oxygen,
+results <- corr.test(x = clams_growth_biogeochem_vars_interp$clams_count, 
+                     y = clams_growth_biogeochem_vars_interp$dissolved_oxygen,
                      method = "pearson", ci = TRUE)
 
 print(results, short=FALSE)
