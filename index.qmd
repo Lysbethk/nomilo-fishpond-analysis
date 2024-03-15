@@ -490,7 +490,8 @@ profiles_data_tidied <- profiles_data %>% #<2>
          across(c(water_temperature,  dissolved_oxygen, salinity, 
                   conductivity,visibility),  as.numeric)) %>% #<11>
    fill(visibility, .direction = "down") %>% #<12>
-  mutate(visibility = if_else(date == "2023-11-28",  NA_real_, visibility)) #<13>
+  mutate(visibility = if_else(date == "2023-11-28",  NA_real_, visibility)) %>%  #<13>
+  mutate(location = str_to_title(location)) # <14>
 
 paged_table(profiles_data_tidied)
 ```
@@ -649,27 +650,33 @@ Export merged final data set into `data/outputs` folder.
 ### Data Dictionaries
 
 ## Exploratory Data Analysis
+
 ### Profiles
+
 How is [salinity, dissolved oxygen, conductivity] distributed over the pond?
 
 Get a visual per Location of how [variable] changes with depth over time
 
 ```{r}
-# Assuming profiles_data_tidied is your dataset
-ggplot(profiles_data_tidied, aes(x = date, y = conductivity, color = as.numeric(as.character(depth)))) +
-  geom_point(size = 3, alpha = 0.8) + # Larger points with slight transparency
-  geom_line(size = 1, alpha = 0.8) + # Thicker lines with slight transparency
-  labs(x = "Date", y = "Conductivity", title = "Conductivity Change Over Time") +
+#| fig-align: center
+#| fig-width: 10
+#| fig-height: 10
+#| echo: false
+ggplot(profiles_data_tidied, aes(x = date, y = conductivity, color = as.factor(depth))) +
+  geom_point(size = 1.5, alpha = 0.8) +
+  geom_line(size = 1, alpha = 0.6) + 
+  facet_wrap(~ location, scales = "free_y") +
   theme_minimal() +
-  facet_wrap(~location) +
-  scale_color_gradient(low = "blue", high = "red", name = "Depth") +
+  labs(color = "Depth", x = "Month", y = "Conductivity", title = "Conductivity Over Time by Location and Depth") +
+  scale_color_viridis_d() +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
         axis.title.x = element_text(margin = margin(t = 10), face = "bold"),
-        plot.title = element_text(hjust = 0.5, face = "bold"),
         axis.title.y = element_text(face = "bold"),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 20),
         legend.title = element_text(face = "bold")) +
   ylim(35, 55)
 ```
+
 
 How is [salinity, dissolved oxygen, conductivity] distributed over depth profiles?
 
