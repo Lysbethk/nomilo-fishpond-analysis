@@ -11,6 +11,8 @@ format:
   html:
     toc-title: "Data Analysis Workflow:"
     toc-location: left
+filter: 
+  - shinylive
 ---
 
 ## Introduction
@@ -31,7 +33,8 @@ on arrow to see code.
 ```{r}
 #| label: install-packages
 packages <- c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", "hms", "zoo", "corrplot", "kableExtra",
-              "psych", "ggplot2")
+              "psych", "ggplot2", "shiny",
+              "rsconnect", "packrat")
 
 
 for (pkg in packages) {
@@ -58,6 +61,9 @@ library(corrplot)
 library(kableExtra)
 library(psych)
 library(ggplot2)
+library(shiny)
+library(rsconnect)
+library(packrat)
 ```
 
 1. For importing excel data
@@ -401,7 +407,11 @@ water_samples_data_tidied <- water_samples_data %>%
   mutate(sample_id = 1:nrow(.)) %>% # <3>
   mutate(date = as.Date(date), # <4>
          across(c(nomilo_id, location, round, depth), as.factor)) %>% # <4>
-  select(-c(sample_id, nomilo_id, tube_name))
+  select(-c(sample_id, nomilo_id, tube_name)) %>% 
+  mutate(location = str_to_title(location)) %>%
+  mutate(location = factor(location, 
+                           levels = c("Mid Buoy", "Back Buoy", "Auwei", "Production Dock"))) %>% 
+   filter(!is.na(location))
 
 paged_table(water_samples_data_tidied)
 ```
@@ -491,7 +501,9 @@ profiles_data_tidied <- profiles_data %>% #<2>
                   conductivity,visibility),  as.numeric)) %>% #<11>
    fill(visibility, .direction = "down") %>% #<12>
   mutate(visibility = if_else(date == "2023-11-28",  NA_real_, visibility)) %>%  #<13>
-  mutate(location = str_to_title(location)) # <14>
+  mutate(location = str_to_title(location)) %>%
+  mutate(location = factor(location, 
+                           levels = c("Mid Buoy", "Back Buoy", "Auwei", "Production Dock")))
 
 paged_table(profiles_data_tidied)
 ```
@@ -537,7 +549,7 @@ paged_table(tidal_data_tidied)
 
 ::: 
 
-### Merge and Impute Tidied Datasets
+### Merge Tidied Datasets
 
 ::: {.panel-tabset}
 
@@ -551,27 +563,17 @@ profiles_water_samples_merged <- reduce(list(profiles_data_tidied, water_samples
   fill(round, .direction = "down") %>%
   mutate(round = if_else(is.na(round), "1", round),
          round = as.factor(round))
-```
 
-```{r}
 # Complete dataset
 compiled_weather_merged <- reduce(list(ksf_compiled_data_tidied, weather_data_tidied), full_join, by = "date")
 
+# Final dataset
 biogeochem_vars_merged <- full_join(compiled_weather_merged, profiles_water_samples_merged)
-```
 
-```{r}
-# Interpolating
-biogeochem_vars_interp <- biogeochem_vars_merged %>% 
-  # Selects numeric columns with missing values, linearly interpolates NAs by 
-  # drawing straight lines between existing points, and extends the outermost 
-  # values to fill NAs at the start or end
-  mutate(across(where(~is.numeric(.x) && any(is.na(.x))),
-                ~na.approx(.x, na.rm = FALSE, rule = 2)))
-```
 
-```{r}
-paged_table(biogeochem_vars_interp)
+paged_table(biogeochem_vars_merged)
+
+
 ```
 
 #### Clams
@@ -581,24 +583,14 @@ paged_table(biogeochem_vars_interp)
 #| code-fold: true
 
 # Merging
-clams_growth_biogeochem_vars_merged <- full_join(ksf_clams_growth_data_tidied, biogeochem_vars_interp, by = "date")
+clams_growth_biogeochem_vars_merged <- full_join(ksf_clams_growth_data_tidied, biogeochem_vars_merged, by = "date")
 
-# Interpolating -- other option is to aggregate to weekly or monthly, but dates 
-# are very mismatched to aggregate to monthly and dataset would be very small if 
-# aggregated to monthly
-clams_growth_biogeochem_vars_interp <- clams_growth_biogeochem_vars_merged %>% 
- mutate(across(
-    .cols = setdiff(names(.)[sapply(., function(col) is.numeric(col) &&
-                                      any(is.na(col)))], "days_btwn_clams_sort"),
-    .fns = ~na.approx(.x, na.rm = FALSE, rule = 2)
-  )) %>%
-  relocate(date, round, location, depth, clams_color, clams_stage, .before = days_btwn_clams_sort) %>% 
-  arrange(date)
 ```
 
 #### Oysters
 
 ```{r}
+#| eval: false
 #| code-summary: Oyster Growth Interpolated and Merged with Environmental Variables
 #| code-fold: true
 
@@ -651,37 +643,72 @@ Export merged final data set into `data/outputs` folder.
 
 ## Exploratory Data Analysis
 
-### Profiles
+```{shinylive-r}
+#| standalone: true 
+# Helper function to convert variable names to title case with spaces
+make_title_case <- function(variable_name) {
+  str_to_title(str_replace_all(variable_name, pattern = "_", replacement = " "))
+}
 
-How is [salinity, dissolved oxygen, conductivity] distributed over the pond?
+# Define the function for generating the plot
+generate_profile_changes_lineplot <- function(df, y_var, y_var_title, y_min, y_max) {
+  ggplot(df, aes(x = date, y = !!rlang::sym(y_var), color = as.factor(depth))) +
+    geom_point(size = 1.5, alpha = 0.8) +
+    geom_line(linewidth = 1, alpha = 0.6) +
+    facet_wrap(~ location, scales = "free_y") +
+    theme_minimal() +
+    labs(color = "Depth", x = "Month", y = y_var_title,
+         title = paste(y_var_title, "Over Time by Location and Depth")) +
+    scale_color_viridis_d() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.title.x = element_text(margin = margin(t = 10), face = "bold"),
+          axis.title.y = element_text(face = "bold"),
+          plot.title = element_text(hjust = 0.5, face = "bold", size = 20),
+          legend.title = element_text(face = "bold")) +
+    ylim(as.numeric(y_min), as.numeric(y_max))
+}
 
-Get a visual per Location of how [variable] changes with depth over time
+# Shiny UI definition
+ui <- fluidPage(
+  titlePanel("Nomilo Fishpond Biogeochemical Changes Over Time"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("dataset", "Choose Dataset:",
+                  choices = c("Water Samples" = "water_samples_data_tidied",
+                              "Profiles" = "profiles_data_tidied")),
+      uiOutput("y_var_ui"),
+      numericInput("y_min", "Y-axis Minimum:", value = 0),
+      numericInput("y_max", "Y-axis Maximum:", value = 100)
+    ),
+    mainPanel(
+      plotOutput("lineplot")
+    )
+  )
+)
 
-```{r}
-#| fig-align: center
-#| fig-width: 10
-#| fig-height: 10
-#| echo: false
-ggplot(profiles_data_tidied, aes(x = date, y = conductivity, color = as.factor(depth))) +
-  geom_point(size = 1.5, alpha = 0.8) +
-  geom_line(size = 1, alpha = 0.6) + 
-  facet_wrap(~ location, scales = "free_y") +
-  theme_minimal() +
-  labs(color = "Depth", x = "Month", y = "Conductivity", title = "Conductivity Over Time by Location and Depth") +
-  scale_color_viridis_d() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
-        axis.title.x = element_text(margin = margin(t = 10), face = "bold"),
-        axis.title.y = element_text(face = "bold"),
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 20),
-        legend.title = element_text(face = "bold")) +
-  ylim(35, 55)
+# Server logic for the Shiny app
+server <- function(input, output, session) {
+  output$y_var_ui <- renderUI({
+    df <- get(input$dataset, envir = .GlobalEnv)
+    num_vars <- df %>%
+      select_if(is.numeric) %>%
+      names()
+    
+    selectInput("y_var", "Choose Y Variable:", choices = num_vars)
+  })
+
+  output$lineplot <- renderPlot({
+    req(input$dataset)
+    df <- get(input$dataset, envir = .GlobalEnv)
+    
+    formatted_title <- make_title_case(input$y_var)
+    
+    generate_profile_changes_lineplot(df, input$y_var, formatted_title, input$y_min, input$y_max)
+  })
+}
+
+shinyApp(ui, server)
 ```
-
-
-How is [salinity, dissolved oxygen, conductivity] distributed over depth profiles?
-
-How do [salinity, dissolved oxygen, conductivity] change over time for each location? 
-
 
 
 ## Correlational Analysis
@@ -693,9 +720,10 @@ How do [salinity, dissolved oxygen, conductivity] change over time for each loca
 #### All Relationships
 
 ```{r}
+#| eval: false
 #| echo: false
 # Select only numeric columns for correlation analysis
-clams_growth_biogeochem_vars_numeric_data <- clams_growth_biogeochem_vars_interp %>%
+clams_growth_biogeochem_vars_numeric_data <- clams_growth_biogeochem_vars_merged %>%
   select_if(is.numeric) %>% 
   select(-days_btwn_clams_sort)
 
@@ -704,6 +732,7 @@ clams_growth_biogeochem_vars_corr_matrix <- cor(clams_growth_biogeochem_vars_num
 ```
 
 ```{r}
+#| eval: false
 #| echo: false
 kable(clams_growth_biogeochem_vars_corr_matrix, caption = "KSF Clams Growth and Environmental Variables Correlation Matrix") %>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
@@ -712,6 +741,7 @@ kable(clams_growth_biogeochem_vars_corr_matrix, caption = "KSF Clams Growth and 
 </br>
 
 ```{r}
+#| eval: false
 #| echo: false
 #| fig-align: center
 #| fig-width: 20
@@ -728,6 +758,7 @@ corrplot(clams_growth_biogeochem_vars_corr_matrix, method = "circle",
 #### Specific Relationship
 
 ```{r}
+#| eval: false
 #| code-fold: true
 #| code-summary: Correlation Between Interpolated Weight and Interpolated Dissolved Oxygen
 results <- corr.test(x = clams_growth_biogeochem_vars_interp$clams_count, 
@@ -738,6 +769,7 @@ print(results, short=FALSE)
 ```
 
 ```{r}
+#| eval: false
 #| code-fold: true
 #| code-summary: Adjusted P-Value
 adjusted_p_values <- results$p.adj
