@@ -11,7 +11,7 @@ format:
   html:
     toc-title: "Data Analysis Workflow:"
     toc-location: left
-filter: 
+filters:
   - shinylive
 ---
 
@@ -32,9 +32,9 @@ on arrow to see code.
 
 ```{r}
 #| label: install-packages
-packages <- c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", "hms", "zoo", "corrplot", "kableExtra",
-              "psych", "ggplot2", "shiny",
-              "rsconnect", "packrat")
+packages <- c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", 
+              "hms", "zoo", "corrplot", "kableExtra", "psych", "ggplot2", "shiny", 
+              "rsconnect", "packrat", "shinylive")
 
 
 for (pkg in packages) {
@@ -48,7 +48,6 @@ for (pkg in packages) {
 
 ```{r}
 #| label: load-libraries
-
 library(rio) # <1>
 library(tidyverse) # <2>
 library(janitor) # <3>
@@ -64,6 +63,7 @@ library(ggplot2)
 library(shiny)
 library(rsconnect)
 library(packrat)
+library(shinylive)
 ```
 
 1. For importing excel data
@@ -643,8 +643,26 @@ Export merged final data set into `data/outputs` folder.
 
 ## Exploratory Data Analysis
 
-```{shinylive-r}
-#| standalone: true 
+```{r}
+#| code-fold: true
+#| code-summary: Helper Functions
+
+load_datasets <- function(path, date_pattern) {
+  # List all files in the directory
+  all_files <- dir_ls(path)
+  
+  # Filter files by the specified date pattern
+  filtered_files <- all_files[grepl(date_pattern, all_files)]
+  
+  # Read each filtered file into a list of data frames
+  datasets <- map(filtered_files, read_csv)
+  
+  # Optional: Assign names to the list elements based on file names
+  names(datasets) <- str_replace_all(basename(filtered_files), pattern = "\\.csv$", replacement = "")
+  
+  datasets
+}
+
 # Helper function to convert variable names to title case with spaces
 make_title_case <- function(variable_name) {
   str_to_title(str_replace_all(variable_name, pattern = "_", replacement = " "))
@@ -667,10 +685,26 @@ generate_profile_changes_lineplot <- function(df, y_var, y_var_title, y_min, y_m
           legend.title = element_text(face = "bold")) +
     ylim(as.numeric(y_min), as.numeric(y_max))
 }
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: Load Tidied Datasets
+tidied_datasets <- load_datasets("data/tidied", "03-15")
+```
+
+```{shinylive-r}
+#| standalone: true 
+#| viewerHeight: 700
 
 # Shiny UI definition
 ui <- fluidPage(
-  titlePanel("Nomilo Fishpond Biogeochemical Changes Over Time"),
+  titlePanel(
+    "Nomilo Fishpond Biogeochemical Changes Over Time", 
+    windowTitle = "Nomilo Fishpond Biogeochemical Changes Over Time",
+    tags$style(HTML(".title {font-weight: bold; text-align: center;}")
+    )
+  ),
   sidebarLayout(
     sidebarPanel(
       selectInput("dataset", "Choose Dataset:",
@@ -696,7 +730,7 @@ server <- function(input, output, session) {
     
     selectInput("y_var", "Choose Y Variable:", choices = num_vars)
   })
-
+  
   output$lineplot <- renderPlot({
     req(input$dataset)
     df <- get(input$dataset, envir = .GlobalEnv)
@@ -708,6 +742,51 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+
+# ui <- fluidPage(
+#   titlePanel("Exploring Depth-wise Biogeochemical Variations Across Nomilo Fishpond Locations Over Time"),
+#   sidebarLayout(
+#     sidebarPanel(
+#       # Dataset selection based on names from tidied_datasets
+#       selectInput("dataset", "Choose Dataset:",
+#                   choices = c("Select Dataset" = "") + names(tidied_datasets)),
+#       uiOutput("y_var_ui"),
+#       numericInput("y_min", "Y-axis Minimum:", value = 0),
+#       numericInput("y_max", "Y-axis Maximum:", value = 100)
+#     ),
+#     mainPanel(
+#       plotOutput("lineplot")
+#     )
+#   )
+# )
+# 
+# server <- function(input, output, session) {
+#   # Dynamically update Y variable choices based on selected dataset
+#   output$y_var_ui <- renderUI({
+#     # Ensure a dataset has been selected
+#     if (input$dataset != "Select Dataset") {
+#       df <- tidied_datasets[[input$dataset]]
+#       num_vars <- names(select_if(df, is.numeric))
+#       
+#       selectInput("y_var", "Choose Y Variable:",
+#                   choices = c("Select Y Variable" = "") + num_vars)
+#     } else {
+#       selectInput("y_var", "Choose Y Variable:", choices = c("Select Y Variable" = ""))
+#     }
+#   })
+# 
+#   # Generate the plot based on selected inputs
+#   output$lineplot <- renderPlot({
+#     req(input$dataset != "Select Dataset", input$y_var != "Select Y Variable")
+#     
+#     df <- tidied_datasets[[input$dataset]]
+#     formatted_title <- make_title_case(input$y_var)
+#     
+#     generate_profile_changes_lineplot(df, input$y_var, formatted_title, input$y_min, input$y_max)
+#   })
+# }
+# 
+# shinyApp(ui, server)
 ```
 
 
