@@ -43,3 +43,5 @@ renv/
 .DS_Store
 /.quarto/
 _freeze/
+data/raw/*.RData
+data/tidied
