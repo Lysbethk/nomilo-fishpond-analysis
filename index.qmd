@@ -638,8 +638,12 @@ dfs_to_export <- list( # <1>
   ksf_compiled_data_tidied = ksf_compiled_data_tidied, # <1>
   ksf_oyster_cylinder_growth_data_tidied = ksf_oyster_cylinder_growth_data_tidied, # <1>
   water_samples_data_tidied = water_samples_data_tidied, # <1>
-  profiles_data_tidied = profiles_data_tidied # <1>
-) # <1>
+  profiles_data_tidied = profiles_data_tidied,
+  biogeochem_vars_merged = biogeochem_vars_merged,
+  profiles_water_samples_merged = profiles_water_samples_merged,
+  tidal_data_tidied = tidal_data_tidied,
+  weather_data_tidied = weather_data_tidied
+  ) # <1>
 
 imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied")) # <2>
 ```
