@@ -8,7 +8,7 @@ library(DT)
 # Preload data
 dfs <- list(
   "Water Samples" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-15_water-samples-data-tidied.csv"),
-  "Profiles" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-15_profiles-data-tidied.csv")
+  "Profiles" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-19_profiles-data-tidied.csv")
 )
 
 # Helper function to convert variable names to title case with spaces
