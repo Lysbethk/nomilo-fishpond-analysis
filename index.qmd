@@ -294,22 +294,20 @@ ksf_clams_growth_data_tidied <- ksf_clams_growth_data %>%
          "weight" = lbs,
          "avg_weight" = avg_per_lbs,
          "clams_growth" = growth_in_lbs,
-         "clams_sr" = sr 
-         # "date_out" = date
-         ) 
-#     mutate(date_in = date_out - days_btwn_clams_sort) %>% 
-# relocate(c(date_in, date_out), .before = days_btwn_clams_sort)
-  # select(-clams_stage) %>% 
-  # pivot_longer(
-  #   cols = c( 
-  #     date_in, date_out 
-  #     ), #<4>
-  #   names_to = c("stage", ".value"), #<4>
-  #   names_prefix = "date_", #<4>
-  #   names_sep = "_", #<4>
-  #   values_to = "value" #<4>
-  # )
-         
+         "clams_sr" = sr, 
+          "date_out" = date
+         ) %>% 
+    mutate(date_in = date_out - days_btwn_clams_sort) %>%
+relocate(c(date_in, date_out), .before = days_btwn_clams_sort) %>% 
+  mutate(
+    date = case_when(
+      clams_stage == 'In' ~ date_in,
+      clams_stage == 'Out' ~ date_out
+    )
+  ) %>%
+  select(-date_in, -date_out) %>% 
+   mutate(grouping_variable = rep(1:(n() / 2), each = 2))
+
 
 paged_table(ksf_clams_growth_data_tidied)
 ```
@@ -669,9 +667,6 @@ passed to `export_to_csv()` function along with the desired directory path.
 
 Export merged final data set into `data/outputs` folder.
 
-```{r}
-# export_to_csv(profiles_data_tidied, "profiles_data_tidied", "data/output")
-```
 
 ### Data Dictionaries
 
@@ -680,12 +675,13 @@ Export merged final data set into `data/outputs` folder.
 ### Paired Line Plots: Oyster & Clam
 
 ```{r}
-paired_plot <- ggplot(ksf_clams_growth_data_tidied, aes(x = date, y = weight, group = date, color = clams_stage)) +
+paired_plot <- ggplot(ksf_clams_growth_data_tidied, aes(x = date, y = weight, group = grouping_variable, color = clams_stage)) +
   geom_line() +  # Connect paired observations with lines
   geom_point(size = 3) +  # Add points for each observation
   labs(x = "Date", y = "Weight", color = "Stage") +  # Label axes and legend
   scale_color_manual(values = c("In" = "blue", "Out" = "red")) +  # Custom color scale
   theme_minimal()  # Apply a minimal theme
+
 paired_plot
 ```
 

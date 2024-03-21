@@ -8,7 +8,11 @@ library(DT)
 # Preload data
 dfs <- list(
   "Water Samples" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-15_water-samples-data-tidied.csv"),
-  "Profiles" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-19_profiles-data-tidied.csv")
+  "Profiles" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-19_profiles-data-tidied.csv"),
+  "Clams Growth" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-20_ksf-clams-growth-data-tidied.csv"),
+  "KSF Compiled" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/tidied/2024-03-15_ksf-compiled-data-tidied.csv"),
+  "Oyster Growth" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/tidied/2024-03-15_ksf-oyster-cylinder-growth-data-tidied.csv"),
+  "Weather" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-20_weather-data-tidied.csv")
 )
 
 # Helper function to convert variable names to title case with spaces
@@ -50,7 +54,165 @@ server <- function(input, output, session) {
       selectInput("y_var", "Choose Y Variable:", choices = c("Select a Y Variable" = ""))
     }
   })
-  
+  observeEvent(input$generate, {
+    req(input$dataset, input$y_var != "")
+    withProgress(message = 'Generating plots...', value = 0, {
+      for(i in 1:10) {
+        incProgress(0.1)
+        Sys.sleep(0.1) # Simulate some processing time
+      }
+      df <- dfs[[input$dataset]]  # Define df here
+      if (input$dataset %in% c("Water Samples", "Profiles") && "depth" %in% names(df)) {
+        df$depth <- as.factor(df$depth)
+      }
+      # Determine the type of plot based on dataset selection
+      if (input$dataset %in% c("Water Samples", "Profiles")) {
+        # Generate static plot for Water Samples and Profiles
+        output$staticplot <- renderPlot({
+          p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var), color = as.factor(depth))) +
+            geom_point(size = 2.75, alpha = 0.8) +
+            geom_line(linewidth = 2, alpha = 0.6) +
+            facet_wrap(~ location) +
+            labs(color = "Depth", x = "Month", y = make_title_case(input$y_var)) +
+            scale_color_viridis_d() +
+            theme_minimal() +
+            theme(
+              axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 14),
+              axis.text.y = element_text(margin = margin(r = 10), size = 14),
+              axis.title.x = element_text(margin = margin(t = 20), face = "bold", size = 18),
+              axis.title.y = element_text(face = "bold", margin = margin(r = 5), size = 18),
+              plot.title = element_text(hjust = 0.5, face = "bold", size = 22),
+              legend.position = "bottom",
+              legend.title = element_text(face = "bold", size = 14),
+              legend.text = element_text(size = 14),
+              strip.text = element_text(size = 16),
+              plot.margin = margin(20, 20, 20, 20),
+              panel.spacing = unit(1.5, "lines")
+            ) +
+            guides(color = guide_legend(override.aes = list(size=4))) +
+            ylim(input$y_min, input$y_max)
+          p
+        })
+        # Generate interactive plot for Water Samples and Profiles
+        output$interactiveplot <- renderPlotly({
+          p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var), color = as.factor(depth))) +
+            geom_point(size = 1.5, alpha = 0.8) +
+            geom_line(linewidth = 1, alpha = 0.6) +
+            facet_wrap(~ location) +
+            labs(color             = "Depth", x = "Month", y = make_title_case(input$y_var)) +
+            scale_color_viridis_d() +
+            theme_minimal() +
+            theme(
+              axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+              axis.title.x = element_text(margin = margin(t = 10), face = "bold", size = 12),
+              axis.title.y = element_text(face = "bold", margin = margin(l = 15), size = 12),
+              plot.title = element_text(hjust = 0.5, face = "bold"),
+              legend.position = "bottom",
+              legend.title = element_text(face = "bold", size = 10),
+              legend.text = element_text(size = 10),
+              plot.margin = margin(20, 20, 20, 20)
+            ) +
+            ylim(input$y_min, input$y_max)
+          ggplotly(p, tooltip = c("text", "y")) %>%
+            layout(legend = list(orientation = 'h', x = 0.5, xanchor = 'center', y = -0.5))
+        })
+      } else if (input$dataset %in% c("Weather", "KSF Compiled", "Oyster Growth")) {
+        # Generate static plot for Weather, KSF Compiled, and Oyster Growth
+        output$staticplot <- renderPlot({
+          p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var))) +
+            geom_line(linewidth = 2, alpha = 0.6) +
+            labs(x = "Month", y = make_title_case(input$y_var)) +
+            scale_x_date(date_labels = "%b %Y") +
+            theme_minimal() +
+            theme(
+              axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 14),
+              axis.text.y = element_text(margin = margin(r = 10), size = 14),
+              axis.title.x = element_text(margin = margin(t = 20), face = "bold", size = 18),
+              axis.title.y = element_text(face = "bold", margin = margin(r = 5), size = 18),
+              plot.title = element_text(hjust = 0.5, face = "bold", size = 22),
+              legend.position = "bottom",
+              legend.title = element_text(face = "bold", size = 14),
+              legend.text = element_text(size = 14),
+              plot.margin = margin(20, 20, 20, 20),
+              panel.spacing = unit(1.5, "lines")
+            ) 
+          # ylim(input$y_min, input$y_max)
+          p
+        })
+        # Generate interactive plot for Weather, KSF Compiled, and Oyster Growth
+        output$interactiveplot <- renderPlotly({
+          p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var))) +
+            geom_line(linewidth = 1, alpha = 0.6) +
+            labs(x = "Month", y = make_title_case(input$y_var)) +
+            scale_x_date(date_labels = "%b %Y") +
+            theme_minimal() +
+            theme(
+              axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+              axis.title.x = element_text(margin = margin(t = 10), face = "bold", size = 12),
+              axis.title.y = element_text(face = "bold", margin = margin(l = 15), size = 12),
+              plot.title = element_text(hjust = 0.5, face = "bold"),
+              legend.position = "bottom",
+              legend.title = element_text(face = "bold", size = 10),
+              legend.text = element_text(size = 10),
+              plot.margin = margin(20, 20, 20, 20)
+            ) +
+            ylim(input$y_min, input$y_max)
+          ggplotly(p, tooltip = c("y")) %>%
+            layout(legend = list(orientation = 'h', x = 0.5, xanchor = 'center', y = -0.5))
+        })
+      } else if (input$dataset == "Clams Growth") {
+        # Generate static plot for Clams Growth
+        output$staticplot <- renderPlot({
+          p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var), group = grouping_variable, color = clams_stage)) +
+            geom_line() +
+            geom_point(size = 3) +
+            labs(x = "Date", y = make_title_case(input$y_var), color = "Stage") +
+            scale_color_manual(values = c("In" = "blue", "Out" = "red")) +
+            theme_minimal() +
+            theme(
+              axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 14),
+              axis.text.y = element_text(margin = margin(r = 10), size = 14),
+              axis.title.x = element_text(margin = margin(t = 20), face = "bold", size = 18),
+              axis.title.y = element_text(face = "bold", margin = margin(r = 5), size = 18),
+              plot.title = element_text(hjust = 0.5, face = "bold", size = 22),
+              legend.position = "bottom",
+              legend.title = element_text(face = "bold", size = 14),
+              legend.text = element_text(size = 14),
+              plot.margin = margin(20, 20, 20, 20),
+              panel.spacing = unit(1.5, "lines")
+            ) 
+          # ylim(input$y_min, input$y_max)
+          p
+        })
+        # Generate interactive plot for Clams Growth
+        output$interactiveplot <- renderPlotly({
+          p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var), group = grouping_variable, color = clams_stage)) +
+            geom_line(linewidth = 1, alpha = 0.6) +
+            geom_point(size = 1.5, alpha = 0.8) +
+            labs(x = "Date", y = make_title_case(input$y_var), color = "Stage") +
+            scale_color_manual(values = c("In" = "blue", "Out" = "red")) +
+            theme_minimal() +
+            theme(
+              axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+              axis.title.x = element_text(margin = margin(t = 10), face = "bold", size = 12),
+              axis.title.y = element_text(face = "bold", margin = margin(l = 15), size = 12),
+              plot.title = element_text(hjust = 0.5, face = "bold"),
+              legend.position = "bottom",
+              legend.title = element_text(face = "bold", size = 10),
+              legend.text = element_text(size = 10),
+              plot.margin = margin(20, 20, 20, 20)
+            ) +
+            ylim(input$y_min, input$y_max)
+          ggplotly(p, tooltip = c("text", "y")) %>%
+            layout(legend = list(orientation = 'h', x = 0.5, xanchor = 'center', y = -0.5))
+        })
+      }
+      # Generate data table for all datasets
+      output$table <- renderDT({
+        datatable(df, options = list(pageLength = 10, autoWidth = TRUE))
+      })
+    })
+  })
   output$plot_ui <- renderUI({
     if(input$dataset == "" || input$y_var == "" || input$y_var == "Select a Y Variable"){
       return(h4("Please select a dataset and y variable to view the dataset and generate plots.", style = "color: red; text-align: center;"))
@@ -62,79 +224,6 @@ server <- function(input, output, session) {
         selected = "Data Table"
       )
     }
-  })
-  
-  observeEvent(input$generate, {
-    # Require that both a dataset and a Y variable have been selected
-    req(input$dataset, input$y_var != "")
-    
-    withProgress(message = 'Generating plots...', value = 0, {
-      for(i in 1:10) {
-        incProgress(0.1)
-        Sys.sleep(0.1) # Simulate some processing time
-      }
-      
-      # Generate data table
-      output$table <- renderDT({
-        datatable(dfs[[input$dataset]], options = list(pageLength = 10, autoWidth = TRUE))
-      })
-      
-      # Generate static plot
-      output$staticplot <- renderPlot({
-        df <- dfs[[input$dataset]]
-        df$depth <- as.factor(df$depth)
-        p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var), color = depth)) +
-          geom_point(size = 2.75, alpha = 0.8) +
-          geom_line(linewidth = 2, alpha = 0.6) +
-          facet_wrap(~ location) +
-          labs(color = "Depth", x = "Month", y = make_title_case(input$y_var)) +
-          scale_color_viridis_d() +
-          theme_minimal() +
-          theme(
-            axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 14),
-            axis.text.y = element_text(margin = margin(r = 10), size = 14),
-            axis.title.x = element_text(margin = margin(t = 20), face = "bold", size = 18),
-            axis.title.y = element_text(face = "bold", margin = margin(r = 5), size = 18),
-            plot.title = element_text(hjust = 0.5, face = "bold", size = 22),
-            legend.position = "bottom",
-            legend.title = element_text(face = "bold", size = 14),
-            legend.text = element_text(size = 14),
-            strip.text = element_text(size = 16),
-            plot.margin = margin(20, 20, 20, 20),
-            panel.spacing = unit(1.5, "lines")
-          ) +
-          guides(color = guide_legend(override.aes = list(size=4))) +
-          ylim(input$y_min, input$y_max)
-        p
-      })
-      
-      # Generate interactive plot
-      output$interactiveplot <- renderPlotly({
-        df <- dfs[[input$dataset]]
-        df$depth <- as.factor(df$depth)
-        p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var), color = depth)) +
-          geom_point(size = 1.5, alpha = 0.8) +
-          geom_line(linewidth = 1, alpha = 0.6) +
-          facet_wrap(~ location) +
-          labs(color = "Depth", x = "Month", y = make_title_case(input$y_var)) +
-          scale_color_viridis_d() +
-          theme_minimal() +
-          theme(
-            axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
-            axis.title.x = element_text(margin = margin(t = 10), face = "bold", size = 12),
-            axis.title.y = element_text(face = "bold", margin = margin(l = 15), size = 12),
-            plot.title = element_text(hjust = 0.5, face = "bold"),
-            legend.position = "bottom",
-            legend.title = element_text(face = "bold", size = 10),
-            legend.text = element_text(size = 10),
-            strip.text = element_text(size = 12),
-            plot.margin = margin(20, 20, 20, 20)
-          ) +
-          ylim(input$y_min, input$y_max)
-        ggplotly(p, tooltip = c("text", "y")) %>% 
-          layout(legend = list(orientation = 'h', x = 0.5, xanchor = 'center', y = -0.5))
-      })
-    })
   })
 }
 
