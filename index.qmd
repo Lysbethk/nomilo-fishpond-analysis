@@ -33,7 +33,7 @@ on arrow to see code.
 packages <- c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", 
               "hms", "zoo", "corrplot", "kableExtra", "psych", "ggplot2", "shiny", 
               "rsconnect", "packrat", "shinylive", "shinycssloaders", "pak", 
-              "plotly", "here")
+              "plotly", "here", "gtsummary")
 
 
 for (pkg in packages) {
@@ -68,6 +68,7 @@ library(shinycssloaders)
 library(stringr)
 library(plotly)
 library(here)
+library(gtsummary)
 ```
 
 1. For importing excel data
@@ -671,6 +672,42 @@ Export merged final data set into `data/outputs` folder.
 ### Data Dictionaries
 
 ## Exploratory Data Analysis
+
+### Descriptive Statistics
+
+```{r}
+create_summary_table <- function(df) {
+  if (is.data.frame(df)) {
+    df %>%
+      dplyr::select(where(is.numeric)) %>%
+      describe() %>%
+      dplyr::select(mean, sd, min, max)
+  } else {
+    cat("Warning: Input is not a data frame. Skipping...\n")
+    return(NULL)
+  }
+}
+
+# Define your list of data frames
+summary_dfs <- list(
+  ksf_clams_growth_data_tidied,
+  ksf_oyster_cylinder_growth_data_tidied,
+  ksf_compiled_data_tidied,
+  profiles_data_tidied,
+  water_samples_data_tidied,
+  weather_data_tidied
+)
+
+# Apply the create_summary_table function to each data frame in the list
+summary_tables <- map(summary_dfs, create_summary_table)
+
+
+# Display the resulting summary tables
+summary_tables <- set_names(summary_tables, summary_dfs)
+summary_tables
+
+```
+
 
 ### Paired Line Plots: Oyster & Clam
 
