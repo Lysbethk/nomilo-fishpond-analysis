@@ -401,7 +401,9 @@ ksf_oyster_cylinder_growth_data_tidied <- ksf_oyster_cylinder_growth_data %>%
   filter(date >= as.Date("2023-11-20") & date <= #<6>
            as.Date("2024-02-14")) %>%  #<6>
   mutate(weight = weight * 0.00220462) %>% 
-  rename("growth_pct" = gain)
+  rename("growth_pct" = gain) %>%
+  select(-growth_pct) %>% 
+  filter(!is.na(weight))
 
 paged_table(ksf_oyster_cylinder_growth_data_tidied)
 ```
@@ -667,15 +669,22 @@ imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied")) # <2>
 passed to `export_to_csv()` function along with the desired directory path.
 
 Export merged final data set into `data/outputs` folder.
+```{r}
+# export_to_csv(ksf_oyster_cylinder_growth_data_tidied, 
+#               "ksf_oyster_cylinder_growth_data_tidied",
+#               "data/output")
+```
 
 
 ### Data Dictionaries
 
 ## Exploratory Data Analysis
 
-### Descriptive Statistics
+<iframe src="http://lysbeth.shinyapps.io/nomilo_fishpond_biogeochemical_changes_over_time" width="100%" height="600" frameborder="0"></iframe>
 
 ```{r}
+#| eval: false
+### Descriptive Statistics
 create_summary_table <- function(df) {
   if (is.data.frame(df)) {
     df %>%
@@ -707,45 +716,6 @@ summary_tables <- set_names(summary_tables, summary_dfs)
 summary_tables
 
 ```
-
-
-### Paired Line Plots: Oyster & Clam
-
-```{r}
-paired_plot <- ggplot(ksf_clams_growth_data_tidied, aes(x = date, y = weight, group = grouping_variable, color = clams_stage)) +
-  geom_line() +  # Connect paired observations with lines
-  geom_point(size = 3) +  # Add points for each observation
-  labs(x = "Date", y = "Weight", color = "Stage") +  # Label axes and legend
-  scale_color_manual(values = c("In" = "blue", "Out" = "red")) +  # Custom color scale
-  theme_minimal()  # Apply a minimal theme
-
-paired_plot
-```
-
-### Line Plots: Weather & KSF Data
-
-```{r}
-p <- ggplot(ksf_compiled_data_tidied, aes(x = date, y = ksf_rdo_saturation)) +
-  geom_line(linewidth = 2, alpha = 0.6) +  # Adjust line size and alpha
-  labs(x = "Month", y = "KSF RDO Saturation") +  # Update axis labels
-  scale_x_date(date_labels = "%b %Y") +  # Format x-axis date labels
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 14),
-    axis.text.y = element_text(margin = margin(r = 10), size = 14),
-    axis.title.x = element_text(margin = margin(t = 20), face = "bold", size = 18),
-    axis.title.y = element_text(face = "bold", margin = margin(r = 5), size = 18),
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 22),
-    legend.position = "bottom",
-    legend.title = element_text(face = "bold", size = 14),
-    legend.text = element_text(size = 14),
-    plot.margin = margin(20, 20, 20, 20),
-    panel.spacing = unit(1.5, "lines")
-  )
-  # ylim(0, 1)
-p
-```
-
 
 ## Correlational Analysis
 
