@@ -26,6 +26,7 @@ format:
     toc: true
     fontsize: 12pt
     page-layout: full
+    link-external-newwindow: true
     resources:
       - shinylive-sw.js
 
