@@ -1,6 +1,8 @@
 ---
 title: "Nomilo Fishpond Biogoechemical Analysis"
-author: "Lysbeth Koster"
+author: 
+  - name: "Lysbeth Koster"
+  - name: "Alemarie Ceria"
 date: "02/28/2024"
 execute: 
   warning: false
@@ -11,13 +13,9 @@ format:
   html:
     toc-title: "Data Analysis Workflow:"
     toc-location: left
-filters:
-  - shinylive
 ---
 
 ## Introduction
-
-[Explain the purpose of this website]
 
 ### Research Questions
 
@@ -26,57 +24,48 @@ Throughout this document, hover over the numbered annotations to the right of co
 on arrow to see code.
 :::
 
-## Install Packages
+## Install Packages and Load Libraries
 
 ```{r}
-#| label: install-packages
-packages <- c("rio", "tidyverse", "janitor", "lubridate", "rmarkdown", "fs", 
-              "hms", "zoo", "corrplot", "kableExtra", "psych", "ggplot2", "shiny", 
-              "rsconnect", "packrat", "shinylive", "shinycssloaders", "pak", 
-              "plotly", "here", "gtsummary")
-
-
-for (pkg in packages) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    install.packages(pkg)
-  }
+#| label: install-packages-and-load-libraries
+#| code-fold: true
+#| code-summary: "Efficiently Install Packages and Load Libraries"
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
 }
-```
 
-## Load Libraries
+pacman::p_load(
+  renv, 
+  yaml, 
+  rmarkdown, 
+  rio, 
+  tidyverse, 
+  janitor, 
+  lubridate, 
+  fs,
+  hms, 
+  zoo, 
+  corrplot, 
+  kableExtra, 
+  psych, 
+  ggplot2, 
+  shiny, 
+  rsconnect, 
+  packrat, 
+  plotly, 
+  htmlwidgets
+  )
+```
 
 ```{r}
-#| label: load-libraries
-library(rio) # <1>
-library(tidyverse) # <2>
-library(janitor) # <3>
-library(lubridate) # <4>
-library(rmarkdown) # <5>
-library(fs) # <6>
-library(hms)
-library(zoo)
-library(corrplot)
-library(kableExtra)
-library(psych)
-library(ggplot2)
-library(shiny)
-library(rsconnect)
-library(packrat)
-library(pak)
-library(shinylive)
-library(shinycssloaders)
-library(stringr)
-library(plotly)
-library(here)
-library(gtsummary)
+#| echo: false
+# 1. For importing excel data
+# 2. For cleaning of data
+# 3. For cleaning variable names
+# 4. For cleaning dates
+# 5. For displaying tables
+# 6. For file path usage
 ```
-
-1. For importing excel data
-2. For cleaning of data 
-3. For cleaning variable names
-4. For cleaning dates
-5. For displaying tables
-6. For file path usage
 
 ## Import Raw Data
 
@@ -101,8 +90,11 @@ create_vector_file_paths <- function(directory_path) {
 files_to_import <- create_vector_file_paths("data/raw")
 ```
 
-1. Store the file paths of our raw data within the `data/raw` directory in `files_to_import`
-2. Print each file path with its index
+```{r}
+#| echo: false
+# 1. Store the file paths of our raw data within the `data/raw` directory in `files_to_import`
+# 2. Print each file path with its index
+```
 
 Use the `purrr::map()` function to iteratively import files in the `files_to_import` vector 
 except for the profiles data and .RData files: 
@@ -132,7 +124,7 @@ Efficiently import up-to-date raw data:
 
 ```{r}
 #| label: efficiently-load-raw-data
-load(files_to_import[10])
+base::load(files_to_import[10])
 ```
 
 Rename datasets:
@@ -583,6 +575,8 @@ paged_table(tidal_data_tidied)
 #### Biogeochemical & Physical Variables
 
 ```{r}
+#| code-summary: Biogeochemical & Physical Variables Merged
+#| code-fold: true
 # Merging
 profiles_water_samples_merged <- reduce(list(profiles_data_tidied, water_samples_data_tidied), full_join, by = c("date", "location", "depth")) %>% 
   relocate(date, round, location, depth, .before = water_temperature) %>%
@@ -669,21 +663,26 @@ imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied")) # <2>
 passed to `export_to_csv()` function along with the desired directory path.
 
 Export merged final data set into `data/outputs` folder.
+
 ```{r}
 # export_to_csv(ksf_oyster_cylinder_growth_data_tidied, 
 #               "ksf_oyster_cylinder_growth_data_tidied",
 #               "data/output")
 ```
 
-
 ### Data Dictionaries
 
 ## Exploratory Data Analysis
 
-<iframe src="http://lysbeth.shinyapps.io/nomilo_fishpond_biogeochemical_changes_over_time" width="100%" height="600" frameborder="0"></iframe>
+::: {.callout-important title="Unresponsive Shiny Application"}
+If the Shiny application fails to load below, please click [here](http://lysbeth.shinyapps.io/nomilo_fishpond_biogeochemical_changes_over_time).
+:::
+
+<iframe src="http://lysbeth.shinyapps.io/nomilo_fishpond_biogeochemical_changes_over_time" width="100%" height="900" frameborder="1"></iframe>
 
 ```{r}
 #| eval: false
+#| echo: false
 ### Descriptive Statistics
 create_summary_table <- function(df) {
   if (is.data.frame(df)) {
@@ -714,7 +713,6 @@ summary_tables <- map(summary_dfs, create_summary_table)
 # Display the resulting summary tables
 summary_tables <- set_names(summary_tables, summary_dfs)
 summary_tables
-
 ```
 
 ## Correlational Analysis
@@ -765,6 +763,7 @@ corrplot(clams_growth_biogeochem_vars_corr_matrix, method = "circle",
 
 ```{r}
 #| eval: false
+#| echo: false
 #| code-fold: true
 #| code-summary: Correlation Between Interpolated Weight and Interpolated Dissolved Oxygen
 results <- corr.test(x = clams_growth_biogeochem_vars_interp$clams_count, 
@@ -776,6 +775,7 @@ print(results, short=FALSE)
 
 ```{r}
 #| eval: false
+#| echo: false
 #| code-fold: true
 #| code-summary: Adjusted P-Value
 adjusted_p_values <- results$p.adj
