@@ -13,6 +13,8 @@ website:
   navbar:
     left:
       - href: index.qmd
+        text: About
+      - href: correlational-analysis.qmd
         text: Correlational Analysis
       - href: fieldwork-templates.qmd
         text: Fieldwork Templates
@@ -27,8 +29,10 @@ format:
     fontsize: 12pt
     page-layout: full
     link-external-newwindow: true
-    resources:
-      - shinylive-sw.js
+    margin-header: |
+      <br>
+      ![](/www/logos/uhm-logo.png) 
+      <br><br>
 
 
 
