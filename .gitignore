@@ -44,4 +44,5 @@ renv/
 /.quarto/
 _freeze/
 data/raw/*.RData
-data/tidied
+data/tidied/
+www/img/all-photos/
