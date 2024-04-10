@@ -143,21 +143,6 @@
       ],
       "Hash": "5ea2700d21e038ace58269ecdbeb9ec0"
     },
-    "archive": {
-      "Package": "archive",
-      "Version": "1.1.7",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "cli",
-        "cpp11",
-        "glue",
-        "rlang",
-        "tibble"
-      ],
-      "Hash": "4f97f3e44f7aca8557a51267e592a385"
-    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.2.0",
@@ -223,16 +208,6 @@
         "vctrs"
       ],
       "Hash": "40415719b5a479b87949f3aa0aee737c"
-    },
-    "brio": {
-      "Package": "brio",
-      "Version": "1.1.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "68bd2b066e1fe780bbf62fc8bcc36de3"
     },
     "broom": {
       "Package": "broom",
@@ -769,6 +744,16 @@
       ],
       "Hash": "9171f898db9d9c4c1b2c745adc2c1ef1"
     },
+    "here": {
+      "Package": "here",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "rprojroot"
+      ],
+      "Hash": "24b224366f9c2e7534d2344d10d59211"
+    },
     "highr": {
       "Package": "highr",
       "Version": "0.10",
@@ -855,27 +840,6 @@
         "openssl"
       ],
       "Hash": "ac107251d9d9fd72f0ca8049988f1d7f"
-    },
-    "httr2": {
-      "Package": "httr2",
-      "Version": "1.0.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "R6",
-        "cli",
-        "curl",
-        "glue",
-        "lifecycle",
-        "magrittr",
-        "openssl",
-        "rappdirs",
-        "rlang",
-        "vctrs",
-        "withr"
-      ],
-      "Hash": "e2b30f1fc039a0bab047dd52bb20ef71"
     },
     "ids": {
       "Package": "ids",
@@ -1526,6 +1490,16 @@
       ],
       "Hash": "9b148e7f95d33aac01f31282d49e4f44"
     },
+    "rprojroot": {
+      "Package": "rprojroot",
+      "Version": "2.0.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "4c8415e0ec1e29f3f4f6fc108bef0144"
+    },
     "rsconnect": {
       "Package": "rsconnect",
       "Version": "1.2.1",
@@ -1654,24 +1628,6 @@
         "xtable"
       ],
       "Hash": "3a1f41807d648a908e3c7f0334bf85e6"
-    },
-    "shinylive": {
-      "Package": "shinylive",
-      "Version": "0.1.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "archive",
-        "brio",
-        "fs",
-        "httr2",
-        "jsonlite",
-        "progress",
-        "rappdirs",
-        "rlang",
-        "tools"
-      ],
-      "Hash": "f5bfd3d920801d2b7c958fc8457031a3"
     },
     "snakecase": {
       "Package": "snakecase",

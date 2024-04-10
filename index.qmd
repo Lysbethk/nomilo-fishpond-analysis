@@ -8,6 +8,20 @@ toc-title: "Contents"
 toc-location: left
 ---
 
+::: {layout-nrow=2}
+
+![](www/img/image00010.jpeg){.rounded}
+
+![](www/img/image00005.jpeg){.rounded}
+
+<br>![](www/img/image00020.jpeg){.rounded}
+
+<br>![](www/img/image00018.jpeg){.rounded}
+
+:::
+
 ## Introduction
 
 ## Research Questions
+
+## Acknowledgements
