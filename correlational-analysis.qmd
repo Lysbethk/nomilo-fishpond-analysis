@@ -1,0 +1,65 @@
+---
+title: "Correlational Analysis"
+author: 
+  - name: "Lysbeth Koster"
+  - name: "Alemarie Ceria"
+date: "02/28/2024"
+execute: 
+  warning: false
+  message: false
+code-annotations: hover
+code-overflow: wrap
+---
+
+```{r}
+library(here)
+library(tidyverse)
+library(psych)
+```
+
+
+```{r}
+source(here("code/functions/create_vector_file_paths.R"))
+files_to_import <- create_vector_file_paths(here("data/output"))
+
+# Preload data
+dfs <- list(
+  "water_samples" = readr::read_csv(files_to_import[2]),
+  "profiles" = readr::read_csv(files_to_import[6]),
+  "clams_growth" = readr::read_csv(files_to_import[4]),
+  "oyster_growth" = readr::read_csv(files_to_import[5]),
+  "weather" = readr::read_csv(files_to_import[3]),
+  "ksf_compiled" = readr::read_csv(files_to_import[1])
+)
+```
+
+::: {.panel-tabset}
+
+### Instrument Validation 
+#### Conductivity & Dissolved Oxygen  
+```{r}
+filtered_dates <- c("2023-11-28", "2023-12-21", "2024-01-09", "2024-01-30", "2024-02-20") 
+ksf_compiled_filtered_dates <- dfs$ksf_compiled %>% 
+  filter(date %in% filtered_dates) 
+
+water_profiles_filtered_location <- dfs$profiles %>% 
+  filter(location == "Production Dock" & depth == 0.5) 
+```
+
+
+```{r}
+#| eval: false
+#| echo: false
+#| code-fold: true
+#| code-summary: Correlation Between Interpolated Weight and Interpolated Dissolved Oxygen
+results <- corr.test(x = ksf_compiled_filtered_dates$ksf_oxygen_partial_pressure, 
+                     y = water_profiles_filtered_location$dissolved_oxygen,
+                     method = "pearson", ci = TRUE)
+
+print(results, short=FALSE)
+```
+
+#### Hypothesis Testing 
+
+
+:::

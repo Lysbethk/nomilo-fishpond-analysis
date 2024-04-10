@@ -4,15 +4,18 @@ library(ggplot2)
 library(plotly)
 library(dplyr)
 library(DT)
+library(here)
+
+source("functions/create_vector_file_paths.R")
+files_to_import <- create_vector_file_paths(here("data/output"))
 
 # Preload data
 dfs <- list(
-  "Water Samples" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-15_water-samples-data-tidied.csv"),
-  "Profiles" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-19_profiles-data-tidied.csv"),
-  "Clams Growth" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-20_ksf-clams-growth-data-tidied.csv"),
-  "KSF Compiled" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/tidied/2024-03-15_ksf-compiled-data-tidied.csv"),
-  "Oyster Growth" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-25_ksf-oyster-cylinder-growth-data-tidied.csv"),
-  "Weather" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-20_weather-data-tidied.csv")
+  "Water Samples" = readr::read_csv(files_to_import[2]),
+  "Profiles" = readr::read_csv(files_to_import[6]),
+  "Clams Growth" = readr::read_csv(files_to_import[4]),
+  "Oyster Growth" = readr::read_csv(files_to_import[5]),
+  "Weather" = readr::read_csv(files_to_import[3])
 )
 
 # Helper function to convert variable names to title case with spaces
@@ -140,7 +143,6 @@ server <- function(input, output, session) {
               plot.margin = margin(20, 20, 20, 20),
               panel.spacing = unit(1.5, "lines")
             ) 
-          # ylim(input$y_min, input$y_max)
           p
         })
         # Generate interactive plot for Weather, KSF Compiled

@@ -1,0 +1,53 @@
+---
+title: "Exploratory Data Analysis (EDA)"
+author: 
+  - name: "Lysbeth Koster"
+  - name: "Alemarie Ceria"
+date: "02/28/2024"
+execute: 
+  warning: false
+  message: false
+code-annotations: hover
+code-overflow: wrap
+---
+
+::: {.callout-important title="Unresponsive Shiny Application"}
+If the Shiny application fails to load below, please click [here](http://lysbeth.shinyapps.io/nomilo_fishpond_biogeochemical_changes_over_time).
+:::
+
+<iframe src="https://lysbeth.shinyapps.io/nomilo_fishpond_biogeochemical_changes_over_time" width="100%" height="900" frameborder="1"></iframe>
+
+```{r}
+#| eval: false
+#| echo: false
+### Descriptive Statistics
+create_summary_table <- function(df) {
+  if (is.data.frame(df)) {
+    df %>%
+      dplyr::select(where(is.numeric)) %>%
+      describe() %>%
+      dplyr::select(mean, sd, min, max)
+  } else {
+    cat("Warning: Input is not a data frame. Skipping...\n")
+    return(NULL)
+  }
+}
+
+# Define your list of data frames
+summary_dfs <- list(
+  ksf_clams_growth_data_tidied,
+  ksf_oyster_cylinder_growth_data_tidied,
+  ksf_compiled_data_tidied,
+  profiles_data_tidied,
+  water_samples_data_tidied,
+  weather_data_tidied
+)
+
+# Apply the create_summary_table function to each data frame in the list
+summary_tables <- map(summary_dfs, create_summary_table)
+
+
+# Display the resulting summary tables
+summary_tables <- set_names(summary_tables, summary_dfs)
+summary_tables
+```

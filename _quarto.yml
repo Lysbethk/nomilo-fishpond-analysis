@@ -13,9 +13,15 @@ website:
   navbar:
     left:
       - href: index.qmd
+        text: About
+      - href: data-processing.qmd
+        text: Data Processing
+      - href: data-collection.qmd
+        text: Data Collection App
+      - href: eda.qmd
+        text: EDA App
+      - href: correlational-analysis.qmd
         text: Correlational Analysis
-      - href: fieldwork-templates.qmd
-        text: Fieldwork Templates
   back-to-top-navigation: true
     
 format:
@@ -26,8 +32,13 @@ format:
     toc: true
     fontsize: 12pt
     page-layout: full
-    resources:
-      - shinylive-sw.js
+    link-external-newwindow: true
+    margin-header: |
+      <br>
+      ![](/www/logos/uhm-logo.png) 
+      <br><br>
+      ![](/www/logos/pac-risa-logo.png) 
+      <br><br>
 
 
 
