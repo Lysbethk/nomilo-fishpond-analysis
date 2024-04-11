@@ -16,12 +16,14 @@ website:
         text: About
       - href: data-processing.qmd
         text: Data Processing
-      - href: data-collection.qmd
-        text: Data Collection App
-      - href: eda.qmd
-        text: EDA App
-      - href: correlational-analysis.qmd
-        text: Correlational Analysis
+      - text: Applications
+        menu:
+          - href: data-collection.qmd
+            text: Data Collection
+          - href: eda.qmd
+            text: Exploratory Data Analysis
+          - href: correlational-analysis.qmd
+            text: Correlational Analysis
   back-to-top-navigation: true
     
 format:

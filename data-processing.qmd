@@ -93,11 +93,14 @@ files_to_import <- create_vector_file_paths("data/raw")
 # 2. Print each file path with its index
 ```
 
-::: {.callout-caution title="@iteratively-import-raw-data Code Chunk Execution Warning"}
-The @iteratively-import-raw-data code chunk should only be ran once when raw data is updated
-because it takes long to execute. Therefore, run the @efficiently-load-raw-data code chunk
-instead to easily import up-to-date raw data.
-:::
+```{r}
+#| label: select-xlsx-files
+#| messages: false
+#| warnings: false
+#| code-fold: true
+#| code-summary: "Step 3: Only select .xlsx files"
+xlsx_files <- files_to_import[str_detect(files_to_import, ".xlsx$")]
+```
 
 ```{r}
 #| label: iteratively-import-raw-data
@@ -105,32 +108,34 @@ instead to easily import up-to-date raw data.
 #| warnings: false
 #| eval: false
 #| code-fold: true
-#| code-summary: "Step 3: Use the `purrr::map()` function to iteratively import files in the `files_to_import` vector except for the profiles data and .RData files"
-dfs_no_profiles <- map(files_to_import[c(2:7)], import_list) # <1>
+#| code-summary: "Step 4a: Use the `purrr::map()` function to iteratively import files in the `files_to_import` vector except for the profiles data and .RData files"
+dfs_no_profiles <- map(xlsx_files, import_list) # <1>
 current_date <- format(Sys.Date(), "%Y-%m-%d")
 save(dfs_no_profiles, file = paste0("data/raw/", current_date, "_dfs-no-profiles.RData")) # <1>
 ```
 
-::: {.callout-warning title="Ensure the Correct Index Value is Inputted Below"}
-Refer to the output of the `files_to_import` data object to ensure you are inputting the correct
-index value corresponding to the file path that needs to be loaded.
+::: {.callout-caution title="Step 4a Execution Warning"}
+Step 4a should only be ran once when raw data is updated
+because it takes long to execute. Therefore, do step 4b instead to easily import up-to-date raw data.
 :::
 
 ```{r}
 #| label: efficiently-load-raw-data
 #| code-fold: true
-#| code-summary: "Step 4: Efficiently import up-to-date raw data"
-base::load(files_to_import[10])
+#| code-summary: "Step 4b: Efficiently import up-to-date raw data"
+base::load(files_to_import[11])
 ```
 
-We will always use snakecase when naming our data objects and functions (e.g., `data_object_name` or `function_name()`).
+    * We will always use snakecase when naming our data
+    objects and functions (e.g., `data_object_name` or
+    `function_name()`).
 
 ```{r}
 #| label: rename-raw-datasets
 #| code-fold: true
 #| code-summary: "Step 5: Rename datasets"
 names(dfs_no_profiles) <- gsub("data/raw/2024-02-28_|\\.xlsx$|\\.xls$", "", 
-                               files_to_import[c(2:4, 6, 7)]) # <1>
+                               xlsx_files) # <1>
 names(dfs_no_profiles) <- gsub("-", "_", names(dfs_no_profiles)) # <2>
 ```
 
@@ -163,7 +168,7 @@ tidal_data <- dfs_no_profiles$ksf_compiled_data$tides
 sheets_to_import <- c("L1", "L2", "L3", "L4") # <1>
 
 profiles_data <- profiles_data <- map_dfr(sheets_to_import, function(sheet_name) { # <2>
-  import(files_to_import[5], which = sheet_name) # <2>
+  import(files_to_import[4], which = sheet_name) # <2>
 }) %>%  # <2>
   bind_rows() # <3>
 ```
@@ -239,7 +244,6 @@ paged_table(tidal_data)
 #| label: tidy-ksf-clam-growth-data-dataset
 #| code-fold: true
 #| code-summary: <i>Steps to clean data</i>
-#| eval: false
 new_clam_var_names <- c( #<1>
   "sort_date", "color", "clams_in_count", "clams_in_lbs",  "clams_in_avg_per_lb",
   "clams_out_count", "clams_out_lbs", "clams_out_avg_per_lb", "growth_in_lbs", 
