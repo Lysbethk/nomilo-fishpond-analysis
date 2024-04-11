@@ -25,7 +25,7 @@
     "href": "correlational-analysis.html",
     "title": "Correlational Analysis",
     "section": "",
-    "text": "ClamsOysters\n\n\n\nAll Relationships\n\n\n\nSpecific Relationship\n\n\n\n\nAll Relationships\n\n\nSpecific Relationship\n\n\n\n\n\n\n\n Back to top"
+    "text": "library(here)\nlibrary(tidyverse)\nlibrary(psych)\n\n\nsource(here(\"code/functions/create_vector_file_paths.R\"))\nfiles_to_import &lt;- create_vector_file_paths(here(\"data/output\"))\n\n1 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-15_ksf-compiled-data-final.csv \n2 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-15_water-samples-data-final.csv \n3 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-20_weather-data-final.csv \n4 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_ksf-clams-growth-data-final.csv \n5 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_ksf-oyster-cylinder-growth-data-final.csv \n6 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_profiles-data-final.csv \n\n# Preload data\ndfs &lt;- list(\n  \"water_samples\" = readr::read_csv(files_to_import[2]),\n  \"profiles\" = readr::read_csv(files_to_import[6]),\n  \"clams_growth\" = readr::read_csv(files_to_import[4]),\n  \"oyster_growth\" = readr::read_csv(files_to_import[5]),\n  \"weather\" = readr::read_csv(files_to_import[3]),\n  \"ksf_compiled\" = readr::read_csv(files_to_import[1])\n)\n\n\nInstrument Validation\n\nConductivity & Dissolved Oxygen\n\nfiltered_dates &lt;- c(\"2023-11-28\", \"2023-12-21\", \"2024-01-09\", \"2024-01-30\", \"2024-02-20\") \nksf_compiled_filtered_dates &lt;- dfs$ksf_compiled %&gt;% \n  filter(date %in% filtered_dates) \n\nwater_profiles_filtered_location &lt;- dfs$profiles %&gt;% \n  filter(location == \"Production Dock\" & depth == 0.5) \n\n\n\nHypothesis Testing\n\n\n\n\n\n\n\n\n\n\n\n Back to top"
   },
   {
     "objectID": "data-processing.html",
@@ -75,12 +75,5 @@
     "title": "About",
     "section": "Acknowledgements",
     "text": "Acknowledgements"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "About",
-    "section": "",
-    "text": "## Introduction"
   }
 ]

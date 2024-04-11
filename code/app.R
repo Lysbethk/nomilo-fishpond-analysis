@@ -143,7 +143,6 @@ server <- function(input, output, session) {
               plot.margin = margin(20, 20, 20, 20),
               panel.spacing = unit(1.5, "lines")
             ) 
-          # ylim(input$y_min, input$y_max)
           p
         })
         # Generate interactive plot for Weather, KSF Compiled

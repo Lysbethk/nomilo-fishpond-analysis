@@ -23,6 +23,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -131,7 +165,13 @@ ul.task-list li input[type="checkbox"] {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
 <p><br> <img src=".\www/logos/uhm-logo.png" class="img-fluid"> <br><br> <img src=".\www/logos/pac-risa-logo.png" class="img-fluid"> <br><br></p>
 </div></div>
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#instrument-validation" id="toc-instrument-validation" class="nav-link active" data-scroll-target="#instrument-validation">Instrument Validation</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content column-page-left" id="quarto-document-content">
@@ -168,30 +208,57 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"code/functions/create_vector_file_paths.R"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>files_to_import <span class="ot">&lt;-</span> <span class="fu">create_vector_file_paths</span>(<span class="fu">here</span>(<span class="st">"data/output"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-15_ksf-compiled-data-final.csv 
+2 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-15_water-samples-data-final.csv 
+3 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-20_weather-data-final.csv 
+4 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_ksf-clams-growth-data-final.csv 
+5 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_ksf-oyster-cylinder-growth-data-final.csv 
+6 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_profiles-data-final.csv </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preload data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"water_samples"</span> <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(files_to_import[<span class="dv">2</span>]),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"profiles"</span> <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(files_to_import[<span class="dv">6</span>]),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"clams_growth"</span> <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(files_to_import[<span class="dv">4</span>]),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"oyster_growth"</span> <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(files_to_import[<span class="dv">5</span>]),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"weather"</span> <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(files_to_import[<span class="dv">3</span>]),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ksf_compiled"</span> <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(files_to_import[<span class="dv">1</span>])</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="instrument-validation" class="level3">
+<h3 class="anchored" data-anchor-id="instrument-validation">Instrument Validation</h3>
+<section id="conductivity-dissolved-oxygen" class="level4">
+<h4 class="anchored" data-anchor-id="conductivity-dissolved-oxygen">Conductivity &amp; Dissolved Oxygen</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>filtered_dates <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2023-11-28"</span>, <span class="st">"2023-12-21"</span>, <span class="st">"2024-01-09"</span>, <span class="st">"2024-01-30"</span>, <span class="st">"2024-02-20"</span>) </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ksf_compiled_filtered_dates <span class="ot">&lt;-</span> dfs<span class="sc">$</span>ksf_compiled <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">%in%</span> filtered_dates) </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>water_profiles_filtered_location <span class="ot">&lt;-</span> dfs<span class="sc">$</span>profiles <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Production Dock"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="hypothesis-testing" class="level4">
+<h4 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis Testing</h4>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Clams</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Oysters</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"></ul>
 <div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<section id="all-relationships" class="level4">
-<h4 class="anchored" data-anchor-id="all-relationships">All Relationships</h4>
-<p><br></p>
-</section>
-<section id="specific-relationship" class="level4">
-<h4 class="anchored" data-anchor-id="specific-relationship">Specific Relationship</h4>
-</section>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<section id="all-relationships-1" class="level4">
-<h4 class="anchored" data-anchor-id="all-relationships-1">All Relationships</h4>
-</section>
-<section id="specific-relationship-1" class="level4">
-<h4 class="anchored" data-anchor-id="specific-relationship-1">Specific Relationship</h4>
-</section>
-</div>
+
 </div>
 </div>
 
 
+</section>
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
