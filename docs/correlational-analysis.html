@@ -169,7 +169,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#instrument-validation" id="toc-instrument-validation" class="nav-link active" data-scroll-target="#instrument-validation">Instrument Validation</a></li>
+  <li><a href="#instrument-validation" id="toc-instrument-validation" class="nav-link active" data-scroll-target="#instrument-validation">Instrument Validation</a>
+  <ul class="collapse">
+  <li><a href="#conductivity-dissolved-oxygen" id="toc-conductivity-dissolved-oxygen" class="nav-link" data-scroll-target="#conductivity-dissolved-oxygen">Conductivity &amp; Dissolved Oxygen <br></a></li>
+  <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing">Hypothesis Testing</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -234,21 +238,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ksf_compiled"</span> <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(files_to_import[<span class="dv">1</span>])</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="instrument-validation" class="level3">
-<h3 class="anchored" data-anchor-id="instrument-validation">Instrument Validation</h3>
-<section id="conductivity-dissolved-oxygen" class="level4">
-<h4 class="anchored" data-anchor-id="conductivity-dissolved-oxygen">Conductivity &amp; Dissolved Oxygen</h4>
+<section id="instrument-validation" class="level2">
+<h2 class="anchored" data-anchor-id="instrument-validation">Instrument Validation</h2>
+<section id="conductivity-dissolved-oxygen" class="level3">
+<h3 class="anchored" data-anchor-id="conductivity-dissolved-oxygen">Conductivity &amp; Dissolved Oxygen <br></h3>
 <div class="cell">
+<details class="code-fold">
+<summary>Correlation Between KSF Oxygen Partial Pressure and Collected Dissolved Oxygen on Specific Days at a 0.5 Depth at the Production Dock</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>filtered_dates <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2023-11-28"</span>, <span class="st">"2023-12-21"</span>, <span class="st">"2024-01-09"</span>, <span class="st">"2024-01-30"</span>, <span class="st">"2024-02-20"</span>) </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ksf_compiled_filtered_dates <span class="ot">&lt;-</span> dfs<span class="sc">$</span>ksf_compiled <span class="sc">%&gt;%</span> </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">%in%</span> filtered_dates) </span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>water_profiles_filtered_location <span class="ot">&lt;-</span> dfs<span class="sc">$</span>profiles <span class="sc">%&gt;%</span> </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Production Dock"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Production Dock"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">corr.test</span>(<span class="at">x =</span> ksf_compiled_filtered_dates<span class="sc">$</span>ksf_oxygen_partial_pressure, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> water_profiles_filtered_location<span class="sc">$</span>dissolved_oxygen,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"pearson"</span>, <span class="at">ci =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(results, <span class="at">short=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:corr.test(x = ksf_compiled_filtered_dates$ksf_oxygen_partial_pressure, 
+    y = water_profiles_filtered_location$dissolved_oxygen, method = "pearson", 
+    ci = TRUE)
+Correlation matrix 
+[1] 0.87
+Sample Size 
+[1] 5
+These are the unadjusted probability values.
+  The probability values  adjusted for multiple tests are in the p.adj object. 
+[1] 0.06
+
+ Confidence intervals based upon normal theory.  To get bootstrapped values, try cor.ci
+      raw.lower raw.r raw.upper raw.p lower.adj upper.adj
+NA-NA     -0.06  0.87      0.99  0.06     -0.06      0.99</code></pre>
+</div>
 </div>
 </section>
-<section id="hypothesis-testing" class="level4">
-<h4 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis Testing</h4>
+<section id="hypothesis-testing" class="level3">
+<h3 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis Testing</h3>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"></ul>
 <div class="tab-content">

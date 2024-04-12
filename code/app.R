@@ -1,5 +1,6 @@
 library(shiny)
 library(readr)
+library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(dplyr)
@@ -15,7 +16,8 @@ dfs <- list(
   "Profiles" = readr::read_csv(files_to_import[6]),
   "Clams Growth" = readr::read_csv(files_to_import[4]),
   "Oyster Growth" = readr::read_csv(files_to_import[5]),
-  "Weather" = readr::read_csv(files_to_import[3])
+  "Weather" = readr::read_csv(files_to_import[3]),
+  "KSF Data" = readr::read_csv(files_to_import[1])
 )
 
 # Helper function to convert variable names to title case with spaces
@@ -123,8 +125,8 @@ server <- function(input, output, session) {
           ggplotly(p, tooltip = c("text", "y")) %>%
             layout(legend = list(orientation = 'h', x = 0.5, xanchor = 'center', y = -0.5))
         })
-      } else if (input$dataset %in% c("Weather", "KSF Compiled")) {
-        # Generate static plot for Weather, KSF Compiled, and Oyster Growth
+      } else if (input$dataset %in% c("Weather", "KSF Data")) {
+        # Generate static plot for Weather and KSF Data
         output$staticplot <- renderPlot({
           p <- ggplot(df, aes(x = date, y = !!rlang::sym(input$y_var))) +
             geom_line(linewidth = 2, alpha = 0.6) +

@@ -17,7 +17,6 @@ library(tidyverse)
 library(psych)
 ```
 
-
 ```{r}
 source(here("code/functions/create_vector_file_paths.R"))
 files_to_import <- create_vector_file_paths(here("data/output"))
@@ -33,24 +32,21 @@ dfs <- list(
 )
 ```
 
-### Instrument Validation 
+## Instrument Validation 
 
-#### Conductivity & Dissolved Oxygen  
+### Conductivity & Dissolved Oxygen <br>
+
 ```{r}
+#| code-fold: true
+#| code-summary: Correlation Between KSF Oxygen Partial Pressure and Collected Dissolved Oxygen on Specific Days at a 0.5 Depth at the Production Dock
+
 filtered_dates <- c("2023-11-28", "2023-12-21", "2024-01-09", "2024-01-30", "2024-02-20") 
 ksf_compiled_filtered_dates <- dfs$ksf_compiled %>% 
   filter(date %in% filtered_dates) 
 
 water_profiles_filtered_location <- dfs$profiles %>% 
-  filter(location == "Production Dock" & depth == 0.5) 
-```
+  filter(location == "Production Dock" & depth == 0.5)
 
-
-```{r}
-#| eval: false
-#| echo: false
-#| code-fold: true
-#| code-summary: Correlation Between Interpolated Weight and Interpolated Dissolved Oxygen
 results <- corr.test(x = ksf_compiled_filtered_dates$ksf_oxygen_partial_pressure, 
                      y = water_profiles_filtered_location$dissolved_oxygen,
                      method = "pearson", ci = TRUE)
@@ -58,7 +54,7 @@ results <- corr.test(x = ksf_compiled_filtered_dates$ksf_oxygen_partial_pressure
 print(results, short=FALSE)
 ```
 
-#### Hypothesis Testing 
+### Hypothesis Testing 
 
 ::: {.panel-tabset}
 
