@@ -7,17 +7,15 @@ library(dplyr)
 library(DT)
 library(here)
 
-source("functions/create_vector_file_paths.R")
-files_to_import <- create_vector_file_paths(here("data/output"))
 
 # Preload data
 dfs <- list(
-  "Water Samples" = readr::read_csv(files_to_import[2]),
-  "Profiles" = readr::read_csv(files_to_import[6]),
-  "Clams Growth" = readr::read_csv(files_to_import[4]),
-  "Oyster Growth" = readr::read_csv(files_to_import[5]),
-  "Weather" = readr::read_csv(files_to_import[3]),
-  "KSF Data" = readr::read_csv(files_to_import[1])
+  "Water Samples" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-15_water-samples-data-final.csv"),
+  "Profiles" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-04-09_profiles-data-final.csv"),
+  "Clams Growth" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-04-09_ksf-clams-growth-data-final.csv"),
+  "Oyster Growth" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-04-09_ksf-oyster-cylinder-growth-data-final.csv"),
+  "Weather" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-20_weather-data-final.csv"),
+  "KSF Data" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-15_ksf-compiled-data-final.csv")
 )
 
 # Helper function to convert variable names to title case with spaces

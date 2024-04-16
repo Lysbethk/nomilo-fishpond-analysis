@@ -47,16 +47,61 @@ ksf_compiled_filtered_dates <- dfs$ksf_compiled %>%
 water_profiles_filtered_location <- dfs$profiles %>% 
   filter(location == "Production Dock" & depth == 0.5)
 
-results <- corr.test(x = ksf_compiled_filtered_dates$ksf_oxygen_partial_pressure, 
-                     y = water_profiles_filtered_location$dissolved_oxygen,
+results <- corr.test(x = ksf_compiled_filtered_dates$ksf_salinity, 
+                     y = water_profiles_filtered_location$salinity,
                      method = "pearson", ci = TRUE)
 
 print(results, short=FALSE)
 ```
 
 ### Hypothesis Testing 
+H1. Increase in phytoplankton production positively correlates with higher dissolved oxygen.
+```{r}
+water_profiles_filtered_location <- dfs$profiles %>% 
+  filter(location == "Mid Buoy" & depth == 0.5)
 
+water_samples_filtered_location <- dfs$water_samples %>% 
+  filter(location == "Mid Buoy" & depth == 0.5)
+
+results <- corr.test(x = water_samples_filtered_location$large_phytoplankton, 
+                     y = water_profiles_filtered_location$dissolved_oxygen,
+                     method = "pearson", ci = TRUE)
+
+print(results, short=FALSE)
+```
+
+AH1: Increase in cyanobacteria production correlates with lower dissolved oxygen levels in the water column.
+```{r}
+water_profiles_filtered_location <- dfs$profiles %>% 
+  filter(location == "Mid Buoy" & depth == 0.5)
+
+water_samples_filtered_location <- dfs$water_samples %>% 
+  filter(location == "Mid Buoy" & depth == 0.5) %>% 
+  select(c(synechococcus_population_1, synechococcus_population_2))
+
+results <- corr.test(x = water_samples_filtered_location, 
+                     y = water_profiles_filtered_location$dissolved_oxygen,
+                     method = "pearson", ci = TRUE)
+
+print(results, short=FALSE)
+```
 ::: {.panel-tabset}
 
+H3: Higher nutrient availability positively correlates with chlorophyll production (total nitrogen, total phosphorus, and N:P ratio).
+```{r}
+cor.test(dfs$water_samples$phosphate, dfs$water_samples$chlorophyll_a)
+```
 
-:::
+H4: Strong western winds positively correlate with chlorophyll production.
+```{r}
+filtered_dates <- c("2023-11-28", "2023-12-21", "2024-01-09", "2024-01-30", "2024-02-20")
+
+weather_filter_dates <- dfs$weather %>% 
+  filter(date %in% filtered_dates) 
+
+water_samples_filtered_location <- dfs$water_samples %>% 
+  filter(location == "Back Buoy" & depth == 0.5)
+
+cor.test(weather_filter_dates$wind_direction, water_samples_filtered_location$chlorophyll_a)
+```
+

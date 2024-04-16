@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.26">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="author" content="Alemarie Ceria">
 <meta name="dcterms.date" content="2024-02-28">
 
-<title>Nomilo Fishpond Biogeochemical Analysis – Correlational Analysis</title>
+<title>Nomilo Fishpond Biogeochemical Analysis - Correlational Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -153,7 +153,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -163,7 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
-<p><br> <img src=".\www/logos/uhm-logo.png" class="img-fluid"> <br><br> <img src=".\www/logos/pac-risa-logo.png" class="img-fluid"> <br><br></p>
+<p><br> <img src="./www/logos/uhm-logo.png" class="img-fluid"> <br><br> <img src="./www/logos/pac-risa-logo.png" class="img-fluid"> <br><br></p>
 </div></div>
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
@@ -221,12 +221,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"code/functions/create_vector_file_paths.R"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>files_to_import <span class="ot">&lt;-</span> <span class="fu">create_vector_file_paths</span>(<span class="fu">here</span>(<span class="st">"data/output"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-15_ksf-compiled-data-final.csv 
-2 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-15_water-samples-data-final.csv 
-3 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-03-20_weather-data-final.csv 
-4 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_ksf-clams-growth-data-final.csv 
-5 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_ksf-oyster-cylinder-growth-data-final.csv 
-6 =  C:/Users/4p0nc/OneDrive - hawaii.edu/Desktop/nomilo-fishpond-analysis/data/output/2024-04-09_profiles-data-final.csv </code></pre>
+<pre><code>1 =  /Users/lysbethkoster/Documents/Universiteit/University of Hawai'i/MSc Thesis/Thesis/RQ2/nomilo-fishpond-analysis/data/output/2024-03-15_ksf-compiled-data-final.csv 
+2 =  /Users/lysbethkoster/Documents/Universiteit/University of Hawai'i/MSc Thesis/Thesis/RQ2/nomilo-fishpond-analysis/data/output/2024-03-15_water-samples-data-final.csv 
+3 =  /Users/lysbethkoster/Documents/Universiteit/University of Hawai'i/MSc Thesis/Thesis/RQ2/nomilo-fishpond-analysis/data/output/2024-03-20_weather-data-final.csv 
+4 =  /Users/lysbethkoster/Documents/Universiteit/University of Hawai'i/MSc Thesis/Thesis/RQ2/nomilo-fishpond-analysis/data/output/2024-04-09_ksf-clams-growth-data-final.csv 
+5 =  /Users/lysbethkoster/Documents/Universiteit/University of Hawai'i/MSc Thesis/Thesis/RQ2/nomilo-fishpond-analysis/data/output/2024-04-09_ksf-oyster-cylinder-growth-data-final.csv 
+6 =  /Users/lysbethkoster/Documents/Universiteit/University of Hawai'i/MSc Thesis/Thesis/RQ2/nomilo-fishpond-analysis/data/output/2024-04-09_profiles-data-final.csv </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preload data</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
@@ -252,36 +252,137 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>water_profiles_filtered_location <span class="ot">&lt;-</span> dfs<span class="sc">$</span>profiles <span class="sc">%&gt;%</span> </span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Production Dock"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">corr.test</span>(<span class="at">x =</span> ksf_compiled_filtered_dates<span class="sc">$</span>ksf_oxygen_partial_pressure, </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> water_profiles_filtered_location<span class="sc">$</span>dissolved_oxygen,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">corr.test</span>(<span class="at">x =</span> ksf_compiled_filtered_dates<span class="sc">$</span>ksf_salinity, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> water_profiles_filtered_location<span class="sc">$</span>salinity,</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"pearson"</span>, <span class="at">ci =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(results, <span class="at">short=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Call:corr.test(x = ksf_compiled_filtered_dates$ksf_oxygen_partial_pressure, 
-    y = water_profiles_filtered_location$dissolved_oxygen, method = "pearson", 
-    ci = TRUE)
+<pre><code>Call:corr.test(x = ksf_compiled_filtered_dates$ksf_salinity, y = water_profiles_filtered_location$salinity, 
+    method = "pearson", ci = TRUE)
 Correlation matrix 
-[1] 0.87
+[1] -0.41
 Sample Size 
 [1] 5
 These are the unadjusted probability values.
   The probability values  adjusted for multiple tests are in the p.adj object. 
-[1] 0.06
+[1] 0.49
 
  Confidence intervals based upon normal theory.  To get bootstrapped values, try cor.ci
       raw.lower raw.r raw.upper raw.p lower.adj upper.adj
-NA-NA     -0.06  0.87      0.99  0.06     -0.06      0.99</code></pre>
+NA-NA     -0.95 -0.41      0.74  0.49     -0.95      0.74</code></pre>
 </div>
 </div>
 </section>
 <section id="hypothesis-testing" class="level3">
 <h3 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis Testing</h3>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"></ul>
-<div class="tab-content">
+<p>H1. Increase in phytoplankton production positively correlates with higher dissolved oxygen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>water_profiles_filtered_location <span class="ot">&lt;-</span> dfs<span class="sc">$</span>profiles <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Mid Buoy"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>water_samples_filtered_location <span class="ot">&lt;-</span> dfs<span class="sc">$</span>water_samples <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Mid Buoy"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">corr.test</span>(<span class="at">x =</span> water_samples_filtered_location<span class="sc">$</span>large_phytoplankton, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> water_profiles_filtered_location<span class="sc">$</span>dissolved_oxygen,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"pearson"</span>, <span class="at">ci =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(results, <span class="at">short=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:corr.test(x = water_samples_filtered_location$large_phytoplankton, 
+    y = water_profiles_filtered_location$dissolved_oxygen, method = "pearson", 
+    ci = TRUE)
+Correlation matrix 
+[1] 0.8
+Sample Size 
+[1] 4
+These are the unadjusted probability values.
+  The probability values  adjusted for multiple tests are in the p.adj object. 
+[1] 0.2
 
+ Confidence intervals based upon normal theory.  To get bootstrapped values, try cor.ci
+      raw.lower raw.r raw.upper raw.p lower.adj upper.adj
+NA-NA     -0.69   0.8         1   0.2     -0.69         1</code></pre>
+</div>
+</div>
+<p>AH1: Increase in cyanobacteria production correlates with lower dissolved oxygen levels in the water column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>water_profiles_filtered_location <span class="ot">&lt;-</span> dfs<span class="sc">$</span>profiles <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Mid Buoy"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>water_samples_filtered_location <span class="ot">&lt;-</span> dfs<span class="sc">$</span>water_samples <span class="sc">%&gt;%</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Mid Buoy"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(synechococcus_population_1, synechococcus_population_2))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">corr.test</span>(<span class="at">x =</span> water_samples_filtered_location, </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> water_profiles_filtered_location<span class="sc">$</span>dissolved_oxygen,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">"pearson"</span>, <span class="at">ci =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(results, <span class="at">short=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:corr.test(x = water_samples_filtered_location, y = water_profiles_filtered_location$dissolved_oxygen, 
+    method = "pearson", ci = TRUE)
+Correlation matrix 
+                            [,1]
+synechococcus_population_1 -0.86
+synechococcus_population_2 -0.72
+Sample Size 
+[1] 4
+These are the unadjusted probability values.
+  The probability values  adjusted for multiple tests are in the p.adj object. 
+                           [,1]
+synechococcus_population_1 0.14
+synechococcus_population_2 0.28
+
+ Confidence intervals based upon normal theory.  To get bootstrapped values, try cor.ci
+         raw.lower raw.r raw.upper raw.p lower.adj upper.adj
+sy__1-NA     -1.00 -0.86      0.57  0.14     -1.00      0.73
+sy__2-NA     -0.99 -0.72      0.78  0.28     -0.99      0.78</code></pre>
+</div>
+</div>
+<p>::: {.panel-tabset}</p>
+<p>H3: Higher nutrient availability positively correlates with chlorophyll production (total nitrogen, total phosphorus, and N:P ratio).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(dfs<span class="sc">$</span>water_samples<span class="sc">$</span>phosphate, dfs<span class="sc">$</span>water_samples<span class="sc">$</span>chlorophyll_a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  dfs$water_samples$phosphate and dfs$water_samples$chlorophyll_a
+t = 1.3192, df = 31, p-value = 0.1967
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.1224407  0.5317770
+sample estimates:
+      cor 
+0.2305599 </code></pre>
+</div>
+</div>
+<p>H4: Strong western winds positively correlate with chlorophyll production.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>filtered_dates <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2023-11-28"</span>, <span class="st">"2023-12-21"</span>, <span class="st">"2024-01-09"</span>, <span class="st">"2024-01-30"</span>, <span class="st">"2024-02-20"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>weather_filter_dates <span class="ot">&lt;-</span> dfs<span class="sc">$</span>weather <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">%in%</span> filtered_dates) </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>water_samples_filtered_location <span class="ot">&lt;-</span> dfs<span class="sc">$</span>water_samples <span class="sc">%&gt;%</span> </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(location <span class="sc">==</span> <span class="st">"Back Buoy"</span> <span class="sc">&amp;</span> depth <span class="sc">==</span> <span class="fl">0.5</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(weather_filter_dates<span class="sc">$</span>wind_direction, water_samples_filtered_location<span class="sc">$</span>chlorophyll_a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  weather_filter_dates$wind_direction and water_samples_filtered_location$chlorophyll_a
+t = -1.4293, df = 2, p-value = 0.2892
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.9933152  0.7898645
+sample estimates:
+       cor 
+-0.7108463 </code></pre>
 </div>
 </div>
 
@@ -325,7 +426,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -357,29 +469,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -387,15 +477,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
           // target, if specified
           link.setAttribute("target", "_blank");
           if (link.getAttribute("rel") === null) {
@@ -437,11 +522,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
+      return note.innerHTML;
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
