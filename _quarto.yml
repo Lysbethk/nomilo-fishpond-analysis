@@ -16,14 +16,8 @@ website:
         text: About
       - href: data-processing.qmd
         text: Data Processing
-      - text: Applications
-        menu:
-          - href: data-collection.qmd
-            text: Data Collection
-          - href: eda.qmd
-            text: Exploratory Data Analysis
-          - href: correlational-analysis.qmd
-            text: Correlational Analysis
+      - href: eda.qmd
+        text: Data Explorer
   back-to-top-navigation: true
     
 format:

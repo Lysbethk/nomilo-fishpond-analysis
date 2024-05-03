@@ -46,3 +46,4 @@ _freeze/
 data/raw/*.RData
 data/tidied/
 www/img/all-photos/
+trash/
