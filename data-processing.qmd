@@ -123,7 +123,7 @@ because it takes long to execute. Therefore, do step 4b instead to easily import
 #| label: efficiently-load-raw-data
 #| code-fold: true
 #| code-summary: "Step 4b: Efficiently import up-to-date raw data"
-base::load(files_to_import[11])
+base::load(files_to_import[8])
 ```
 
     * We will always use snakecase when naming our data
