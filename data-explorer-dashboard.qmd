@@ -1,0 +1,222 @@
+---
+format: 
+  dashboard:
+    logo: www/logos/fish-fins-solid.svg
+    nav-buttons:
+      - icon: github
+        href: https://github.com/Lysbethk/nomilo-fishpond-analysis
+---
+
+# Interactive Visualizations Old
+
+## Sidebar {.sidebar}
+
+```{r}
+htmltools::includeMarkdown(here::here("dashboard-intro.md"))
+```
+
+## Column
+
+```{r}
+#| title: "Data Collection Sites at Nomilo Fishpond Located in Kauaʻi, Hawaiʻi"
+#| echo: false
+#| padding: 0px
+library(leaflet)
+library(tidyverse)
+
+location_coords <- data.frame(
+  location = c("Back Buoy", "Middle Buoy",
+               "Production Dock", "Auwai"),
+  lat = c(21.8875, 21.8865556, 21.8851, 21.885),
+  lon = c(-159.5268, -159.5273056, -159.5276, -159.5281)
+)
+
+lat <- 21.88625
+long <- -159.52725
+
+m <- leaflet(location_coords) %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  setView(long, lat, zoom = 17) %>%
+  addCircleMarkers(
+    ~lon, ~lat, 
+    radius = 5, 
+    color = "orange", 
+    fillOpacity = 0.8
+  )
+
+m <- purrr::reduce(1:nrow(location_coords), function(map, i) {
+  map %>% addLabelOnlyMarkers(
+    location_coords$lon[i], 
+    location_coords$lat[i], 
+    label = location_coords$location[i],
+    labelOptions = labelOptions(
+      noHide = TRUE, 
+      textOnly = TRUE, 
+      direction = "right",
+      offset = c(10, 10),  
+      style = list(color = "white", fontWeight = "bold", fontSize = "13px") 
+    )
+  )
+}, .init = m)
+
+m
+```
+
+## Column {width=70%}
+
+<iframe src="https://lysbeth.shinyapps.io/nomilo_fishpond_biogeochemical_changes_over_time" width="100%" height="900" frameborder="1"></iframe>
+
+# Interactive Visualizations New
+
+## Sidebar {.sidebar}
+
+```{r}
+htmltools::includeMarkdown(here::here("dashboard-intro.md"))
+```
+
+## Column {width=30%}
+
+```{r}
+#| title: "Data Collection Sites at Nomilo Fishpond Located in Kauaʻi, Hawaiʻi"
+#| echo: false
+#| padding: 0px
+library(leaflet)
+library(tidyverse)
+
+location_coords <- data.frame(
+  location = c("Back Buoy", "Middle Buoy",
+               "Production Dock", "Auwai"),
+  lat = c(21.8875, 21.8865556, 21.8851, 21.885),
+  lon = c(-159.5268, -159.5273056, -159.5276, -159.5281)
+)
+
+lat <- 21.88625
+long <- -159.52725
+
+m <- leaflet(location_coords) %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  setView(long, lat, zoom = 17) %>%
+  addCircleMarkers(
+    ~lon, ~lat, 
+    radius = 5, 
+    color = "orange", 
+    fillOpacity = 0.8
+  )
+
+m <- purrr::reduce(1:nrow(location_coords), function(map, i) {
+  map %>% addLabelOnlyMarkers(
+    location_coords$lon[i], 
+    location_coords$lat[i], 
+    label = location_coords$location[i],
+    labelOptions = labelOptions(
+      noHide = TRUE, 
+      textOnly = TRUE, 
+      direction = "right",
+      offset = c(10, 10),  
+      style = list(color = "white", fontWeight = "bold", fontSize = "13px") 
+    )
+  )
+}, .init = m)
+
+m
+```
+
+## Column 
+
+```{r}
+#| title: "Cell Growth Changes"
+
+print("Plot")
+```
+
+```{r}
+#| title: "Nutrient Spikes"
+print("Plot")
+```
+
+## Row 
+
+### Column
+
+```{r}
+#| title: "Water Stratification Volatility"
+print("Plot")
+```
+
+### Column {.tabset}
+
+```{r}
+#| title: "Clam Growth Trends"
+print("Plot")
+```
+
+```{r}
+#| title: "Oyster Growth Trends"
+print("Plot")
+```
+
+# Dataset Descriptions 
+
+## Sidebar {.sidebar}
+
+```{r}
+htmltools::includeMarkdown(here::here("dashboard-intro.md"))
+```
+
+## Column {.flow}
+
+```{r}
+#| echo: false
+library(dataxray)
+library(tidyverse)
+library(htmltools)
+```
+
+```{r}
+#| echo: false
+load_tidied_data <- function(base_url, file_names) {
+  dfs <- map(file_names, ~ read_csv(glue::glue("{base_url}{.x}"), show_col_types = FALSE))
+  names(dfs) <- names(file_names)
+  return(dfs)
+}
+
+# Define the named vector of file names
+file_names <- c(
+  "Water Samples" = "2024-03-15_water-samples-data-final.csv",
+  "Profiles" = "2024-04-09_profiles-data-final.csv",
+  "Clam Growth" = "2024-04-09_ksf-clams-growth-data-final.csv",
+  "Oyster Growth" = "2024-04-09_ksf-oyster-cylinder-growth-data-final.csv",
+  "Weather" = "2024-03-20_weather-data-final.csv",
+  "Kauaʻi Sea Farm Data" = "2024-03-15_ksf-compiled-data-final.csv"
+)
+
+# Example usage
+base_url <- "https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/"
+dfs <- load_tidied_data(base_url, file_names)
+```
+
+<center><iframe src="https://aceria.shinyapps.io/dataset-description/" width="100%" height="900" frameborder="1"></iframe></center>
+
+# Data Collection
+
+## Sidebar {.sidebar}
+
+```{r}
+htmltools::includeMarkdown(here::here("dashboard-intro.md"))
+```
+
+## Row
+
+```{r}
+#| title: "Upload KSF Data and Export Visualizations"
+print("App")
+```
+
+## Row
+
+```{r}
+#| title: "Collect Water Sampling and Profile Data"
+print("App")
+```
+
+

@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Data Analysis (EDA)"
+title: "Data Explorer"
 author: 
   - name: "Lysbeth Koster"
   - name: "Alemarie Ceria"
@@ -9,7 +9,63 @@ execute:
   message: false
 code-annotations: hover
 code-overflow: wrap
+page-layout: full
 ---
+
+```{r}
+#| echo: false
+library(dataxray)
+library(tidyverse)
+```
+
+```{r}
+#| echo: false
+load_tidied_data <- function(base_url, file_names) {
+  dfs <- map(file_names, ~ read_csv(glue::glue("{base_url}{.x}"), show_col_types = FALSE))
+  names(dfs) <- names(file_names)
+  return(dfs)
+}
+
+# Define the named vector of file names
+file_names <- c(
+  "Water Samples" = "2024-03-15_water-samples-data-final.csv",
+  "Profiles" = "2024-04-09_profiles-data-final.csv",
+  "Clam Growth" = "2024-04-09_ksf-clams-growth-data-final.csv",
+  "Oyster Growth" = "2024-04-09_ksf-oyster-cylinder-growth-data-final.csv",
+  "Weather" = "2024-03-20_weather-data-final.csv",
+  "KSF Data" = "2024-03-15_ksf-compiled-data-final.csv"
+)
+
+# Example usage
+base_url <- "https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/"
+dfs <- load_tidied_data(base_url, file_names)
+```
+
+## Dataset Descriptions
+
+::: {.panel-tabset}
+
+### Water Samples
+
+```{r}
+#| echo: false
+dfs$`Water Samples` %>%  
+   make_xray() %>% 
+   view_xray()
+```
+
+### Profiles
+
+```{r}
+#| echo: false
+dfs$Profiles %>%  
+   make_xray() %>% 
+   view_xray()
+```
+
+:::
+
+## Exploratory Data Analysis (EDA)
 
 ::: {.callout-important title="Unresponsive Shiny Application"}
 If the Shiny application fails to load below, please click [here](http://lysbeth.shinyapps.io/nomilo_fishpond_biogeochemical_changes_over_time).
@@ -51,3 +107,5 @@ summary_tables <- map(summary_dfs, create_summary_table)
 summary_tables <- set_names(summary_tables, summary_dfs)
 summary_tables
 ```
+
+

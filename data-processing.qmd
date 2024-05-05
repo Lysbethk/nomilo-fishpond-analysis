@@ -123,10 +123,10 @@ because it takes long to execute. Therefore, do step 4b instead to easily import
 #| label: efficiently-load-raw-data
 #| code-fold: true
 #| code-summary: "Step 4b: Efficiently import up-to-date raw data"
-base::load(files_to_import[8])
+base::load(files_to_import[12])
 ```
 
-    * We will always use snakecase when naming our data
+    - We will always use snakecase when naming our data
     objects and functions (e.g., `data_object_name` or
     `function_name()`).
 
@@ -158,7 +158,6 @@ ksf_compiled_data <- dfs_no_profiles$ksf_compiled_data$full_data
 ksf_oyster_cylinder_growth_data <- dfs_no_profiles$ksf_oyster_cylinder_growth$sheet1
 water_samples_data <- dfs_no_profiles$water_samples$data_overview
 weather_data <- dfs_no_profiles$weather_data$weather_ksf
-tidal_data <- dfs_no_profiles$ksf_compiled_data$tides
 ```
 
 ```{r}
@@ -427,7 +426,7 @@ water_samples_data_tidied <- water_samples_data %>%
   select(-c(sample_id, nomilo_id, tube_name)) %>% 
   mutate(location = str_to_title(location)) %>%
   mutate(location = factor(location, 
-                           levels = c("Mid Buoy", "Back Buoy", "Auwei", "Production Dock"))) %>% 
+                           levels = c("Mid Buoy", "Back Buoy", "Auwai", "Production Dock"))) %>% 
    filter(!is.na(location))
 
 paged_table(water_samples_data_tidied)
@@ -493,7 +492,7 @@ profiles_data_tidied <- profiles_data %>% #<2>
       location == "L1 Northwest buoy" ~ "back buoy",
       location == "L2 Middle Buoy" ~ "mid buoy",
       location == "L3 Production Dock" ~ "production dock", #<8>
-      location == "L4 Auwai" ~ "auwei", #<8>
+      location == "L4 Auwai" ~ "Auwai", #<8>
       TRUE ~ location #<8>
     ), #<8>
     date = case_when( #<8>
@@ -520,7 +519,7 @@ profiles_data_tidied <- profiles_data %>% #<2>
   mutate(visibility = if_else(date == "2023-11-28",  NA_real_, visibility)) %>%  #<13>
   mutate(location = str_to_title(location)) %>%
   mutate(location = factor(location, 
-                           levels = c("Mid Buoy", "Back Buoy", "Auwei", "Production Dock"))) %>% 
+                           levels = c("Mid Buoy", "Back Buoy", "Auwai", "Production Dock"))) %>% 
   mutate(conductivity = coalesce(conductivity, salinity)) %>% 
   rename("salinity1" = salinity,
          "salinity" = conductivity) %>% 
@@ -542,32 +541,6 @@ paged_table(profiles_data_tidied)
 11. Sets correct data types for each variable
 12. Fills  values from the temperature downwards into the newly created columns for date and location
 
-#### tidal_data_tidied
-
-```{r}
-#| label: tidy-tidal-data-dataset
-#| code-fold: true
-#| code-summary: <i>Steps to clean data</i>
-
-tidal_data_tidied <- tidal_data %>% 
-
-janitor::clean_names() %>% #<1>
-  mutate(date = as.Date(date, format = "%Y-%m-%d"))  %>% #<2>
-   filter(date >= as.Date("2023-11-20") & date <=  as.Date("2024-02-20")) %>% #<3>
-  select(-2) %>% #<4>
-  mutate(time = as_hms(format(time, "%H:%M:%S")), #<5>
-         high_low = as.factor(high_low)) #<6>
-  
-paged_table(tidal_data_tidied)
-```
-
-1. Clean variable names 
-2. Set date as correct variable type and format YYYY-MM-DD
-3. Filter to desired date range
-4. Cut column
-5. Set time as time variable type
-6. Set variable as factor type
-
 ::: 
 
 ## Data Exportation
@@ -583,15 +556,12 @@ source("code/functions/export_to_csv.R")
 
 dfs_to_export <- list( # <1>
   ksf_clams_growth_data_tidied = ksf_clams_growth_data_tidied, # <1>
-  # ksf_compiled_data_tidied = ksf_compiled_data_tidied, # <1>
-  ksf_oyster_cylinder_growth_data_tidied = ksf_oyster_cylinder_growth_data_tidied # <1>
-  # water_samples_data_tidied = water_samples_data_tidied, # <1>
-  # profiles_data_tidied = profiles_data_tidied,
-  # biogeochem_vars_merged = biogeochem_vars_merged,
-  # profiles_water_samples_merged = profiles_water_samples_merged,
-  # tidal_data_tidied = tidal_data_tidied,
-  # weather_data_tidied = weather_data_tidied
-  ) # <1>
+  ksf_compiled_data_tidied = ksf_compiled_data_tidied, # <1>
+  ksf_oyster_cylinder_growth_data_tidied = ksf_oyster_cylinder_growth_data_tidied, # <1>
+  water_samples_data_tidied = water_samples_data_tidied, # <1>
+  weather_data_tidied = weather_data_tidied, # <1>
+  profiles_data_tidied = profiles_data_tidied # <1>
+) # <1>
 
 imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied")) # <2>
 ```
@@ -601,12 +571,4 @@ imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied")) # <2>
 `.x` refers to the dataframe. `.y` refers to the name of the dataframe. These are 
 passed to `export_to_csv()` function along with the desired directory path.
 
-```{r}
-#| code-fold: true
-#| code-summary: Export merged final data set into `data/outputs` folder
-#| eval: false
-export_to_csv(profiles_data_tidied,
-              "profiles_data_tidied",
-              "data/tidied")
-```
 

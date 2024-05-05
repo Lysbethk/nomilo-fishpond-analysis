@@ -23,9 +23,9 @@
   {
     "objectID": "eda.html",
     "href": "eda.html",
-    "title": "Exploratory Data Analysis (EDA)",
+    "title": "Data Explorer",
     "section": "",
-    "text": "Unresponsive Shiny Application\n\n\n\nIf the Shiny application fails to load below, please click here.\n\n\n\n\n\n\n\n Back to top"
+    "text": "Water SamplesProfiles\n\n\n\n\n\n\nExpand/collapse all\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExpand/collapse all"
   },
   {
     "objectID": "data-processing.html",
@@ -82,5 +82,33 @@
     "title": "Correlational Analysis",
     "section": "Instrument Validation",
     "text": "Instrument Validation\n\nConductivity & Dissolved Oxygen \n\n\nCorrelation Between KSF Oxygen Partial Pressure and Collected Dissolved Oxygen on Specific Days at a 0.5 Depth at the Production Dock\nfiltered_dates &lt;- c(\"2023-11-28\", \"2023-12-21\", \"2024-01-09\", \"2024-01-30\", \"2024-02-20\") \nksf_compiled_filtered_dates &lt;- dfs$ksf_compiled %&gt;% \n  filter(date %in% filtered_dates) \n\nwater_profiles_filtered_location &lt;- dfs$profiles %&gt;% \n  filter(location == \"Production Dock\" & depth == 0.5)\n\nresults &lt;- corr.test(x = ksf_compiled_filtered_dates$ksf_salinity, \n                     y = water_profiles_filtered_location$salinity,\n                     method = \"pearson\", ci = TRUE)\n\nprint(results, short=FALSE)\n\n\nCall:corr.test(x = ksf_compiled_filtered_dates$ksf_salinity, y = water_profiles_filtered_location$salinity, \n    method = \"pearson\", ci = TRUE)\nCorrelation matrix \n[1] -0.41\nSample Size \n[1] 5\nThese are the unadjusted probability values.\n  The probability values  adjusted for multiple tests are in the p.adj object. \n[1] 0.49\n\n Confidence intervals based upon normal theory.  To get bootstrapped values, try cor.ci\n      raw.lower raw.r raw.upper raw.p lower.adj upper.adj\nNA-NA     -0.95 -0.41      0.74  0.49     -0.95      0.74\n\n\n\n\nHypothesis Testing\nH1. Increase in phytoplankton production positively correlates with higher dissolved oxygen.\n\nwater_profiles_filtered_location &lt;- dfs$profiles %&gt;% \n  filter(location == \"Mid Buoy\" & depth == 0.5)\n\nwater_samples_filtered_location &lt;- dfs$water_samples %&gt;% \n  filter(location == \"Mid Buoy\" & depth == 0.5)\n\nresults &lt;- corr.test(x = water_samples_filtered_location$large_phytoplankton, \n                     y = water_profiles_filtered_location$dissolved_oxygen,\n                     method = \"pearson\", ci = TRUE)\n\nprint(results, short=FALSE)\n\nCall:corr.test(x = water_samples_filtered_location$large_phytoplankton, \n    y = water_profiles_filtered_location$dissolved_oxygen, method = \"pearson\", \n    ci = TRUE)\nCorrelation matrix \n[1] 0.8\nSample Size \n[1] 4\nThese are the unadjusted probability values.\n  The probability values  adjusted for multiple tests are in the p.adj object. \n[1] 0.2\n\n Confidence intervals based upon normal theory.  To get bootstrapped values, try cor.ci\n      raw.lower raw.r raw.upper raw.p lower.adj upper.adj\nNA-NA     -0.69   0.8         1   0.2     -0.69         1\n\n\nAH1: Increase in cyanobacteria production correlates with lower dissolved oxygen levels in the water column.\n\nwater_profiles_filtered_location &lt;- dfs$profiles %&gt;% \n  filter(location == \"Mid Buoy\" & depth == 0.5)\n\nwater_samples_filtered_location &lt;- dfs$water_samples %&gt;% \n  filter(location == \"Mid Buoy\" & depth == 0.5) %&gt;% \n  select(c(synechococcus_population_1, synechococcus_population_2))\n\nresults &lt;- corr.test(x = water_samples_filtered_location, \n                     y = water_profiles_filtered_location$dissolved_oxygen,\n                     method = \"pearson\", ci = TRUE)\n\nprint(results, short=FALSE)\n\nCall:corr.test(x = water_samples_filtered_location, y = water_profiles_filtered_location$dissolved_oxygen, \n    method = \"pearson\", ci = TRUE)\nCorrelation matrix \n                            [,1]\nsynechococcus_population_1 -0.86\nsynechococcus_population_2 -0.72\nSample Size \n[1] 4\nThese are the unadjusted probability values.\n  The probability values  adjusted for multiple tests are in the p.adj object. \n                           [,1]\nsynechococcus_population_1 0.14\nsynechococcus_population_2 0.28\n\n Confidence intervals based upon normal theory.  To get bootstrapped values, try cor.ci\n         raw.lower raw.r raw.upper raw.p lower.adj upper.adj\nsy__1-NA     -1.00 -0.86      0.57  0.14     -1.00      0.73\nsy__2-NA     -0.99 -0.72      0.78  0.28     -0.99      0.78\n\n\n::: {.panel-tabset}\nH3: Higher nutrient availability positively correlates with chlorophyll production (total nitrogen, total phosphorus, and N:P ratio).\n\ncor.test(dfs$water_samples$phosphate, dfs$water_samples$chlorophyll_a)\n\n\n    Pearson's product-moment correlation\n\ndata:  dfs$water_samples$phosphate and dfs$water_samples$chlorophyll_a\nt = 1.3192, df = 31, p-value = 0.1967\nalternative hypothesis: true correlation is not equal to 0\n95 percent confidence interval:\n -0.1224407  0.5317770\nsample estimates:\n      cor \n0.2305599 \n\n\nH4: Strong western winds positively correlate with chlorophyll production.\n\nfiltered_dates &lt;- c(\"2023-11-28\", \"2023-12-21\", \"2024-01-09\", \"2024-01-30\", \"2024-02-20\")\n\nweather_filter_dates &lt;- dfs$weather %&gt;% \n  filter(date %in% filtered_dates) \n\nwater_samples_filtered_location &lt;- dfs$water_samples %&gt;% \n  filter(location == \"Back Buoy\" & depth == 0.5)\n\ncor.test(weather_filter_dates$wind_direction, water_samples_filtered_location$chlorophyll_a)\n\n\n    Pearson's product-moment correlation\n\ndata:  weather_filter_dates$wind_direction and water_samples_filtered_location$chlorophyll_a\nt = -1.4293, df = 2, p-value = 0.2892\nalternative hypothesis: true correlation is not equal to 0\n95 percent confidence interval:\n -0.9933152  0.7898645\nsample estimates:\n       cor \n-0.7108463"
+  },
+  {
+    "objectID": "eda.html#dataset-descriptions",
+    "href": "eda.html#dataset-descriptions",
+    "title": "Data Explorer",
+    "section": "",
+    "text": "Water SamplesProfiles\n\n\n\n\n\n\nExpand/collapse all\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExpand/collapse all"
+  },
+  {
+    "objectID": "eda.html#exploratory-data-analysis-eda",
+    "href": "eda.html#exploratory-data-analysis-eda",
+    "title": "Data Explorer",
+    "section": "Exploratory Data Analysis (EDA)",
+    "text": "Exploratory Data Analysis (EDA)\n\n\n\n\n\n\nUnresponsive Shiny Application\n\n\n\nIf the Shiny application fails to load below, please click here."
+  },
+  {
+    "objectID": "dashboard-intro.html",
+    "href": "dashboard-intro.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "Welcome\nThis dashboard collects and analyzes biogeochemical and physical data that affect the aquacultural productivity of the Nomilo fishpond, operated by Kauaʻi Sea Farm (KSF), to monitor its ecosystem and make informed management decisions aimed at optimizing its ecosystem and sustaining ecosystem services amid climate change.\n\nDatasets Used\n\nWater Sampling\nProfiles\nClam growth\nOyster growth\nWeather\nKSF Data\n\n\n\nGain Insights In\n\nCell growth changes\nNutrient spikes\nWater stratification volatility\nClam/oyster growth trends\n\n\n\nMonitoring Recommendation\nMeasurements should be taken year-round to compare seasonal dynamics, especially contrasting summer and winter. This will help KSF grasp how climate change impacts Nomilo.\n    \nCreated By: Alemarie Ceria  Last Updated: 05/05/2024  © 2024 Oleson Lab, University of Hawaii at Manoa\n\n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "data-explorer-dashboard.html",
+    "href": "data-explorer-dashboard.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "Nomilo Fishpond Located in Kauaʻi, Hawaiʻi\n\n\n\n\n\n\n\n    \n    \n        \n    \n\n\n\n\n\n\n\n\n\nWelcome\nThis dashboard collects and analyzes biogeochemical and physical data that affect the aquacultural productivity of the Nomilo fishpond, operated by Kauaʻi Sea Farm (KSF), to monitor its ecosystem and make informed management decisions aimed at restoring the fishpond and sustaining ecosystem services amid climate change.\nDatasets Used\n\nWater Sampling\nProfiles\nClam growth\nOyster growth\nWeather\nKSF Data\n\nGain Insights In\n\nCell growth changes\nNutrient spikes\nWater stratification volatility\nClam/oyster growth trends\n\nMonitoring Recommendation\nMeasurements should be taken year-round to compare seasonal dynamics, especially contrasting summer and winter. This will help KSF grasp how climate change impacts Nomilo.\n \n \n\nCreated By: Alemarie Ceria \nLast Updated: 05/05/2024 \n© 2024 Oleson Lab, University of Hawaii at Manoa\n\n\n\n\n    \n      \n    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Back to top"
   }
 ]

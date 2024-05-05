@@ -9,22 +9,21 @@ execute:
   freeze: auto
 
 website:
-  title: "Nomilo Fishpond Biogeochemical Analysis"
+  title: "Nomilo Fishpond Case Study"
   navbar:
     left:
       - href: index.qmd
         text: About
       - href: data-processing.qmd
         text: Data Processing
-      - href: eda.qmd
-        text: Data Explorer
+      - href: data-explorer-dashboard.qmd
+        text: Data Explorer Dashboard
   back-to-top-navigation: true
     
 format:
   html:
     theme: 
       - simplex
-      # - styles.scss
     toc: true
     fontsize: 12pt
     page-layout: full
@@ -34,6 +33,8 @@ format:
       ![](/www/logos/uhm-logo.png) 
       <br><br>
       ![](/www/logos/pac-risa-logo.png) 
+      <br><br>
+      ![](/www/logos/ksf-logo.png) 
       <br><br>
 
 
