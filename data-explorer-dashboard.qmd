@@ -165,36 +165,6 @@ htmltools::includeMarkdown(here::here("dashboard-intro.md"))
 
 ## Column {.flow}
 
-```{r}
-#| echo: false
-library(dataxray)
-library(tidyverse)
-library(htmltools)
-```
-
-```{r}
-#| echo: false
-load_tidied_data <- function(base_url, file_names) {
-  dfs <- map(file_names, ~ read_csv(glue::glue("{base_url}{.x}"), show_col_types = FALSE))
-  names(dfs) <- names(file_names)
-  return(dfs)
-}
-
-# Define the named vector of file names
-file_names <- c(
-  "Water Samples" = "2024-03-15_water-samples-data-final.csv",
-  "Profiles" = "2024-04-09_profiles-data-final.csv",
-  "Clam Growth" = "2024-04-09_ksf-clams-growth-data-final.csv",
-  "Oyster Growth" = "2024-04-09_ksf-oyster-cylinder-growth-data-final.csv",
-  "Weather" = "2024-03-20_weather-data-final.csv",
-  "Kauaʻi Sea Farm Data" = "2024-03-15_ksf-compiled-data-final.csv"
-)
-
-# Example usage
-base_url <- "https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/"
-dfs <- load_tidied_data(base_url, file_names)
-```
-
 <center><iframe src="https://aceria.shinyapps.io/dataset-description/" width="100%" height="900" frameborder="1"></iframe></center>
 
 # Data Collection

@@ -162,11 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#procedure" id="toc-procedure" class="nav-link" data-scroll-target="#procedure">Procedure</a></li>
   </ul></li>
   <li><a href="#data-tidying" id="toc-data-tidying" class="nav-link" data-scroll-target="#data-tidying">Data Tidying</a></li>
-  <li><a href="#data-exportation" id="toc-data-exportation" class="nav-link" data-scroll-target="#data-exportation">Data Exportation</a>
-  <ul class="collapse">
-  <li><a href="#exporting-processed-data" id="toc-exporting-processed-data" class="nav-link" data-scroll-target="#exporting-processed-data">Exporting Processed Data</a></li>
-  <li><a href="#generating-data-dictionaries" id="toc-generating-data-dictionaries" class="nav-link" data-scroll-target="#generating-data-dictionaries">Generating Data Dictionaries</a></li>
-  </ul></li>
+  <li><a href="#data-exportation" id="toc-data-exportation" class="nav-link" data-scroll-target="#data-exportation">Data Exportation</a></li>
   </ul>
 </nav>
 </nav>
@@ -288,22 +284,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>Kauaʻi Sea Farm</td>
 <td>Clam Growth</td>
-<td>Growth and harvest data of clams at Nomilo fishpond gathered by Kauai Sea Farm</td>
+<td>Growth and harvest data of clams at Nomilo fishpond gathered by Kauaʻi Sea Farm</td>
 </tr>
 <tr class="even">
 <td>Kauaʻi Sea Farm</td>
 <td>Oyster Growth</td>
-<td>Growth and harvest data of the <em>Mercenaria mercenaria</em> clams and <em>Crassostrea gigas</em> oysters at Nomilo fishpond gathered by Kauai Sea Farm</td>
+<td>Growth and harvest data of the <em>Mercenaria mercenaria</em> clams and <em>Crassostrea gigas</em> oysters at Nomilo fishpond gathered by Kauaʻi Sea Farm</td>
 </tr>
 <tr class="odd">
 <td>Kauaʻi Sea Farm</td>
 <td>Weather</td>
-<td>Meteorological measurements and weather data reports that were kept on-site by Kauai Sea Farm accessed through weather.kauaiseafarm.com</td>
+<td>Meteorological measurements and weather data reports that were kept on-site by Kauaʻi Sea Farm accessed through weather.Kauaʻiseafarm.com</td>
 </tr>
 <tr class="even">
 <td>Kauaʻi Sea Farm</td>
 <td>Kauaʻi Sea Farm Compiled Data</td>
-<td>Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauai Sea Farm</td>
+<td>Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauaʻi Sea Farm</td>
 </tr>
 </tbody>
 </table>
@@ -684,9 +680,9 @@ Expand To Learn When to Run Step 2a
 </section>
 <section id="data-exportation" class="level2">
 <h2 class="anchored" data-anchor-id="data-exportation">Data Exportation</h2>
-<section id="exporting-processed-data" class="level3">
-<h3 class="anchored" data-anchor-id="exporting-processed-data">Exporting Processed Data</h3>
 <div class="cell">
+<details class="code-fold">
+<summary>Efficiently export tidied datasets to <code>data/tidied</code> folder</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dfs_to_export <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">water_samples_data_tidied =</span> water_samples_data_tidied,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">water_profiles_data_tidied =</span> water_profiles_data_tidied,</span>
@@ -697,13 +693,10 @@ Expand To Learn When to Run Step 2a
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>) </span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">imap</span>(dfs_to_export, <span class="sc">~</span> <span class="fu">export_to_csv</span>(.x, .y, <span class="st">"data/tidied"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-</section>
-<section id="generating-data-dictionaries" class="level3">
-<h3 class="anchored" data-anchor-id="generating-data-dictionaries">Generating Data Dictionaries</h3>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
