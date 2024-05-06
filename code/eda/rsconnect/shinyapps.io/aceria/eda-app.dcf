@@ -1,0 +1,12 @@
+name: eda-app
+title: eda-app
+username: aceria
+account: aceria
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11941407
+bundleId: 8580436
+url: https://aceria.shinyapps.io/eda-app/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

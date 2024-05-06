@@ -7,16 +7,21 @@ library(dplyr)
 library(DT)
 library(here)
 
-
 # Preload data
-dfs <- list(
-  "Water Samples" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-15_water-samples-data-final.csv"),
-  "Profiles" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-04-09_profiles-data-final.csv"),
-  "Clams Growth" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-04-09_ksf-clams-growth-data-final.csv"),
-  "Oyster Growth" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-04-09_ksf-oyster-cylinder-growth-data-final.csv"),
-  "Weather" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-20_weather-data-final.csv"),
-  "KSF Data" = readr::read_csv("https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/2024-03-15_ksf-compiled-data-final.csv")
+source(here::here("code/functions/load_tidied_data.R"))
+
+# Define the named vector of file names
+file_names <- c(
+  "Water Samples" = "2024-05-05_water-samples-data-final.csv",
+  "Profiles" = "2024-05-05_water-profiles-data-final.csv",
+  "Clam Growth" = "2024-05-05_clam-growth-data-final.csv",
+  "Oyster Growth" = "2024-05-05_oyster-growth-data-final.csv",
+  "Weather" = "2024-05-05_weather-data-final.csv",
+  "Kauaʻi Sea Farm Data" = "2024-05-05_ksf-data-final.csv"
 )
+
+base_url <- "https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/"
+dfs <- load_tidied_data(base_url, file_names)
 
 # Helper function to convert variable names to title case with spaces
 make_title_case <- function(variable_name) {
