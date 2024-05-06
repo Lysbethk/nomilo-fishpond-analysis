@@ -57,7 +57,6 @@ export_to_csv <- function(df, df_name, dir_path) {
   file_name <- gsub("_", "-", df_name)
   full_file_path <- paste0(dir_path, "/", current_date, "_", file_name, ".csv")
   write.csv(df, full_file_path, row.names = FALSE)
-  message("Exported file to ", full_file_path)
 }
 ```
 
@@ -65,19 +64,14 @@ export_to_csv <- function(df, df_name, dir_path) {
 
 ### Data Sources
 
-| Data Producer   | Dataset                       | Dataset Description                                                                                           |
+| Data Producer   | Dataset                       | Dataset Description                                                                                                                                              |
 |--------------------|--------------------|--------------------------------|
-| Lysbeth         | Water Samples                 | Measurements to represent the biogeochemical dynamics of Nomilo Fishpond                                      |
-| Lysbeth         | Water Profiles                | Measurements of basic physical water quality indicators                                                       |
-| Kauaʻi Sea Farm | Clam Growth                   | Growth and harvest data of clams at Nomilo                                                                    
-                                                   fishpond gathered by Kauai Sea Farm                                                                            |
-| Kauaʻi Sea Farm | Oyster Growth                 | Growth and harvest data of the *Mercenaria mercenaria* clams and *Crassostrea gigas* oysters at Nomilo        
-                                                   fishpond gathered by Kauai Sea Farm                                                                            |
-| Kauaʻi Sea Farm | Weather                       | Meteorological measurements and weather data reports that were kept on-site by Kauai Sea Farmaccessed through 
-                                                   weather.kauaiseafarm.com                                                                                       |
-| Kauaʻi Sea Farm | Kauaʻi Sea Farm Compiled Data | Various                                                                                                       
-                                                   daily water quality metrics at the surface level (approximately 0.5m) at the                                   
-                                                   Production Dock location of Nomilo fishpond measured by Kauai Sea Farm                                         |
+| Lysbeth         | Water Samples                 | Measurements to represent the biogeochemical dynamics of Nomilo Fishpond                                                                                         |
+| Lysbeth         | Water Profiles                | Measurements of basic physical water quality indicators                                                                                                          |
+| Kauaʻi Sea Farm | Clam Growth                   | Growth and harvest data of clams at Nomilo fishpond gathered by Kauai Sea Farm                                                                                   |
+| Kauaʻi Sea Farm | Oyster Growth                 | Growth and harvest data of the *Mercenaria mercenaria* clams and *Crassostrea gigas* oysters at Nomilo fishpond gathered by Kauai Sea Farm                       |
+| Kauaʻi Sea Farm | Weather                       | Meteorological measurements and weather data reports that were kept on-site by Kauai Sea Farm accessed through weather.kauaiseafarm.com                          |
+| Kauaʻi Sea Farm | Kauaʻi Sea Farm Compiled Data | Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauai Sea Farm      |
 
 ### Procedure
 
@@ -114,9 +108,11 @@ pacman::p_load(
 
 #### Expand To Learn When to Run Step 2a
 
+Run when there is new raw data added. Since the following code chunk is slow to execute, run step 2b.
+
 ```{r}
 #| code-fold: true
-#| code-summary: "Step 2a: Load all XLSX files into a large dataframe list and clean dataframe names and sheets then export as an .RData file"
+#| code-summary: "Step 2a: Load all XLSX files into a large dataframe list and clean dataframe and sheet names then export as an .RData file"
 #| eval: false
 dfs <- slowly_load_xlsx_files_to_list("data/raw")
 export_to_rdata(dfs, "data/raw/rdata-files/")
@@ -126,7 +122,7 @@ export_to_rdata(dfs, "data/raw/rdata-files/")
 
 ```{r}
 #| code-fold: true
-#| code-summary: "Step 2b: Efficiently load all data into a dataframe list"
+#| code-summary: "Step 2b: Efficiently load all dataframes into a large list"
 base::load("data/raw/rdata-files/2024-05-05_dfs.RData")
 ```
 
@@ -148,7 +144,7 @@ ksf_data <- load_xlsx_sheet(dfs_list, "ksf_compiled_data", "full_data")
 
 ## Data Tidying
 
-::: {.panel-tabset}
+::: panel-tabset
 
 ### Water Samples
 
@@ -365,7 +361,7 @@ janitor::clean_names() %>%  #<1>
 paged_table(weather_data_tidied)
 ```
 
-### Kauaʻi Sea Farm Data 
+### Kauaʻi Sea Farm Data
 
 ```{r}
 #| label: tidy-ksf-compiled-data-dataset
@@ -402,7 +398,6 @@ ksf_data_tidied <- ksf_data %>%
 
 paged_table(ksf_data_tidied)
 ```
-
 :::
 
 ## Data Exportation
@@ -410,6 +405,7 @@ paged_table(ksf_data_tidied)
 ### Exporting Processed Data
 
 ```{r}
+#| eval: false
 dfs_to_export <- list( 
   water_samples_data_tidied = water_samples_data_tidied,
   water_profiles_data_tidied = water_profiles_data_tidied,

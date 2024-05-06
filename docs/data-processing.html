@@ -253,8 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  file_name <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"_"</span>, <span class="st">"-"</span>, df_name)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  full_file_path <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dir_path, <span class="st">"/"</span>, current_date, <span class="st">"_"</span>, file_name, <span class="st">".csv"</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(df, full_file_path, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Exported file to "</span>, full_file_path)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -289,71 +288,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>Kauaʻi Sea Farm</td>
 <td>Clam Growth</td>
-<td>Growth and harvest data of clams at Nomilo</td>
+<td>Growth and harvest data of clams at Nomilo fishpond gathered by Kauai Sea Farm</td>
 </tr>
 <tr class="even">
-<td>fishpond gathered by Kauai Sea Farm</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
 <td>Kauaʻi Sea Farm</td>
 <td>Oyster Growth</td>
-<td>Growth and harvest data of the <em>Mercenaria mercenaria</em> clams and <em>Crassostrea gigas</em> oysters at Nomilo</td>
-</tr>
-<tr class="even">
-<td>fishpond gathered by Kauai Sea Farm</td>
-<td></td>
-<td></td>
+<td>Growth and harvest data of the <em>Mercenaria mercenaria</em> clams and <em>Crassostrea gigas</em> oysters at Nomilo fishpond gathered by Kauai Sea Farm</td>
 </tr>
 <tr class="odd">
 <td>Kauaʻi Sea Farm</td>
 <td>Weather</td>
-<td>Meteorological measurements and weather data reports that were kept on-site by Kauai Sea Farmaccessed through</td>
+<td>Meteorological measurements and weather data reports that were kept on-site by Kauai Sea Farm accessed through weather.kauaiseafarm.com</td>
 </tr>
 <tr class="even">
-<td>weather.kauaiseafarm.com</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
 <td>Kauaʻi Sea Farm</td>
 <td>Kauaʻi Sea Farm Compiled Data</td>
-<td>Various</td>
+<td>Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauai Sea Farm</td>
 </tr>
 </tbody>
 </table>
-<pre><code>                                               daily water quality metrics at the surface level (approximately 0.5m) at the                                   
-                                               Production Dock location of Nomilo fishpond measured by Kauai Sea Farm                                         |</code></pre>
 </section>
 <section id="procedure" class="level3">
 <h3 class="anchored" data-anchor-id="procedure">Procedure</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Step 1: Efficiently install packages and load libraries</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  renv, </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  yaml, </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  rmarkdown, </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  rio, </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  tidyverse, </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  janitor, </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  lubridate, </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  fs,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  hms, </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  zoo, </span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  kableExtra, </span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  ggplot2, </span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  shiny, </span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  rsconnect, </span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  packrat, </span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  plotly, </span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  htmlwidgets</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  renv, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  yaml, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  rmarkdown, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  rio, </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  tidyverse, </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  janitor, </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  lubridate, </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  fs,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  hms, </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  zoo, </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  kableExtra, </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  ggplot2, </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  shiny, </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  rsconnect, </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  packrat, </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  plotly, </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  htmlwidgets</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled">
@@ -368,11 +350,12 @@ Expand To Learn When to Run Step 2a
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Run when there is new raw data added. Since the following code chunk is slow to execute, run step 2b.</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Step 2a: Load all XLSX files into a large dataframe list and clean dataframe names and sheets then export as an .RData file</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> <span class="fu">slowly_load_xlsx_files_to_list</span>(<span class="st">"data/raw"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">export_to_rdata</span>(dfs, <span class="st">"data/raw/rdata-files/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>Step 2a: Load all XLSX files into a large dataframe list and clean dataframe and sheet names then export as an .RData file</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> <span class="fu">slowly_load_xlsx_files_to_list</span>(<span class="st">"data/raw"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">export_to_rdata</span>(dfs, <span class="st">"data/raw/rdata-files/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </div>
@@ -380,24 +363,24 @@ Expand To Learn When to Run Step 2a
 </div>
 <div class="cell">
 <details class="code-fold">
-<summary>Step 2b: Efficiently load all data into a dataframe list</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>base<span class="sc">::</span><span class="fu">load</span>(<span class="st">"data/raw/rdata-files/2024-05-05_dfs.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>Step 2b: Efficiently load all dataframes into a large list</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>base<span class="sc">::</span><span class="fu">load</span>(<span class="st">"data/raw/rdata-files/2024-05-05_dfs.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Step 3: Load the specific Excel sheet of each dataframe and store in their respective data objects</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>water_samples_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"water_samples"</span>, <span class="st">"data_overview"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>water_profiles_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">c</span>(<span class="st">"l1"</span>, <span class="st">"l2"</span>, <span class="st">"l3"</span>, <span class="st">"l4"</span>), <span class="sc">~</span> dfs_list<span class="sc">$</span>profile_data[[.x]])</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>clam_growth_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"ksf_clam_growth"</span>, <span class="st">"sheet1"</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>oyster_growth_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"ksf_oyster_cylinder_growth"</span>, <span class="st">"sheet1"</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>weather_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"weather_data"</span>, <span class="st">"weather_ksf"</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>ksf_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"ksf_compiled_data"</span>, <span class="st">"full_data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>water_samples_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"water_samples"</span>, <span class="st">"data_overview"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>water_profiles_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">c</span>(<span class="st">"l1"</span>, <span class="st">"l2"</span>, <span class="st">"l3"</span>, <span class="st">"l4"</span>), <span class="sc">~</span> dfs_list<span class="sc">$</span>profile_data[[.x]])</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>clam_growth_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"ksf_clam_growth"</span>, <span class="st">"sheet1"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>oyster_growth_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"ksf_oyster_cylinder_growth"</span>, <span class="st">"sheet1"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>weather_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"weather_data"</span>, <span class="st">"weather_ksf"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>ksf_data <span class="ot">&lt;-</span> <span class="fu">load_xlsx_sheet</span>(dfs_list, <span class="st">"ksf_compiled_data"</span>, <span class="st">"full_data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -411,25 +394,25 @@ Expand To Learn When to Run Step 2a
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="annotated-cell-11"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-11-1"><a href="#annotated-cell-11-1" aria-hidden="true" tabindex="-1"></a>water_samples_data_tidied <span class="ot">&lt;-</span> water_samples_data <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-11-2"><a href="#annotated-cell-11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">44</span><span class="sc">:</span><span class="dv">52</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-11-3"><a href="#annotated-cell-11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">s*</span><span class="sc">\\</span><span class="st">([^</span><span class="sc">\\</span><span class="st">)]+</span><span class="sc">\\</span><span class="st">)"</span>, <span class="st">""</span>, .x)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-11-4"><a href="#annotated-cell-11-4" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-11-5"><a href="#annotated-cell-11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="annotated-cell-11-6"><a href="#annotated-cell-11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="st">"44074"</span>,</span>
-<span id="annotated-cell-11-7"><a href="#annotated-cell-11-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">as.character</span>(<span class="fu">as.Date</span>(<span class="st">"2024-01-09"</span>)),</span>
-<span id="annotated-cell-11-8"><a href="#annotated-cell-11-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">format</span>(<span class="fu">dmy</span>(date), <span class="st">"%Y-%m-%d"</span>))</span>
-<span id="annotated-cell-11-9"><a href="#annotated-cell-11-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-11-10"><a href="#annotated-cell-11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sample_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-11-11"><a href="#annotated-cell-11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
-<span id="annotated-cell-11-12"><a href="#annotated-cell-11-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(nomilo_id, location, round, depth), as.factor)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-11-13"><a href="#annotated-cell-11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(sample_id, nomilo_id, tube_name)) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-11-14"><a href="#annotated-cell-11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">str_to_title</span>(location)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-11-15"><a href="#annotated-cell-11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">factor</span>(location, </span>
-<span id="annotated-cell-11-16"><a href="#annotated-cell-11-16" aria-hidden="true" tabindex="-1"></a>                           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Mid Buoy"</span>, <span class="st">"Back Buoy"</span>, <span class="st">"Auwai"</span>, <span class="st">"Production Dock"</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-11-17"><a href="#annotated-cell-11-17" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(location))</span>
-<span id="annotated-cell-11-18"><a href="#annotated-cell-11-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-11-19"><a href="#annotated-cell-11-19" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(water_samples_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-10"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1" aria-hidden="true" tabindex="-1"></a>water_samples_data_tidied <span class="ot">&lt;-</span> water_samples_data <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-10-2"><a href="#annotated-cell-10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">44</span><span class="sc">:</span><span class="dv">52</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-10-3"><a href="#annotated-cell-10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">s*</span><span class="sc">\\</span><span class="st">([^</span><span class="sc">\\</span><span class="st">)]+</span><span class="sc">\\</span><span class="st">)"</span>, <span class="st">""</span>, .x)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-10-4"><a href="#annotated-cell-10-4" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-10-5"><a href="#annotated-cell-10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="annotated-cell-10-6"><a href="#annotated-cell-10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="st">"44074"</span>,</span>
+<span id="annotated-cell-10-7"><a href="#annotated-cell-10-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">as.character</span>(<span class="fu">as.Date</span>(<span class="st">"2024-01-09"</span>)),</span>
+<span id="annotated-cell-10-8"><a href="#annotated-cell-10-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">format</span>(<span class="fu">dmy</span>(date), <span class="st">"%Y-%m-%d"</span>))</span>
+<span id="annotated-cell-10-9"><a href="#annotated-cell-10-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-10-10"><a href="#annotated-cell-10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sample_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-10-11"><a href="#annotated-cell-10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
+<span id="annotated-cell-10-12"><a href="#annotated-cell-10-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(nomilo_id, location, round, depth), as.factor)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-10-13"><a href="#annotated-cell-10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(sample_id, nomilo_id, tube_name)) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-10-14"><a href="#annotated-cell-10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">str_to_title</span>(location)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-10-15"><a href="#annotated-cell-10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">factor</span>(location, </span>
+<span id="annotated-cell-10-16"><a href="#annotated-cell-10-16" aria-hidden="true" tabindex="-1"></a>                           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Mid Buoy"</span>, <span class="st">"Back Buoy"</span>, <span class="st">"Auwai"</span>, <span class="st">"Production Dock"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-10-17"><a href="#annotated-cell-10-17" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(location))</span>
+<span id="annotated-cell-10-18"><a href="#annotated-cell-10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-10-19"><a href="#annotated-cell-10-19" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(water_samples_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -444,60 +427,60 @@ Expand To Learn When to Run Step 2a
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="annotated-cell-12"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-12-1"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a>new_profile_var_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"depth"</span>, <span class="st">"water_temperature"</span>, <span class="st">"dissolved_oxygen"</span>, <span class="st">"salinity"</span>, <span class="st">"conductivity"</span>, <span class="st">"visibility"</span>, <span class="st">"location"</span>, <span class="st">"date"</span>)</span>
-<span id="annotated-cell-12-2"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-12-3"><a href="#annotated-cell-12-3" aria-hidden="true" tabindex="-1"></a>water_profiles_data_tidied <span class="ot">&lt;-</span> water_profiles_data <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-4"><a href="#annotated-cell-12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-5"><a href="#annotated-cell-12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="annotated-cell-12-6"><a href="#annotated-cell-12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">temp_column1 =</span> <span class="cn">NA_character_</span>,</span>
-<span id="annotated-cell-12-7"><a href="#annotated-cell-12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">temp_column2 =</span> <span class="cn">NA_character_</span></span>
-<span id="annotated-cell-12-8"><a href="#annotated-cell-12-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-9"><a href="#annotated-cell-12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(new_profile_var_names) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-10"><a href="#annotated-cell-12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="annotated-cell-12-11"><a href="#annotated-cell-12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> <span class="fu">ifelse</span>(depth <span class="sc">==</span> <span class="st">"Location"</span>, water_temperature, <span class="cn">NA_character_</span>), </span>
-<span id="annotated-cell-12-12"><a href="#annotated-cell-12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">ifelse</span>(depth <span class="sc">==</span> <span class="st">"Date"</span>,  water_temperature, <span class="cn">NA_character_</span>)</span>
-<span id="annotated-cell-12-13"><a href="#annotated-cell-12-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-14"><a href="#annotated-cell-12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fill</span>(location, date, <span class="at">.direction =</span> <span class="st">"down"</span>) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-15"><a href="#annotated-cell-12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(depth <span class="sc">!=</span> <span class="st">"Location"</span>, depth <span class="sc">!=</span> <span class="st">"Date"</span>) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-16"><a href="#annotated-cell-12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="annotated-cell-12-17"><a href="#annotated-cell-12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> <span class="fu">case_when</span>(</span>
-<span id="annotated-cell-12-18"><a href="#annotated-cell-12-18" aria-hidden="true" tabindex="-1"></a>      location <span class="sc">==</span> <span class="st">"L1 Northwest buoy"</span> <span class="sc">~</span> <span class="st">"back buoy"</span>,</span>
-<span id="annotated-cell-12-19"><a href="#annotated-cell-12-19" aria-hidden="true" tabindex="-1"></a>      location <span class="sc">==</span> <span class="st">"L2 Middle Buoy"</span> <span class="sc">~</span> <span class="st">"mid buoy"</span>,</span>
-<span id="annotated-cell-12-20"><a href="#annotated-cell-12-20" aria-hidden="true" tabindex="-1"></a>      location <span class="sc">==</span> <span class="st">"L3 Production Dock"</span> <span class="sc">~</span> <span class="st">"production dock"</span>,</span>
-<span id="annotated-cell-12-21"><a href="#annotated-cell-12-21" aria-hidden="true" tabindex="-1"></a>      location <span class="sc">==</span> <span class="st">"L4 Auwai"</span> <span class="sc">~</span> <span class="st">"Auwai"</span>,</span>
-<span id="annotated-cell-12-22"><a href="#annotated-cell-12-22" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> location</span>
-<span id="annotated-cell-12-23"><a href="#annotated-cell-12-23" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="annotated-cell-12-24"><a href="#annotated-cell-12-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">case_when</span>(</span>
-<span id="annotated-cell-12-25"><a href="#annotated-cell-12-25" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"45258"</span>, <span class="st">"2023-11-28"</span>) <span class="sc">~</span> <span class="st">"2023-11-28"</span>,</span>
-<span id="annotated-cell-12-26"><a href="#annotated-cell-12-26" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"45282"</span>, <span class="st">"2023-12-21"</span>) <span class="sc">~</span> <span class="st">"2023-12-21"</span>,</span>
-<span id="annotated-cell-12-27"><a href="#annotated-cell-12-27" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"45536"</span>, <span class="st">"2024-01-09"</span>) <span class="sc">~</span> <span class="st">"2024-01-09"</span>,</span>
-<span id="annotated-cell-12-28"><a href="#annotated-cell-12-28" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30/1/24"</span>, <span class="st">"30/01/24"</span>) <span class="sc">~</span> <span class="st">"2024-01-30"</span>,</span>
-<span id="annotated-cell-12-29"><a href="#annotated-cell-12-29" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"20/02/24"</span>, <span class="st">"20/2/24"</span>) <span class="sc">~</span> <span class="st">"2024-02-20"</span>,</span>
-<span id="annotated-cell-12-30"><a href="#annotated-cell-12-30" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> date</span>
-<span id="annotated-cell-12-31"><a href="#annotated-cell-12-31" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-32"><a href="#annotated-cell-12-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="annotated-cell-12-33"><a href="#annotated-cell-12-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as.Date</span>(date, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>),</span>
-<span id="annotated-cell-12-34"><a href="#annotated-cell-12-34" aria-hidden="true" tabindex="-1"></a>     <span class="at">conductivity =</span> <span class="fu">case_when</span>(</span>
-<span id="annotated-cell-12-35"><a href="#annotated-cell-12-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">row_number</span>() <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>, <span class="dv">53</span><span class="sc">:</span><span class="dv">62</span>, <span class="dv">128</span><span class="sc">:</span><span class="dv">133</span>, <span class="dv">159</span><span class="sc">:</span><span class="dv">161</span>) <span class="sc">~</span> <span class="cn">NA_character_</span>,</span>
-<span id="annotated-cell-12-36"><a href="#annotated-cell-12-36" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(conductivity)</span>
-<span id="annotated-cell-12-37"><a href="#annotated-cell-12-37" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="annotated-cell-12-38"><a href="#annotated-cell-12-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-39"><a href="#annotated-cell-12-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(depth <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Samples"</span>, <span class="st">"Depth"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-40"><a href="#annotated-cell-12-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
-<span id="annotated-cell-12-41"><a href="#annotated-cell-12-41" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(depth, location), as.factor),</span>
-<span id="annotated-cell-12-42"><a href="#annotated-cell-12-42" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(water_temperature,  dissolved_oxygen, salinity, </span>
-<span id="annotated-cell-12-43"><a href="#annotated-cell-12-43" aria-hidden="true" tabindex="-1"></a>                  conductivity,visibility),  as.numeric)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-44"><a href="#annotated-cell-12-44" aria-hidden="true" tabindex="-1"></a>   <span class="fu">fill</span>(visibility, <span class="at">.direction =</span> <span class="st">"down"</span>) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-45"><a href="#annotated-cell-12-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">visibility =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="st">"2023-11-28"</span>,  <span class="cn">NA_real_</span>, visibility)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-46"><a href="#annotated-cell-12-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">str_to_title</span>(location)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-12-47"><a href="#annotated-cell-12-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">factor</span>(location, </span>
-<span id="annotated-cell-12-48"><a href="#annotated-cell-12-48" aria-hidden="true" tabindex="-1"></a>                           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Mid Buoy"</span>, <span class="st">"Back Buoy"</span>, <span class="st">"Auwai"</span>, <span class="st">"Production Dock"</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-12-49"><a href="#annotated-cell-12-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">conductivity =</span> <span class="fu">coalesce</span>(conductivity, salinity)) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-12-50"><a href="#annotated-cell-12-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"salinity1"</span> <span class="ot">=</span> salinity,</span>
-<span id="annotated-cell-12-51"><a href="#annotated-cell-12-51" aria-hidden="true" tabindex="-1"></a>         <span class="st">"salinity"</span> <span class="ot">=</span> conductivity) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-12-52"><a href="#annotated-cell-12-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>salinity1)</span>
-<span id="annotated-cell-12-53"><a href="#annotated-cell-12-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-12-54"><a href="#annotated-cell-12-54" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(water_profiles_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-11"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-11-1"><a href="#annotated-cell-11-1" aria-hidden="true" tabindex="-1"></a>new_profile_var_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"depth"</span>, <span class="st">"water_temperature"</span>, <span class="st">"dissolved_oxygen"</span>, <span class="st">"salinity"</span>, <span class="st">"conductivity"</span>, <span class="st">"visibility"</span>, <span class="st">"location"</span>, <span class="st">"date"</span>)</span>
+<span id="annotated-cell-11-2"><a href="#annotated-cell-11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-11-3"><a href="#annotated-cell-11-3" aria-hidden="true" tabindex="-1"></a>water_profiles_data_tidied <span class="ot">&lt;-</span> water_profiles_data <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-4"><a href="#annotated-cell-11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-5"><a href="#annotated-cell-11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="annotated-cell-11-6"><a href="#annotated-cell-11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">temp_column1 =</span> <span class="cn">NA_character_</span>,</span>
+<span id="annotated-cell-11-7"><a href="#annotated-cell-11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">temp_column2 =</span> <span class="cn">NA_character_</span></span>
+<span id="annotated-cell-11-8"><a href="#annotated-cell-11-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-9"><a href="#annotated-cell-11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(new_profile_var_names) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-10"><a href="#annotated-cell-11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="annotated-cell-11-11"><a href="#annotated-cell-11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> <span class="fu">ifelse</span>(depth <span class="sc">==</span> <span class="st">"Location"</span>, water_temperature, <span class="cn">NA_character_</span>), </span>
+<span id="annotated-cell-11-12"><a href="#annotated-cell-11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">ifelse</span>(depth <span class="sc">==</span> <span class="st">"Date"</span>,  water_temperature, <span class="cn">NA_character_</span>)</span>
+<span id="annotated-cell-11-13"><a href="#annotated-cell-11-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-14"><a href="#annotated-cell-11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fill</span>(location, date, <span class="at">.direction =</span> <span class="st">"down"</span>) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-15"><a href="#annotated-cell-11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(depth <span class="sc">!=</span> <span class="st">"Location"</span>, depth <span class="sc">!=</span> <span class="st">"Date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-16"><a href="#annotated-cell-11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="annotated-cell-11-17"><a href="#annotated-cell-11-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> <span class="fu">case_when</span>(</span>
+<span id="annotated-cell-11-18"><a href="#annotated-cell-11-18" aria-hidden="true" tabindex="-1"></a>      location <span class="sc">==</span> <span class="st">"L1 Northwest buoy"</span> <span class="sc">~</span> <span class="st">"back buoy"</span>,</span>
+<span id="annotated-cell-11-19"><a href="#annotated-cell-11-19" aria-hidden="true" tabindex="-1"></a>      location <span class="sc">==</span> <span class="st">"L2 Middle Buoy"</span> <span class="sc">~</span> <span class="st">"mid buoy"</span>,</span>
+<span id="annotated-cell-11-20"><a href="#annotated-cell-11-20" aria-hidden="true" tabindex="-1"></a>      location <span class="sc">==</span> <span class="st">"L3 Production Dock"</span> <span class="sc">~</span> <span class="st">"production dock"</span>,</span>
+<span id="annotated-cell-11-21"><a href="#annotated-cell-11-21" aria-hidden="true" tabindex="-1"></a>      location <span class="sc">==</span> <span class="st">"L4 Auwai"</span> <span class="sc">~</span> <span class="st">"Auwai"</span>,</span>
+<span id="annotated-cell-11-22"><a href="#annotated-cell-11-22" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> location</span>
+<span id="annotated-cell-11-23"><a href="#annotated-cell-11-23" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="annotated-cell-11-24"><a href="#annotated-cell-11-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">case_when</span>(</span>
+<span id="annotated-cell-11-25"><a href="#annotated-cell-11-25" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"45258"</span>, <span class="st">"2023-11-28"</span>) <span class="sc">~</span> <span class="st">"2023-11-28"</span>,</span>
+<span id="annotated-cell-11-26"><a href="#annotated-cell-11-26" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"45282"</span>, <span class="st">"2023-12-21"</span>) <span class="sc">~</span> <span class="st">"2023-12-21"</span>,</span>
+<span id="annotated-cell-11-27"><a href="#annotated-cell-11-27" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"45536"</span>, <span class="st">"2024-01-09"</span>) <span class="sc">~</span> <span class="st">"2024-01-09"</span>,</span>
+<span id="annotated-cell-11-28"><a href="#annotated-cell-11-28" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30/1/24"</span>, <span class="st">"30/01/24"</span>) <span class="sc">~</span> <span class="st">"2024-01-30"</span>,</span>
+<span id="annotated-cell-11-29"><a href="#annotated-cell-11-29" aria-hidden="true" tabindex="-1"></a>      date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"20/02/24"</span>, <span class="st">"20/2/24"</span>) <span class="sc">~</span> <span class="st">"2024-02-20"</span>,</span>
+<span id="annotated-cell-11-30"><a href="#annotated-cell-11-30" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> date</span>
+<span id="annotated-cell-11-31"><a href="#annotated-cell-11-31" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-32"><a href="#annotated-cell-11-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="annotated-cell-11-33"><a href="#annotated-cell-11-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as.Date</span>(date, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>),</span>
+<span id="annotated-cell-11-34"><a href="#annotated-cell-11-34" aria-hidden="true" tabindex="-1"></a>     <span class="at">conductivity =</span> <span class="fu">case_when</span>(</span>
+<span id="annotated-cell-11-35"><a href="#annotated-cell-11-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">row_number</span>() <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>, <span class="dv">53</span><span class="sc">:</span><span class="dv">62</span>, <span class="dv">128</span><span class="sc">:</span><span class="dv">133</span>, <span class="dv">159</span><span class="sc">:</span><span class="dv">161</span>) <span class="sc">~</span> <span class="cn">NA_character_</span>,</span>
+<span id="annotated-cell-11-36"><a href="#annotated-cell-11-36" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(conductivity)</span>
+<span id="annotated-cell-11-37"><a href="#annotated-cell-11-37" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="annotated-cell-11-38"><a href="#annotated-cell-11-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-39"><a href="#annotated-cell-11-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(depth <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Samples"</span>, <span class="st">"Depth"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-40"><a href="#annotated-cell-11-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
+<span id="annotated-cell-11-41"><a href="#annotated-cell-11-41" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(depth, location), as.factor),</span>
+<span id="annotated-cell-11-42"><a href="#annotated-cell-11-42" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(water_temperature,  dissolved_oxygen, salinity, </span>
+<span id="annotated-cell-11-43"><a href="#annotated-cell-11-43" aria-hidden="true" tabindex="-1"></a>                  conductivity,visibility),  as.numeric)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-44"><a href="#annotated-cell-11-44" aria-hidden="true" tabindex="-1"></a>   <span class="fu">fill</span>(visibility, <span class="at">.direction =</span> <span class="st">"down"</span>) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-45"><a href="#annotated-cell-11-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">visibility =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="st">"2023-11-28"</span>,  <span class="cn">NA_real_</span>, visibility)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-46"><a href="#annotated-cell-11-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">str_to_title</span>(location)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-11-47"><a href="#annotated-cell-11-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">factor</span>(location, </span>
+<span id="annotated-cell-11-48"><a href="#annotated-cell-11-48" aria-hidden="true" tabindex="-1"></a>                           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Mid Buoy"</span>, <span class="st">"Back Buoy"</span>, <span class="st">"Auwai"</span>, <span class="st">"Production Dock"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-11-49"><a href="#annotated-cell-11-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">conductivity =</span> <span class="fu">coalesce</span>(conductivity, salinity)) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-11-50"><a href="#annotated-cell-11-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"salinity1"</span> <span class="ot">=</span> salinity,</span>
+<span id="annotated-cell-11-51"><a href="#annotated-cell-11-51" aria-hidden="true" tabindex="-1"></a>         <span class="st">"salinity"</span> <span class="ot">=</span> conductivity) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-11-52"><a href="#annotated-cell-11-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>salinity1)</span>
+<span id="annotated-cell-11-53"><a href="#annotated-cell-11-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-11-54"><a href="#annotated-cell-11-54" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(water_profiles_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -512,64 +495,64 @@ Expand To Learn When to Run Step 2a
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="annotated-cell-13"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-13-1"><a href="#annotated-cell-13-1" aria-hidden="true" tabindex="-1"></a>new_clam_var_names <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="annotated-cell-13-2"><a href="#annotated-cell-13-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sort_date"</span>, <span class="st">"color"</span>, <span class="st">"clams_in_count"</span>, <span class="st">"clams_in_lbs"</span>,  <span class="st">"clams_in_avg_per_lb"</span>,</span>
-<span id="annotated-cell-13-3"><a href="#annotated-cell-13-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"clams_out_count"</span>, <span class="st">"clams_out_lbs"</span>, <span class="st">"clams_out_avg_per_lb"</span>, <span class="st">"growth_in_lbs"</span>, </span>
-<span id="annotated-cell-13-4"><a href="#annotated-cell-13-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"growth_pct"</span>, <span class="st">"sr"</span>, <span class="st">"days_btwn_sort"</span></span>
-<span id="annotated-cell-13-5"><a href="#annotated-cell-13-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="annotated-cell-13-6"><a href="#annotated-cell-13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-13-7"><a href="#annotated-cell-13-7" aria-hidden="true" tabindex="-1"></a>new_clam_date_col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="annotated-cell-13-8"><a href="#annotated-cell-13-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2023-10-17"</span>, <span class="st">"2023-12-06"</span>, <span class="st">"2023-12-12"</span>, <span class="st">"2024-01-02"</span>,  <span class="st">"2024-01-10"</span>,</span>
-<span id="annotated-cell-13-9"><a href="#annotated-cell-13-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2024-01-24"</span>, <span class="st">"2024-01-31"</span>, <span class="st">"2024-02-08"</span>, <span class="st">"2024-02-13"</span>, <span class="st">"2024-02-07"</span>,</span>
-<span id="annotated-cell-13-10"><a href="#annotated-cell-13-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2024-02-13"</span>, <span class="st">"2024-03-14"</span>, <span class="st">"2024-03-19"</span></span>
-<span id="annotated-cell-13-11"><a href="#annotated-cell-13-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="annotated-cell-13-12"><a href="#annotated-cell-13-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-13-13"><a href="#annotated-cell-13-13" aria-hidden="true" tabindex="-1"></a>clam_growth_data_tidied <span class="ot">&lt;-</span> clam_growth_data <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-14"><a href="#annotated-cell-13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-15"><a href="#annotated-cell-13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(new_clam_var_names) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-16"><a href="#annotated-cell-13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(new_clam_date_col)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-17"><a href="#annotated-cell-13-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>sort_date) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-18"><a href="#annotated-cell-13-18" aria-hidden="true" tabindex="-1"></a>   <span class="fu">pivot_longer</span>(</span>
-<span id="annotated-cell-13-19"><a href="#annotated-cell-13-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(</span>
-<span id="annotated-cell-13-20"><a href="#annotated-cell-13-20" aria-hidden="true" tabindex="-1"></a>      clams_in_count, clams_in_lbs, clams_in_avg_per_lb,   clams_out_count, </span>
-<span id="annotated-cell-13-21"><a href="#annotated-cell-13-21" aria-hidden="true" tabindex="-1"></a>      clams_out_lbs, clams_out_avg_per_lb</span>
-<span id="annotated-cell-13-22"><a href="#annotated-cell-13-22" aria-hidden="true" tabindex="-1"></a>      ),</span>
-<span id="annotated-cell-13-23"><a href="#annotated-cell-13-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"stage"</span>, <span class="st">".value"</span>),</span>
-<span id="annotated-cell-13-24"><a href="#annotated-cell-13-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"clams_"</span>,</span>
-<span id="annotated-cell-13-25"><a href="#annotated-cell-13-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span>,</span>
-<span id="annotated-cell-13-26"><a href="#annotated-cell-13-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
-<span id="annotated-cell-13-27"><a href="#annotated-cell-13-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-28"><a href="#annotated-cell-13-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stage =</span> <span class="fu">if_else</span>(<span class="fu">str_detect</span>(stage, <span class="st">"in"</span>), <span class="st">"In"</span>, <span class="st">"Out"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-29"><a href="#annotated-cell-13-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">avg_per_lbs =</span> avg) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-30"><a href="#annotated-cell-13-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(color, stage), as.factor)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-31"><a href="#annotated-cell-13-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(count, lbs, avg_per_lbs, growth_in_lbs, growth_pct, sr),</span>
-<span id="annotated-cell-13-32"><a href="#annotated-cell-13-32" aria-hidden="true" tabindex="-1"></a>                <span class="sc">~</span><span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"%"</span>, <span class="st">""</span>, .)))) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-33"><a href="#annotated-cell-13-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date, color, stage) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-34"><a href="#annotated-cell-13-34" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(date, days_btwn_sort, color, stage, count, lbs, avg_per_lbs,</span>
-<span id="annotated-cell-13-35"><a href="#annotated-cell-13-35" aria-hidden="true" tabindex="-1"></a>                growth_in_lbs, growth_pct, sr) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-36"><a href="#annotated-cell-13-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"days_btwn_clams_sort"</span> <span class="ot">=</span> days_btwn_sort,</span>
-<span id="annotated-cell-13-37"><a href="#annotated-cell-13-37" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_color"</span> <span class="ot">=</span> color,</span>
-<span id="annotated-cell-13-38"><a href="#annotated-cell-13-38" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_stage"</span> <span class="ot">=</span> stage,</span>
-<span id="annotated-cell-13-39"><a href="#annotated-cell-13-39" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_count"</span> <span class="ot">=</span> count,</span>
-<span id="annotated-cell-13-40"><a href="#annotated-cell-13-40" aria-hidden="true" tabindex="-1"></a>         <span class="st">"weight"</span> <span class="ot">=</span> lbs,</span>
-<span id="annotated-cell-13-41"><a href="#annotated-cell-13-41" aria-hidden="true" tabindex="-1"></a>         <span class="st">"avg_weight"</span> <span class="ot">=</span> avg_per_lbs,</span>
-<span id="annotated-cell-13-42"><a href="#annotated-cell-13-42" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_growth"</span> <span class="ot">=</span> growth_in_lbs,</span>
-<span id="annotated-cell-13-43"><a href="#annotated-cell-13-43" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_sr"</span> <span class="ot">=</span> sr, </span>
-<span id="annotated-cell-13-44"><a href="#annotated-cell-13-44" aria-hidden="true" tabindex="-1"></a>          <span class="st">"date_out"</span> <span class="ot">=</span> date</span>
-<span id="annotated-cell-13-45"><a href="#annotated-cell-13-45" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-13-46"><a href="#annotated-cell-13-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date_in =</span> date_out <span class="sc">-</span> days_btwn_clams_sort) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-47"><a href="#annotated-cell-13-47" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(<span class="fu">c</span>(date_in, date_out), <span class="at">.before =</span> days_btwn_clams_sort) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-13-48"><a href="#annotated-cell-13-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="annotated-cell-13-49"><a href="#annotated-cell-13-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">case_when</span>(</span>
-<span id="annotated-cell-13-50"><a href="#annotated-cell-13-50" aria-hidden="true" tabindex="-1"></a>      clams_stage <span class="sc">==</span> <span class="st">'In'</span> <span class="sc">~</span> date_in,</span>
-<span id="annotated-cell-13-51"><a href="#annotated-cell-13-51" aria-hidden="true" tabindex="-1"></a>      clams_stage <span class="sc">==</span> <span class="st">'Out'</span> <span class="sc">~</span> date_out</span>
-<span id="annotated-cell-13-52"><a href="#annotated-cell-13-52" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="annotated-cell-13-53"><a href="#annotated-cell-13-53" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-13-54"><a href="#annotated-cell-13-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>date_in, <span class="sc">-</span>date_out) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-13-55"><a href="#annotated-cell-13-55" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">grouping_variable =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="fu">n</span>() <span class="sc">/</span> <span class="dv">2</span>), <span class="at">each =</span> <span class="dv">2</span>))</span>
-<span id="annotated-cell-13-56"><a href="#annotated-cell-13-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-13-57"><a href="#annotated-cell-13-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-13-58"><a href="#annotated-cell-13-58" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(clam_growth_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-12"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-12-1"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a>new_clam_var_names <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="annotated-cell-12-2"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sort_date"</span>, <span class="st">"color"</span>, <span class="st">"clams_in_count"</span>, <span class="st">"clams_in_lbs"</span>,  <span class="st">"clams_in_avg_per_lb"</span>,</span>
+<span id="annotated-cell-12-3"><a href="#annotated-cell-12-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"clams_out_count"</span>, <span class="st">"clams_out_lbs"</span>, <span class="st">"clams_out_avg_per_lb"</span>, <span class="st">"growth_in_lbs"</span>, </span>
+<span id="annotated-cell-12-4"><a href="#annotated-cell-12-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"growth_pct"</span>, <span class="st">"sr"</span>, <span class="st">"days_btwn_sort"</span></span>
+<span id="annotated-cell-12-5"><a href="#annotated-cell-12-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="annotated-cell-12-6"><a href="#annotated-cell-12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-12-7"><a href="#annotated-cell-12-7" aria-hidden="true" tabindex="-1"></a>new_clam_date_col <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="annotated-cell-12-8"><a href="#annotated-cell-12-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2023-10-17"</span>, <span class="st">"2023-12-06"</span>, <span class="st">"2023-12-12"</span>, <span class="st">"2024-01-02"</span>,  <span class="st">"2024-01-10"</span>,</span>
+<span id="annotated-cell-12-9"><a href="#annotated-cell-12-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2024-01-24"</span>, <span class="st">"2024-01-31"</span>, <span class="st">"2024-02-08"</span>, <span class="st">"2024-02-13"</span>, <span class="st">"2024-02-07"</span>,</span>
+<span id="annotated-cell-12-10"><a href="#annotated-cell-12-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2024-02-13"</span>, <span class="st">"2024-03-14"</span>, <span class="st">"2024-03-19"</span></span>
+<span id="annotated-cell-12-11"><a href="#annotated-cell-12-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="annotated-cell-12-12"><a href="#annotated-cell-12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-12-13"><a href="#annotated-cell-12-13" aria-hidden="true" tabindex="-1"></a>clam_growth_data_tidied <span class="ot">&lt;-</span> clam_growth_data <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-14"><a href="#annotated-cell-12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-15"><a href="#annotated-cell-12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(new_clam_var_names) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-16"><a href="#annotated-cell-12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(new_clam_date_col)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-17"><a href="#annotated-cell-12-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>sort_date) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-18"><a href="#annotated-cell-12-18" aria-hidden="true" tabindex="-1"></a>   <span class="fu">pivot_longer</span>(</span>
+<span id="annotated-cell-12-19"><a href="#annotated-cell-12-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(</span>
+<span id="annotated-cell-12-20"><a href="#annotated-cell-12-20" aria-hidden="true" tabindex="-1"></a>      clams_in_count, clams_in_lbs, clams_in_avg_per_lb,   clams_out_count, </span>
+<span id="annotated-cell-12-21"><a href="#annotated-cell-12-21" aria-hidden="true" tabindex="-1"></a>      clams_out_lbs, clams_out_avg_per_lb</span>
+<span id="annotated-cell-12-22"><a href="#annotated-cell-12-22" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="annotated-cell-12-23"><a href="#annotated-cell-12-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"stage"</span>, <span class="st">".value"</span>),</span>
+<span id="annotated-cell-12-24"><a href="#annotated-cell-12-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"clams_"</span>,</span>
+<span id="annotated-cell-12-25"><a href="#annotated-cell-12-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span>,</span>
+<span id="annotated-cell-12-26"><a href="#annotated-cell-12-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
+<span id="annotated-cell-12-27"><a href="#annotated-cell-12-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-28"><a href="#annotated-cell-12-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stage =</span> <span class="fu">if_else</span>(<span class="fu">str_detect</span>(stage, <span class="st">"in"</span>), <span class="st">"In"</span>, <span class="st">"Out"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-29"><a href="#annotated-cell-12-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">avg_per_lbs =</span> avg) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-30"><a href="#annotated-cell-12-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(color, stage), as.factor)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-31"><a href="#annotated-cell-12-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(count, lbs, avg_per_lbs, growth_in_lbs, growth_pct, sr),</span>
+<span id="annotated-cell-12-32"><a href="#annotated-cell-12-32" aria-hidden="true" tabindex="-1"></a>                <span class="sc">~</span><span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"%"</span>, <span class="st">""</span>, .)))) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-33"><a href="#annotated-cell-12-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date, color, stage) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-34"><a href="#annotated-cell-12-34" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(date, days_btwn_sort, color, stage, count, lbs, avg_per_lbs,</span>
+<span id="annotated-cell-12-35"><a href="#annotated-cell-12-35" aria-hidden="true" tabindex="-1"></a>                growth_in_lbs, growth_pct, sr) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-36"><a href="#annotated-cell-12-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"days_btwn_clams_sort"</span> <span class="ot">=</span> days_btwn_sort,</span>
+<span id="annotated-cell-12-37"><a href="#annotated-cell-12-37" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_color"</span> <span class="ot">=</span> color,</span>
+<span id="annotated-cell-12-38"><a href="#annotated-cell-12-38" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_stage"</span> <span class="ot">=</span> stage,</span>
+<span id="annotated-cell-12-39"><a href="#annotated-cell-12-39" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_count"</span> <span class="ot">=</span> count,</span>
+<span id="annotated-cell-12-40"><a href="#annotated-cell-12-40" aria-hidden="true" tabindex="-1"></a>         <span class="st">"weight"</span> <span class="ot">=</span> lbs,</span>
+<span id="annotated-cell-12-41"><a href="#annotated-cell-12-41" aria-hidden="true" tabindex="-1"></a>         <span class="st">"avg_weight"</span> <span class="ot">=</span> avg_per_lbs,</span>
+<span id="annotated-cell-12-42"><a href="#annotated-cell-12-42" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_growth"</span> <span class="ot">=</span> growth_in_lbs,</span>
+<span id="annotated-cell-12-43"><a href="#annotated-cell-12-43" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clams_sr"</span> <span class="ot">=</span> sr, </span>
+<span id="annotated-cell-12-44"><a href="#annotated-cell-12-44" aria-hidden="true" tabindex="-1"></a>          <span class="st">"date_out"</span> <span class="ot">=</span> date</span>
+<span id="annotated-cell-12-45"><a href="#annotated-cell-12-45" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-12-46"><a href="#annotated-cell-12-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date_in =</span> date_out <span class="sc">-</span> days_btwn_clams_sort) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-47"><a href="#annotated-cell-12-47" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(<span class="fu">c</span>(date_in, date_out), <span class="at">.before =</span> days_btwn_clams_sort) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-12-48"><a href="#annotated-cell-12-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="annotated-cell-12-49"><a href="#annotated-cell-12-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">case_when</span>(</span>
+<span id="annotated-cell-12-50"><a href="#annotated-cell-12-50" aria-hidden="true" tabindex="-1"></a>      clams_stage <span class="sc">==</span> <span class="st">'In'</span> <span class="sc">~</span> date_in,</span>
+<span id="annotated-cell-12-51"><a href="#annotated-cell-12-51" aria-hidden="true" tabindex="-1"></a>      clams_stage <span class="sc">==</span> <span class="st">'Out'</span> <span class="sc">~</span> date_out</span>
+<span id="annotated-cell-12-52"><a href="#annotated-cell-12-52" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="annotated-cell-12-53"><a href="#annotated-cell-12-53" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-12-54"><a href="#annotated-cell-12-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>date_in, <span class="sc">-</span>date_out) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-12-55"><a href="#annotated-cell-12-55" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">grouping_variable =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="fu">n</span>() <span class="sc">/</span> <span class="dv">2</span>), <span class="at">each =</span> <span class="dv">2</span>))</span>
+<span id="annotated-cell-12-56"><a href="#annotated-cell-12-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-12-57"><a href="#annotated-cell-12-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-12-58"><a href="#annotated-cell-12-58" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(clam_growth_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -584,37 +567,37 @@ Expand To Learn When to Run Step 2a
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="annotated-cell-14"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-14-1"><a href="#annotated-cell-14-1" aria-hidden="true" tabindex="-1"></a>oyster_var_names <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="annotated-cell-14-2"><a href="#annotated-cell-14-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"date"</span>, <span class="st">"oyster_large_weight"</span>, <span class="st">"oyster_large_gain"</span>, <span class="st">"oyster_small_weight"</span>,</span>
-<span id="annotated-cell-14-3"><a href="#annotated-cell-14-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"oyster_small_gain"</span>, <span class="st">"oyster_chlorophyll"</span></span>
-<span id="annotated-cell-14-4"><a href="#annotated-cell-14-4" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="annotated-cell-14-5"><a href="#annotated-cell-14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-14-6"><a href="#annotated-cell-14-6" aria-hidden="true" tabindex="-1"></a>oyster_growth_data_tidied <span class="ot">&lt;-</span> oyster_growth_data <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-14-7"><a href="#annotated-cell-14-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">12</span>)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-14-8"><a href="#annotated-cell-14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-14-9"><a href="#annotated-cell-14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(oyster_var_names) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-14-10"><a href="#annotated-cell-14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="annotated-cell-14-11"><a href="#annotated-cell-14-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(oyster_large_weight, oyster_large_gain,</span>
-<span id="annotated-cell-14-12"><a href="#annotated-cell-14-12" aria-hidden="true" tabindex="-1"></a>             oyster_small_gain,</span>
-<span id="annotated-cell-14-13"><a href="#annotated-cell-14-13" aria-hidden="true" tabindex="-1"></a>             oyster_small_weight),</span>
-<span id="annotated-cell-14-14"><a href="#annotated-cell-14-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"oyster_size"</span>, <span class="st">".value"</span>),</span>
-<span id="annotated-cell-14-15"><a href="#annotated-cell-14-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"oyster_"</span>,</span>
-<span id="annotated-cell-14-16"><a href="#annotated-cell-14-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span>,</span>
-<span id="annotated-cell-14-17"><a href="#annotated-cell-14-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
-<span id="annotated-cell-14-18"><a href="#annotated-cell-14-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-14-19"><a href="#annotated-cell-14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">oyster_size =</span> <span class="fu">if_else</span>(<span class="fu">str_detect</span>(oyster_size, <span class="st">"small"</span>), <span class="st">"Small"</span>, <span class="st">"Large"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-14-20"><a href="#annotated-cell-14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
-<span id="annotated-cell-14-21"><a href="#annotated-cell-14-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">oyster_size =</span> <span class="fu">as.factor</span>(oyster_size),</span>
-<span id="annotated-cell-14-22"><a href="#annotated-cell-14-22" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(weight, gain), as.numeric)</span>
-<span id="annotated-cell-14-23"><a href="#annotated-cell-14-23" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-14-24"><a href="#annotated-cell-14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2023-11-20"</span>) <span class="sc">&amp;</span> date <span class="sc">&lt;=</span></span>
-<span id="annotated-cell-14-25"><a href="#annotated-cell-14-25" aria-hidden="true" tabindex="-1"></a>           <span class="fu">as.Date</span>(<span class="st">"2024-02-20"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-14-26"><a href="#annotated-cell-14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weight =</span> weight <span class="sc">*</span> <span class="fl">0.00220462</span>) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-14-27"><a href="#annotated-cell-14-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"growth_pct"</span> <span class="ot">=</span> gain) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-14-28"><a href="#annotated-cell-14-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>growth_pct) <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-14-29"><a href="#annotated-cell-14-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(weight) <span class="sc">&amp;</span> oyster_size <span class="sc">!=</span> <span class="st">"Large"</span>)</span>
-<span id="annotated-cell-14-30"><a href="#annotated-cell-14-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-14-31"><a href="#annotated-cell-14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(oyster_growth_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-13"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-13-1"><a href="#annotated-cell-13-1" aria-hidden="true" tabindex="-1"></a>oyster_var_names <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="annotated-cell-13-2"><a href="#annotated-cell-13-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"date"</span>, <span class="st">"oyster_large_weight"</span>, <span class="st">"oyster_large_gain"</span>, <span class="st">"oyster_small_weight"</span>,</span>
+<span id="annotated-cell-13-3"><a href="#annotated-cell-13-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"oyster_small_gain"</span>, <span class="st">"oyster_chlorophyll"</span></span>
+<span id="annotated-cell-13-4"><a href="#annotated-cell-13-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="annotated-cell-13-5"><a href="#annotated-cell-13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-13-6"><a href="#annotated-cell-13-6" aria-hidden="true" tabindex="-1"></a>oyster_growth_data_tidied <span class="ot">&lt;-</span> oyster_growth_data <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-13-7"><a href="#annotated-cell-13-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">12</span>)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-13-8"><a href="#annotated-cell-13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-13-9"><a href="#annotated-cell-13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(oyster_var_names) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-13-10"><a href="#annotated-cell-13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="annotated-cell-13-11"><a href="#annotated-cell-13-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(oyster_large_weight, oyster_large_gain,</span>
+<span id="annotated-cell-13-12"><a href="#annotated-cell-13-12" aria-hidden="true" tabindex="-1"></a>             oyster_small_gain,</span>
+<span id="annotated-cell-13-13"><a href="#annotated-cell-13-13" aria-hidden="true" tabindex="-1"></a>             oyster_small_weight),</span>
+<span id="annotated-cell-13-14"><a href="#annotated-cell-13-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"oyster_size"</span>, <span class="st">".value"</span>),</span>
+<span id="annotated-cell-13-15"><a href="#annotated-cell-13-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"oyster_"</span>,</span>
+<span id="annotated-cell-13-16"><a href="#annotated-cell-13-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span>,</span>
+<span id="annotated-cell-13-17"><a href="#annotated-cell-13-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
+<span id="annotated-cell-13-18"><a href="#annotated-cell-13-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-13-19"><a href="#annotated-cell-13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">oyster_size =</span> <span class="fu">if_else</span>(<span class="fu">str_detect</span>(oyster_size, <span class="st">"small"</span>), <span class="st">"Small"</span>, <span class="st">"Large"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-13-20"><a href="#annotated-cell-13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date),</span>
+<span id="annotated-cell-13-21"><a href="#annotated-cell-13-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">oyster_size =</span> <span class="fu">as.factor</span>(oyster_size),</span>
+<span id="annotated-cell-13-22"><a href="#annotated-cell-13-22" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(weight, gain), as.numeric)</span>
+<span id="annotated-cell-13-23"><a href="#annotated-cell-13-23" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-13-24"><a href="#annotated-cell-13-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2023-11-20"</span>) <span class="sc">&amp;</span> date <span class="sc">&lt;=</span></span>
+<span id="annotated-cell-13-25"><a href="#annotated-cell-13-25" aria-hidden="true" tabindex="-1"></a>           <span class="fu">as.Date</span>(<span class="st">"2024-02-20"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-13-26"><a href="#annotated-cell-13-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weight =</span> weight <span class="sc">*</span> <span class="fl">0.00220462</span>) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-13-27"><a href="#annotated-cell-13-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"growth_pct"</span> <span class="ot">=</span> gain) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-13-28"><a href="#annotated-cell-13-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>growth_pct) <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-13-29"><a href="#annotated-cell-13-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(weight) <span class="sc">&amp;</span> oyster_size <span class="sc">!=</span> <span class="st">"Large"</span>)</span>
+<span id="annotated-cell-13-30"><a href="#annotated-cell-13-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-13-31"><a href="#annotated-cell-13-31" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(oyster_growth_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -629,19 +612,19 @@ Expand To Learn When to Run Step 2a
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="annotated-cell-15"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-15-1"><a href="#annotated-cell-15-1" aria-hidden="true" tabindex="-1"></a>weather_data_tidied <span class="ot">&lt;-</span> weather_data <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-15-2"><a href="#annotated-cell-15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-15-3"><a href="#annotated-cell-15-3" aria-hidden="true" tabindex="-1"></a>janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-15-4"><a href="#annotated-cell-15-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">unite</span>(date, year, month, day, <span class="at">sep =</span> <span class="st">"-"</span>) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-15-5"><a href="#annotated-cell-15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(date)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-15-6"><a href="#annotated-cell-15-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-15-7"><a href="#annotated-cell-15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"outdoor_temperature"</span> <span class="ot">=</span> outdoor_temp_f) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-15-8"><a href="#annotated-cell-15-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">outdoor_temperature =</span> (outdoor_temperature <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-15-9"><a href="#annotated-cell-15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-15-10"><a href="#annotated-cell-15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-15-11"><a href="#annotated-cell-15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="annotated-cell-15-12"><a href="#annotated-cell-15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-15-13"><a href="#annotated-cell-15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(weather_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-14"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-14-1"><a href="#annotated-cell-14-1" aria-hidden="true" tabindex="-1"></a>weather_data_tidied <span class="ot">&lt;-</span> weather_data <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-14-2"><a href="#annotated-cell-14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-14-3"><a href="#annotated-cell-14-3" aria-hidden="true" tabindex="-1"></a>janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-14-4"><a href="#annotated-cell-14-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">unite</span>(date, year, month, day, <span class="at">sep =</span> <span class="st">"-"</span>) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-14-5"><a href="#annotated-cell-14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">ymd</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-14-6"><a href="#annotated-cell-14-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-14-7"><a href="#annotated-cell-14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"outdoor_temperature"</span> <span class="ot">=</span> outdoor_temp_f) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-14-8"><a href="#annotated-cell-14-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">outdoor_temperature =</span> (outdoor_temperature <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-14-9"><a href="#annotated-cell-14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-14-10"><a href="#annotated-cell-14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-14-11"><a href="#annotated-cell-14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="annotated-cell-14-12"><a href="#annotated-cell-14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-14-13"><a href="#annotated-cell-14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(weather_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -656,36 +639,36 @@ Expand To Learn When to Run Step 2a
 <div class="cell">
 <details class="code-fold">
 <summary><i>Steps to clean data</i></summary>
-<div class="sourceCode cell-code" id="annotated-cell-16"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-16-1"><a href="#annotated-cell-16-1" aria-hidden="true" tabindex="-1"></a>ksf_data_tidied <span class="ot">&lt;-</span> ksf_data <span class="sc">%&gt;%</span> </span>
-<span id="annotated-cell-16-2"><a href="#annotated-cell-16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">s*</span><span class="sc">\\</span><span class="st">([^</span><span class="sc">\\</span><span class="st">)]+</span><span class="sc">\\</span><span class="st">)"</span>, <span class="st">""</span>, .x)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-3"><a href="#annotated-cell-16-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-4"><a href="#annotated-cell-16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> date_time) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-5"><a href="#annotated-cell-16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-6"><a href="#annotated-cell-16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2023-11-20"</span>) <span class="sc">&amp;</span> date <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2024-02-20"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-7"><a href="#annotated-cell-16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-8"><a href="#annotated-cell-16-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(external_voltage, wk_num, wind_dir,</span>
-<span id="annotated-cell-16-9"><a href="#annotated-cell-16-9" aria-hidden="true" tabindex="-1"></a>                   spadd, outdoor_temperature, hourly_rain,</span>
-<span id="annotated-cell-16-10"><a href="#annotated-cell-16-10" aria-hidden="true" tabindex="-1"></a>                   solar_radiation, resistivity, battery_capacity,</span>
-<span id="annotated-cell-16-11"><a href="#annotated-cell-16-11" aria-hidden="true" tabindex="-1"></a>                   hour, daynum, data_pt, wind_sp, diradd,</span>
-<span id="annotated-cell-16-12"><a href="#annotated-cell-16-12" aria-hidden="true" tabindex="-1"></a>                   wind_speed, wind_direction, tide, day, month, year)</span>
-<span id="annotated-cell-16-13"><a href="#annotated-cell-16-13" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-14"><a href="#annotated-cell-16-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">anyNA</span>(.))) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-15"><a href="#annotated-cell-16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-16"><a href="#annotated-cell-16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
-<span id="annotated-cell-16-17"><a href="#annotated-cell-16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"ksf_salinity"</span> <span class="ot">=</span> salinity,</span>
-<span id="annotated-cell-16-18"><a href="#annotated-cell-16-18" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_rdo_saturation"</span> <span class="ot">=</span> rdo_saturation,</span>
-<span id="annotated-cell-16-19"><a href="#annotated-cell-16-19" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_rdo_concentration"</span> <span class="ot">=</span> rdo_concentration,</span>
-<span id="annotated-cell-16-20"><a href="#annotated-cell-16-20" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_actual_conductivity"</span> <span class="ot">=</span> actual_conductivity,</span>
-<span id="annotated-cell-16-21"><a href="#annotated-cell-16-21" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_total_dissolved_solids"</span> <span class="ot">=</span> total_dissolved_solids,</span>
-<span id="annotated-cell-16-22"><a href="#annotated-cell-16-22" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_ammonium"</span> <span class="ot">=</span> ammonium,</span>
-<span id="annotated-cell-16-23"><a href="#annotated-cell-16-23" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_barometric_pressure"</span> <span class="ot">=</span> barometric_pressure,</span>
-<span id="annotated-cell-16-24"><a href="#annotated-cell-16-24" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_oxygen_partial_pressure"</span> <span class="ot">=</span> oxygen_partial_pressure,</span>
-<span id="annotated-cell-16-25"><a href="#annotated-cell-16-25" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_specific_conductivity"</span> <span class="ot">=</span> specific_conductivity,</span>
-<span id="annotated-cell-16-26"><a href="#annotated-cell-16-26" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_density"</span> <span class="ot">=</span> density,</span>
-<span id="annotated-cell-16-27"><a href="#annotated-cell-16-27" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_chlorophyll_a_fluorescence"</span> <span class="ot">=</span> chlorophyll_a_fluorescence,</span>
-<span id="annotated-cell-16-28"><a href="#annotated-cell-16-28" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_ammonium_m_v"</span> <span class="ot">=</span> ammonium_m_v)</span>
-<span id="annotated-cell-16-29"><a href="#annotated-cell-16-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="annotated-cell-16-30"><a href="#annotated-cell-16-30" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(ksf_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="annotated-cell-15"><pre class="sourceCode r code-annotation-code code-with-copy"><code class="sourceCode r"><span id="annotated-cell-15-1"><a href="#annotated-cell-15-1" aria-hidden="true" tabindex="-1"></a>ksf_data_tidied <span class="ot">&lt;-</span> ksf_data <span class="sc">%&gt;%</span> </span>
+<span id="annotated-cell-15-2"><a href="#annotated-cell-15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">s*</span><span class="sc">\\</span><span class="st">([^</span><span class="sc">\\</span><span class="st">)]+</span><span class="sc">\\</span><span class="st">)"</span>, <span class="st">""</span>, .x)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-3"><a href="#annotated-cell-15-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-4"><a href="#annotated-cell-15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date =</span> date_time) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-5"><a href="#annotated-cell-15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-6"><a href="#annotated-cell-15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2023-11-20"</span>) <span class="sc">&amp;</span> date <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2024-02-20"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-7"><a href="#annotated-cell-15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-8"><a href="#annotated-cell-15-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(external_voltage, wk_num, wind_dir,</span>
+<span id="annotated-cell-15-9"><a href="#annotated-cell-15-9" aria-hidden="true" tabindex="-1"></a>                   spadd, outdoor_temperature, hourly_rain,</span>
+<span id="annotated-cell-15-10"><a href="#annotated-cell-15-10" aria-hidden="true" tabindex="-1"></a>                   solar_radiation, resistivity, battery_capacity,</span>
+<span id="annotated-cell-15-11"><a href="#annotated-cell-15-11" aria-hidden="true" tabindex="-1"></a>                   hour, daynum, data_pt, wind_sp, diradd,</span>
+<span id="annotated-cell-15-12"><a href="#annotated-cell-15-12" aria-hidden="true" tabindex="-1"></a>                   wind_speed, wind_direction, tide, day, month, year)</span>
+<span id="annotated-cell-15-13"><a href="#annotated-cell-15-13" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-14"><a href="#annotated-cell-15-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">anyNA</span>(.))) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-15"><a href="#annotated-cell-15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-16"><a href="#annotated-cell-15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-15-17"><a href="#annotated-cell-15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"ksf_salinity"</span> <span class="ot">=</span> salinity,</span>
+<span id="annotated-cell-15-18"><a href="#annotated-cell-15-18" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_rdo_saturation"</span> <span class="ot">=</span> rdo_saturation,</span>
+<span id="annotated-cell-15-19"><a href="#annotated-cell-15-19" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_rdo_concentration"</span> <span class="ot">=</span> rdo_concentration,</span>
+<span id="annotated-cell-15-20"><a href="#annotated-cell-15-20" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_actual_conductivity"</span> <span class="ot">=</span> actual_conductivity,</span>
+<span id="annotated-cell-15-21"><a href="#annotated-cell-15-21" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_total_dissolved_solids"</span> <span class="ot">=</span> total_dissolved_solids,</span>
+<span id="annotated-cell-15-22"><a href="#annotated-cell-15-22" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_ammonium"</span> <span class="ot">=</span> ammonium,</span>
+<span id="annotated-cell-15-23"><a href="#annotated-cell-15-23" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_barometric_pressure"</span> <span class="ot">=</span> barometric_pressure,</span>
+<span id="annotated-cell-15-24"><a href="#annotated-cell-15-24" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_oxygen_partial_pressure"</span> <span class="ot">=</span> oxygen_partial_pressure,</span>
+<span id="annotated-cell-15-25"><a href="#annotated-cell-15-25" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_specific_conductivity"</span> <span class="ot">=</span> specific_conductivity,</span>
+<span id="annotated-cell-15-26"><a href="#annotated-cell-15-26" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_density"</span> <span class="ot">=</span> density,</span>
+<span id="annotated-cell-15-27"><a href="#annotated-cell-15-27" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_chlorophyll_a_fluorescence"</span> <span class="ot">=</span> chlorophyll_a_fluorescence,</span>
+<span id="annotated-cell-15-28"><a href="#annotated-cell-15-28" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ksf_ammonium_m_v"</span> <span class="ot">=</span> ammonium_m_v)</span>
+<span id="annotated-cell-15-29"><a href="#annotated-cell-15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-15-30"><a href="#annotated-cell-15-30" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(ksf_data_tidied)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -704,35 +687,16 @@ Expand To Learn When to Run Step 2a
 <section id="exporting-processed-data" class="level3">
 <h3 class="anchored" data-anchor-id="exporting-processed-data">Exporting Processed Data</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dfs_to_export <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">water_samples_data_tidied =</span> water_samples_data_tidied,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">water_profiles_data_tidied =</span> water_profiles_data_tidied,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">clam_growth_data_tidied =</span> clam_growth_data_tidied,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">oyster_growth_data_tidied =</span> oyster_growth_data_tidied,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">weather_data_tidied =</span> weather_data_tidied,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ksf_data_tidied =</span> ksf_data_tidied</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>) </span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">imap</span>(dfs_to_export, <span class="sc">~</span> <span class="fu">export_to_csv</span>(.x, .y, <span class="st">"data/tidied"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$water_samples_data_tidied
-NULL
-
-$water_profiles_data_tidied
-NULL
-
-$clam_growth_data_tidied
-NULL
-
-$oyster_growth_data_tidied
-NULL
-
-$weather_data_tidied
-NULL
-
-$ksf_data_tidied
-NULL</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dfs_to_export <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">water_samples_data_tidied =</span> water_samples_data_tidied,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">water_profiles_data_tidied =</span> water_profiles_data_tidied,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">clam_growth_data_tidied =</span> clam_growth_data_tidied,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">oyster_growth_data_tidied =</span> oyster_growth_data_tidied,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">weather_data_tidied =</span> weather_data_tidied,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ksf_data_tidied =</span> ksf_data_tidied</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">imap</span>(dfs_to_export, <span class="sc">~</span> <span class="fu">export_to_csv</span>(.x, .y, <span class="st">"data/tidied"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="generating-data-dictionaries" class="level3">
