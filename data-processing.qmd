@@ -405,7 +405,9 @@ paged_table(ksf_data_tidied)
 ### Exporting Processed Data
 
 ```{r}
-#| eval: false
+#| eval: false 
+#| code-fold: true
+#| code-summary: "Efficiently export tidied datasets to `data/tidied` folder"
 dfs_to_export <- list( 
   water_samples_data_tidied = water_samples_data_tidied,
   water_profiles_data_tidied = water_profiles_data_tidied,
