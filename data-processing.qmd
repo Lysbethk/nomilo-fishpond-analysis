@@ -165,10 +165,15 @@ water_samples_data_tidied <- water_samples_data %>%
   mutate(date = as.Date(date), # <4>
          across(c(nomilo_id, location, round, depth), as.factor)) %>% # <4>
   select(-c(sample_id, nomilo_id, tube_name)) %>% 
-  mutate(location = str_to_title(location)) %>%
-  mutate(location = factor(location, 
-                           levels = c("Mid Buoy", "Back Buoy", "Auwai", "Production Dock"))) %>% 
-   filter(!is.na(location))
+  mutate(location = str_to_title(location), 
+         location = case_when(
+           location == "Auwei" ~ "Auwai",
+           TRUE ~ as.character(location)
+         ),
+         location = factor(location, 
+                           levels = c("Mid Buoy", "Back Buoy", "Auwai", "Production Dock"))
+  ) %>% 
+  filter(!is.na(location))
 
 paged_table(water_samples_data_tidied)
 ```

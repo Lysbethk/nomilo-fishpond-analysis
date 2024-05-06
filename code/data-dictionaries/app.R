@@ -3,9 +3,12 @@ library(dataxray)
 library(tidyverse)
 library(glue)
 
-source(here::here("code/functions/load_tidied_data.R"))
+load_tidied_data <- function(base_url, file_names) {
+  dfs <- map(file_names, ~ read_csv(glue::glue("{base_url}{.x}"), show_col_types = FALSE))
+  names(dfs) <- names(file_names)
+  return(dfs)
+}
 
-# Define the named vector of file names
 file_names <- c(
   "Water Samples" = "2024-05-05_water-samples-data-final.csv",
   "Profiles" = "2024-05-05_water-profiles-data-final.csv",
