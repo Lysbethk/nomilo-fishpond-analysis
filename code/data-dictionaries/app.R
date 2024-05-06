@@ -12,12 +12,12 @@ load_tidied_data <- function(base_url, file_names) {
 
 # Define the named vector of file names
 file_names <- c(
-  "Water Samples" = "2024-03-15_water-samples-data-final.csv",
-  "Profiles" = "2024-04-09_profiles-data-final.csv",
-  "Clam Growth" = "2024-04-09_ksf-clams-growth-data-final.csv",
-  "Oyster Growth" = "2024-04-09_ksf-oyster-cylinder-growth-data-final.csv",
-  "Weather" = "2024-03-20_weather-data-final.csv",
-  "Kauaʻi Sea Farm Data" = "2024-03-15_ksf-compiled-data-final.csv"
+  "Water Samples" = "2024-05-05_water-samples-data-final.csv",
+  "Profiles" = "2024-05-05_water-profiles-data-final.csv",
+  "Clam Growth" = "2024-05-05_clams-growth-data-final.csv",
+  "Oyster Growth" = "2024-05-05_oyster-growth-data-final.csv",
+  "Weather" = "2024-05-05_weather-data-final.csv",
+  "Kauaʻi Sea Farm Data" = "2024-05-05_ksf-data-final.csv"
 )
 
 base_url <- "https://raw.githubusercontent.com/Lysbethk/nomilo-fishpond-analysis/main/data/output/"
@@ -49,7 +49,7 @@ ui <- fluidPage(
   mainPanel(
     align = "center",
     fluidRow(
-      column(width = 6, offset = 6, h4("Please select a dataset to describe.", style = "color: red; font-face: bold; text-align: center;"))
+      column(width = 6, offset = 6, h4("Please select a dataset to view its data dictionary.", style = "color: red; font-face: bold; text-align: center;"))
     ),
     fluidRow(
       column(width = 6, offset = 6, selectInput("dataset", "", choices = c("Select a Dataset", names(dfs))))

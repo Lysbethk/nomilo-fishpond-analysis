@@ -68,10 +68,10 @@ export_to_csv <- function(df, df_name, dir_path) {
 |--------------------|--------------------|--------------------------------|
 | Lysbeth         | Water Samples                 | Measurements to represent the biogeochemical dynamics of Nomilo Fishpond                                                                                         |
 | Lysbeth         | Water Profiles                | Measurements of basic physical water quality indicators                                                                                                          |
-| Kauaʻi Sea Farm | Clam Growth                   | Growth and harvest data of clams at Nomilo fishpond gathered by Kauai Sea Farm                                                                                   |
-| Kauaʻi Sea Farm | Oyster Growth                 | Growth and harvest data of the *Mercenaria mercenaria* clams and *Crassostrea gigas* oysters at Nomilo fishpond gathered by Kauai Sea Farm                       |
-| Kauaʻi Sea Farm | Weather                       | Meteorological measurements and weather data reports that were kept on-site by Kauai Sea Farm accessed through weather.kauaiseafarm.com                          |
-| Kauaʻi Sea Farm | Kauaʻi Sea Farm Compiled Data | Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauai Sea Farm      |
+| Kauaʻi Sea Farm | Clam Growth                   | Growth and harvest data of clams at Nomilo fishpond gathered by Kauaʻi Sea Farm                                                                                   |
+| Kauaʻi Sea Farm | Oyster Growth                 | Growth and harvest data of the *Mercenaria mercenaria* clams and *Crassostrea gigas* oysters at Nomilo fishpond gathered by Kauaʻi Sea Farm                       |
+| Kauaʻi Sea Farm | Weather                       | Meteorological measurements and weather data reports that were kept on-site by Kauaʻi Sea Farm accessed through weather.Kauaʻiseafarm.com                          |
+| Kauaʻi Sea Farm | Kauaʻi Sea Farm Compiled Data | Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauaʻi Sea Farm      |
 
 ### Procedure
 
@@ -402,12 +402,10 @@ paged_table(ksf_data_tidied)
 
 ## Data Exportation
 
-### Exporting Processed Data
-
 ```{r}
-#| eval: false 
 #| code-fold: true
 #| code-summary: "Efficiently export tidied datasets to `data/tidied` folder"
+#| eval: false 
 dfs_to_export <- list( 
   water_samples_data_tidied = water_samples_data_tidied,
   water_profiles_data_tidied = water_profiles_data_tidied,
@@ -419,5 +417,3 @@ dfs_to_export <- list(
 
 imap(dfs_to_export, ~ export_to_csv(.x, .y, "data/tidied"))
 ```
-
-### Generating Data Dictionaries
