@@ -64,14 +64,14 @@ export_to_csv <- function(df, df_name, dir_path) {
 
 ### Data Sources
 
-| Data Producer   | Dataset                       | Dataset Description                                                                                                                                              |
+| Data Producer   | Dataset                       | Dataset Description                                                                                                                                            |
 |--------------------|--------------------|--------------------------------|
-| Lysbeth         | Water Samples                 | Measurements to represent the biogeochemical dynamics of Nomilo Fishpond                                                                                         |
-| Lysbeth         | Water Profiles                | Measurements of basic physical water quality indicators                                                                                                          |
-| Kauaʻi Sea Farm | Clam Growth                   | Growth and harvest data of clams at Nomilo fishpond gathered by Kauaʻi Sea Farm                                                                                   |
-| Kauaʻi Sea Farm | Oyster Growth                 | Growth and harvest data of the *Mercenaria mercenaria* clams and *Crassostrea gigas* oysters at Nomilo fishpond gathered by Kauaʻi Sea Farm                       |
-| Kauaʻi Sea Farm | Weather                       | Meteorological measurements and weather data reports that were kept on-site by Kauaʻi Sea Farm accessed through weather.Kauaʻiseafarm.com                          |
-| Kauaʻi Sea Farm | Kauaʻi Sea Farm Compiled Data | Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauaʻi Sea Farm      |
+| Lysbeth         | Water Samples                 | Measurements of flow cytometry, nutrients, and chlorophyll-a to represent the biogeochemical dynamics of Nomilo Fishpond                                       |
+| Lysbeth         | Water Profiles                | Measurements of temperature, dissolved oxygen, salinity, and visibility to determine water column profiles.                                                    |
+| Kauaʻi Sea Farm | Clam Growth                   | Growth data of *Mercenaria mercenaria* clams at Nomilo fishpond gathered by Kauaʻi Sea Farm.                                                                   |
+| Kauaʻi Sea Farm | Oyster Growth                 | Growth data of *Crassostrea gigas* oysters at Nomilo fishpond gathered by Kauaʻi Sea Farm.                                                                     |
+| Kauaʻi Sea Farm | Weather                       | Meteorological measurements and weather data reports that were kept on-site by Kauaʻi Sea Farm accessed through weather.Kauaʻiseafarm.com                      |
+| Kauaʻi Sea Farm | Kauaʻi Sea Farm Compiled Data | Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauaʻi Sea Farm.  |
 
 ### Procedure
 
@@ -105,7 +105,6 @@ pacman::p_load(
 ```
 
 ::: {.callout-caution collapse="true"}
-
 #### Expand To Learn When to Run Step 2a
 
 Run when there is new raw data added. Since the following code chunk is slow to execute, run step 2b.
@@ -117,7 +116,6 @@ Run when there is new raw data added. Since the following code chunk is slow to 
 dfs <- slowly_load_xlsx_files_to_list("data/raw")
 export_to_rdata(dfs, "data/raw/rdata-files/")
 ```
-
 :::
 
 ```{r}
@@ -145,7 +143,6 @@ ksf_data <- load_xlsx_sheet(dfs_list, "ksf_compiled_data", "full_data")
 ## Data Tidying
 
 ::: panel-tabset
-
 ### Water Samples
 
 ```{r}

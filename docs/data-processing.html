@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.26">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="author" content="Alemarie Ceria">
 <meta name="dcterms.date" content="2024-02-28">
 
-<title>Nomilo Fishpond Case Study – Data Processing</title>
+<title>Nomilo Fishpond Case Study - Data Processing</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,9 +104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-
 
 
 </head>
@@ -142,7 +140,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -169,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
-<p><br> <img src=".\www/logos/uhm-logo.png" class="img-fluid"> <br><br> <img src=".\www/logos/pac-risa-logo.png" class="img-fluid"> <br><br> <img src=".\www/logos/ksf-logo.png" class="img-fluid"> <br><br></p>
+<p><br> <img src="./www/logos/uhm-logo.png" class="img-fluid"> <br><br> <img src="./www/logos/pac-risa-logo.png" class="img-fluid"> <br><br> <img src="./www/logos/ksf-logo.png" class="img-fluid"> <br><br></p>
 </div></div>
     </div>
 <!-- main -->
@@ -274,22 +272,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>Lysbeth</td>
 <td>Water Samples</td>
-<td>Measurements to represent the biogeochemical dynamics of Nomilo Fishpond</td>
+<td>Measurements of flow cytometry, nutrients, and chlorophyll-a to represent the biogeochemical dynamics of Nomilo Fishpond</td>
 </tr>
 <tr class="even">
 <td>Lysbeth</td>
 <td>Water Profiles</td>
-<td>Measurements of basic physical water quality indicators</td>
+<td>Measurements of temperature, dissolved oxygen, salinity, and visibility to determine water column profiles.</td>
 </tr>
 <tr class="odd">
 <td>Kauaʻi Sea Farm</td>
 <td>Clam Growth</td>
-<td>Growth and harvest data of clams at Nomilo fishpond gathered by Kauaʻi Sea Farm</td>
+<td>Growth data of <em>Mercenaria mercenaria</em> clams at Nomilo fishpond gathered by Kauaʻi Sea Farm.</td>
 </tr>
 <tr class="even">
 <td>Kauaʻi Sea Farm</td>
 <td>Oyster Growth</td>
-<td>Growth and harvest data of the <em>Mercenaria mercenaria</em> clams and <em>Crassostrea gigas</em> oysters at Nomilo fishpond gathered by Kauaʻi Sea Farm</td>
+<td>Growth data of <em>Crassostrea gigas</em> oysters at Nomilo fishpond gathered by Kauaʻi Sea Farm.</td>
 </tr>
 <tr class="odd">
 <td>Kauaʻi Sea Farm</td>
@@ -299,7 +297,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>Kauaʻi Sea Farm</td>
 <td>Kauaʻi Sea Farm Compiled Data</td>
-<td>Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauaʻi Sea Farm</td>
+<td>Various daily water quality metrics at the surface level (approximately 0.5m) at the Production Dock location of Nomilo fishpond measured by Kauaʻi Sea Farm.</td>
 </tr>
 </tbody>
 </table>
@@ -740,7 +738,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -772,29 +781,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -802,15 +789,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
           // target, if specified
           link.setAttribute("target", "_blank");
           if (link.getAttribute("rel") === null) {
@@ -852,11 +834,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
+      return note.innerHTML;
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
