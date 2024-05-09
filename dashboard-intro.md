@@ -32,6 +32,11 @@ To better understand these fishpond ecosystem dynamics, this research analyzed b
 
 The main finding can be summarized into four statements that chronologically explain the biogoechemcial dynamics and aquacultural productivity at Nomilo fishpond during the critical winter period (November 2023 till February 2024): (1) First, reversed wind direction from North/North-East to Westernn wind induced enhanced intercolumn mixing dynamics of Nomilo fishpond, creating reversed mixing conditions that stimulate water turnover. (2) Second, benthic and deep-water conditions might be a good determiner of what drives changes in aquacultural productivity during winter. Groundwater levels could play a role by pushing nutrients from the anoxic 7.5m sediment into the water-column. (3) Third, reversed mixing dynamics induced by wind had beneficial cascading effects throughout the fishpond ecosystem in that it spread nutrients spatially and throughout the water columns, which supported increased concentrations of larger phytoplankton. (4) Fourth, aquacultural productivity of clams and oysters in terms of growth and survival rate improved after reversed mixing dynamics, consistent with increased phytoplankton abundance.
 
-![](www/logos/uhm-logo.png){fig-align="center" width="200"} <br><br> ![](www/logos/pac-risa-logo.png){fig-align="center" width="200"} <br><br> ![](www/logos/ksf-logo.png){fig-align="center" width="200"}
+![](www/logos/uhm-logo.png){fig-align="center" width="200"} <br><br> 
+![](www/logos/wur-logo.png){fig-align="center" width="200"} <br><br> 
+![](www/logos/pac-risa-logo.png){fig-align="center" width="200"} <br><br> ![](www/logos/ksf-logo.png){fig-align="center" width="200"}
 
-**Created By**: Alemarie Ceria <br> **Last Updated**: 05/05/2024 <br><br> *© 2024 Oleson Lab, University of Hawaii at Manoa*
+**Created By**: Alemarie Ceria <br> 
+**Last Updated**: 05/05/2024 <br><br> 
+
+*© 2024 Oleson Lab, University of Hawaii at Manoa*
