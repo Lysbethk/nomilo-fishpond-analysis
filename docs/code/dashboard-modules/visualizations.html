@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Nomilo Fishpond Case Study – visualizations</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="../../site_libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
+
+<script src="../../site_libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
+
+<script src="../../site_libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
+
+<script src="../../site_libs/flatbush-4.0.0/flatbush.min.js"></script>
+
+<link href="../../site_libs/ggiraphjs-0.4.6/ggiraphjs.min.css" rel="stylesheet">
+
+<script src="../../site_libs/ggiraphjs-0.4.6/ggiraphjs.min.js"></script>
+
+<script src="../../site_libs/girafe-binding-0.8.9/girafe.js"></script>
+
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Nomilo Fishpond Case Study</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../data-processing.html"> 
+<span class="menu-text">Data Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../data-explorer-dashboard.html"> 
+<span class="menu-text">Data Explorer Dashboard</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<p><br> <img src="../..\www/logos/uhm-logo.png" class="img-fluid"> <br><br> <img src="../..\www/logos/wur-logo.png" class="img-fluid"> <br><br> <img src="../..\www/logos/pac-risa-logo.png" class="img-fluid"> <br><br> <img src="../..\www/logos/ksf-logo.png" class="img-fluid"> <br><br></p>
+</div></div>
+        
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+
+
+
+<p><a href="https://albert-rapp.de/posts/ggplot2-tips/17_ggiraph/17_ggiraph#combine-ggirafe-and-patchwork">Creating interactive visualizations with {ggiraph} (with or without Shiny) by Albert Rapp</a></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Step 1: Efficiently install packages and load libraries</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  fs,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  here,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  rio,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  tidyverse,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  ggplot2,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  patchwork,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  ggiraph,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  shiny,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  wesanderson,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  epoxy</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>final_dataset_paths <span class="ot">&lt;-</span> <span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"output"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> final_dataset_paths <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(import) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_names</span>(<span class="fu">map</span>(<span class="fu">names</span>(.), <span class="sc">~</span> <span class="fu">str_replace</span>(.x, <span class="st">".*_(.*)-final</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">str_replace_all</span>(., <span class="st">"-"</span>, <span class="st">"_"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Conversions: clams lbs &gt; g</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dfs<span class="sc">$</span>clam_growth_data <span class="ot">&lt;-</span> dfs<span class="sc">$</span>clam_growth_data <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weight =</span> weight <span class="sc">*</span> <span class="fl">453.592</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Create units vector and add to dfs</li>
+<li>Subset each df to specified columns</li>
+<li>Format values</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to create named vectors</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>create_units_vector <span class="ot">&lt;-</span> <span class="cf">function</span>(names, unit) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">rep</span>(unit, <span class="fu">length</span>(names)), names)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define names and units</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>names_units <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cells/ml"</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"heterotrophic_bacteria"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"large_phytoplankton"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"synechococcus_population_1"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"synechococcus_population_2"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"prochlorococcus"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"myster_cells_events"</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mol/L"</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"phosphate"</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"silicate"</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nitrate_nitrite"</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ammonia"</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ug/L"</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"chlorophyll_a"</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mg/L"</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dissolved_oxygen"</span>,</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ksf_rdo_concentration"</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ksf_rdo_saturation"</span>,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ksf_ammonium"</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"C"</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"water_temperature"</span>,</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"outdoor_temperature"</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"g"</span> <span class="ot">=</span> <span class="st">"weight"</span>,</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mS/cm"</span> <span class="ot">=</span> <span class="st">"salinity"</span>,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ft"</span> <span class="ot">=</span> <span class="st">"visibility"</span>,</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PSU"</span> <span class="ot">=</span> <span class="st">"ksf_salinity"</span>,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"g/cm3"</span> <span class="ot">=</span> <span class="st">"ksf_density"</span>,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PPT"</span> <span class="ot">=</span> <span class="st">"ksf_total_dissolved_solids"</span>,</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"RFU"</span> <span class="ot">=</span> <span class="st">"ksf_chlorophyll_a_fluorescence"</span>,</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mph"</span> <span class="ot">=</span> <span class="st">"wind_speed_mph"</span>,</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"in/hr"</span> <span class="ot">=</span> <span class="st">"hourly_rain_inch_hr"</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the named vector using map and flatten from purrr</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>units_vector <span class="ot">&lt;-</span> names_units <span class="sc">%&gt;%</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">imap</span>(create_units_vector) <span class="sc">%&gt;%</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flatten_chr</span>()</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>units_vector</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        heterotrophic_bacteria            large_phytoplankton 
+                    "cells/ml"                     "cells/ml" 
+    synechococcus_population_1     synechococcus_population_2 
+                    "cells/ml"                     "cells/ml" 
+               prochlorococcus            myster_cells_events 
+                    "cells/ml"                     "cells/ml" 
+                     phosphate                       silicate 
+                       "mol/L"                        "mol/L" 
+               nitrate_nitrite                        ammonia 
+                       "mol/L"                        "mol/L" 
+                 chlorophyll_a               dissolved_oxygen 
+                        "ug/L"                         "mg/L" 
+         ksf_rdo_concentration             ksf_rdo_saturation 
+                        "mg/L"                         "mg/L" 
+                  ksf_ammonium              water_temperature 
+                        "mg/L"                            "C" 
+           outdoor_temperature                         weight 
+                           "C"                            "g" 
+                      salinity                     visibility 
+                       "mS/cm"                           "ft" 
+                  ksf_salinity                    ksf_density 
+                         "PSU"                        "g/cm3" 
+    ksf_total_dissolved_solids ksf_chlorophyll_a_fluorescence 
+                         "PPT"                          "RFU" 
+                wind_speed_mph            hourly_rain_inch_hr 
+                         "mph"                        "in/hr" </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Function to pivot, apply units, and label the dataset</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># apply_units_after_pivot &lt;- function(df, name) {</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   df %&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     mutate(across(-date, as.character)) %&gt;%  # Convert all columns except 'date' to character</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     pivot_longer(</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#       cols = -date,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#       names_to = "var",</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#       values_to = "value"</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     ) %&gt;%</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     mutate(</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#       unit = if_else(var %in% names(units_vector), units_vector[var], NA_character_),</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#       dataset_name = name  # Add the dataset name</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     )</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Use imap_dfr to apply the function and combine using map_dfr, passing dataset names</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>dfs_combined <span class="ot">&lt;-</span> <span class="fu">imap_dfr</span>(dfs, apply_units_after_pivot, <span class="at">.id =</span> <span class="st">"dataset_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dfs_combined <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(clams_color, ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Cell Growth Changes - Water Samples Dataset Visualizes the following variables from the water sampling data set: hetero trophic, large phytoplankton, synechococcus 1, synechococcus 2, prochloroccocus, mystery cells. Shows these variables of cells per location and at different depths (like we had before in the app). Data point 2 is missing (this is correct due to an error). Unit of analysis that goes behind the name is ‘cells/ml’. Make sure metric/measurement unit is behind the name in the graphs. It visualizes 1 parameter at the time that you can select through a fold-out menu of the y-variables (like we had in the last shiny app).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cell_growth_changes <span class="ot">&lt;-</span> dfs<span class="sc">$</span>water_samples_data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"myster_cells_events"</span> <span class="ot">=</span> lysbeths_mystery_cells_events) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    round,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    date,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    location,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    depth,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    heterotrophic_bacteria,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    large_phytoplankton,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    synechococcus_population_1,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    synechococcus_population_2,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    prochlorococcus,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    myster_cells_events</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">depth =</span> <span class="fu">as.factor</span>(depth),</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> <span class="fu">if_else</span>(location <span class="sc">==</span> <span class="st">"Mid Buoy"</span>, <span class="st">"Middle Buoy"</span>, location)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>location_coords <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">location =</span> <span class="fu">c</span>(<span class="st">"Back Buoy"</span>, <span class="st">"Middle Buoy"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Production Dock"</span>, <span class="st">"Auwai"</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">lat =</span> <span class="fu">c</span>(<span class="fl">21.8875</span>, <span class="fl">21.8865556</span>, <span class="fl">21.8851</span>, <span class="fl">21.885</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lon =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">159.5268</span>, <span class="sc">-</span><span class="fl">159.5273056</span>, <span class="sc">-</span><span class="fl">159.5276</span>, <span class="sc">-</span><span class="fl">159.5281</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>get_unit <span class="ot">&lt;-</span> <span class="cf">function</span>(var, names_units) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  unit <span class="ot">&lt;-</span> <span class="fu">names</span>(names_units)[<span class="fu">detect_index</span>(names_units, <span class="sc">~</span> var <span class="sc">%in%</span> .)]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(unit)) {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(unit)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>weight_unit <span class="ot">&lt;-</span> <span class="fu">get_unit</span>(<span class="st">"weight"</span>, names_units)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>oyster_growth <span class="ot">&lt;-</span> dfs<span class="sc">$</span>oyster_growth_data <span class="sc">%&gt;%</span> </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>oyster_chlorophyll)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Define colors from the palette</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>blue_color <span class="ot">&lt;-</span> <span class="st">"#0A9F9D"</span>  <span class="co"># A blue-like color from your palette</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>dark_brown_color <span class="ot">&lt;-</span> <span class="st">"#C18748"</span>  <span class="co"># A dark brown color from your palette</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>light_brown_color <span class="ot">&lt;-</span> <span class="st">"#CEB175"</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting code using specified colors</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(oyster_growth, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> blue_color, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span>  </span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_text(aes(label = round(weight, 2)),</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">#           vjust = -2, </span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">#           hjust = 0.65,</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">#           color = "black",</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">#           size = 3) +</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point_interactive</span>(</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">size =</span> weight, </span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> light_brown_color,  <span class="co"># Set the color for the points</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">tooltip =</span> <span class="fu">paste0</span>(<span class="st">"Weight: "</span>, </span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">round</span>(weight, <span class="dv">2</span>), </span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>                         <span class="st">" ("</span>, </span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>                         weight_unit, </span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>                         <span class="st">")"</span>), </span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">data_id =</span> date),</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.9</span>,  <span class="co"># Set transparency of the points</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">hover_css =</span> <span class="fu">paste0</span>(<span class="st">"fill: "</span>, dark_brown_color, <span class="st">";"</span>),</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span>  <span class="co"># This argument removes the size legend</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">10</span>)) <span class="sc">+</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># title = "Growth of Small Oysters Over Time",</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">paste0</span>(<span class="st">"Weight"</span>, <span class="st">" ("</span>, weight_unit, <span class="st">")"</span>)</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">max</span>(oyster_growth<span class="sc">$</span>weight) <span class="sc">*</span> <span class="fl">1.1</span>)) <span class="sc">+</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%m/%d/%Y"</span>, <span class="at">date_breaks =</span> <span class="st">"1 week"</span>) <span class="sc">+</span></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>), </span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>, <span class="at">b =</span> <span class="dv">10</span>)), </span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>, <span class="at">r =</span> <span class="dv">10</span>)), </span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),  <span class="co"># Axis labels size 10</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>  <span class="co"># This will remove all legends</span></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_identity</span>()  <span class="co"># Ensure that the color values are taken literally</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="visualizations_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ggplot object to ggiraph</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>interactive_plot <span class="ot">&lt;-</span> <span class="fu">girafe</span>(<span class="at">ggobj =</span> p)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the interactive plot</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>interactive_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="girafe html-widget html-fill-item" id="htmlwidget-9fa7e3517c91acd76bf9" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-9fa7e3517c91acd76bf9">{"x":{"html":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='ggiraph-svg' role='graphics-document' id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f' viewBox='0 0 504 360'>\n <style><![CDATA[.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2024-02-20\"] { fill: #C18748; }.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2024-01-17\"] { fill: #C18748; }.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2024-01-08\"] { fill: #C18748; }.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2024-01-01\"] { fill: #C18748; }.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2023-12-18\"] { fill: #C18748; }.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2023-12-11\"] { fill: #C18748; }.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2024-01-23\"] { fill: #C18748; }.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2023-11-27\"] { fill: #C18748; }.hover_data_svg_75a9fa36_8adb_498c_a72e_89454c06fd2f[data-id = \"2023-11-20\"] { fill: #C18748; }]]><\/style>\n <defs id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_defs'>\n  <clipPath id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_c1'>\n   <rect x='0' y='0' width='504' height='360'/>\n  <\/clipPath>\n  <clipPath id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_c2'>\n   <rect x='47.25' y='5.48' width='451.27' height='269.25'/>\n  <\/clipPath>\n <\/defs>\n <g id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_rootg' class='ggiraph-svg-rootg'>\n  <g clip-path='url(#svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_c1)'>\n   <rect x='0' y='0' width='504' height='360' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.75' stroke-linejoin='round' stroke-linecap='round' class='ggiraph-svg-bg'/>\n  <\/g>\n  <g clip-path='url(#svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_c2)'>\n   <polyline points='47.25,232.42 498.52,232.42' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='47.25,154.01 498.52,154.01' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='47.25,75.60 498.52,75.60' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='52.16,274.73 52.16,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='83.37,274.73 83.37,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='114.58,274.73 114.58,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='145.80,274.73 145.80,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='177.01,274.73 177.01,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='208.23,274.73 208.23,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='239.44,274.73 239.44,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='270.66,274.73 270.66,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='301.87,274.73 301.87,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='333.08,274.73 333.08,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='364.30,274.73 364.30,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='395.51,274.73 395.51,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='426.73,274.73 426.73,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='457.94,274.73 457.94,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='489.16,274.73 489.16,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='47.25,271.62 498.52,271.62' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='47.25,193.21 498.52,193.21' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='47.25,114.80 498.52,114.80' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='47.25,36.39 498.52,36.39' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='67.76,274.73 67.76,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='98.98,274.73 98.98,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='130.19,274.73 130.19,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='161.41,274.73 161.41,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='192.62,274.73 192.62,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='223.83,274.73 223.83,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='255.05,274.73 255.05,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='286.26,274.73 286.26,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='317.48,274.73 317.48,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='348.69,274.73 348.69,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='379.91,274.73 379.91,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='411.12,274.73 411.12,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='442.33,274.73 442.33,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='473.55,274.73 473.55,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='67.76,262.49 98.98,245.21 161.41,231.03 192.62,200.26 255.05,135.96 286.26,128.00 326.40,103.11 353.15,84.44 478.01,55.06' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e1' cx='67.76' cy='262.49' r='2.67pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 1.06 (g)' data-id='2023-11-20'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e2' cx='98.98' cy='245.21' r='4.28pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 1.17 (g)' data-id='2023-11-27'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e3' cx='161.41' cy='231.03' r='4.85pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 1.26 (g)' data-id='2023-12-11'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e4' cx='192.62' cy='200.26' r='5.73pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 1.46 (g)' data-id='2023-12-18'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e5' cx='255.05' cy='135.96' r='7.04pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 1.87 (g)' data-id='2024-01-01'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e6' cx='286.26' cy='128' r='7.18pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 1.92 (g)' data-id='2024-01-08'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e7' cx='326.4' cy='103.11' r='7.58pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 2.07 (g)' data-id='2024-01-17'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e8' cx='353.15' cy='84.44' r='7.86pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 2.19 (g)' data-id='2024-01-23'/>\n   <circle id='svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_e9' cx='478.01' cy='55.06' r='8.27pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 2.38 (g)' data-id='2024-02-20'/>\n  <\/g>\n  <g clip-path='url(#svg_75a9fa36_8adb_498c_a72e_89454c06fd2f_c1)'>\n   <text x='28.41' y='275.2' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>1.0<\/text>\n   <text x='28.41' y='196.79' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>1.5<\/text>\n   <text x='28.41' y='118.38' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>2.0<\/text>\n   <text x='28.41' y='39.98' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>2.5<\/text>\n   <text transform='translate(37.94,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>11/20/2023<\/text>\n   <text transform='translate(69.15,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>11/27/2023<\/text>\n   <text transform='translate(99.84,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>12/04/2023<\/text>\n   <text transform='translate(131.58,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>12/11/2023<\/text>\n   <text transform='translate(162.27,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>12/18/2023<\/text>\n   <text transform='translate(193.49,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>12/25/2023<\/text>\n   <text transform='translate(224.70,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/01/2024<\/text>\n   <text transform='translate(255.91,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/08/2024<\/text>\n   <text transform='translate(287.13,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/15/2024<\/text>\n   <text transform='translate(318.34,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/22/2024<\/text>\n   <text transform='translate(349.56,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/29/2024<\/text>\n   <text transform='translate(380.77,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>02/05/2024<\/text>\n   <text transform='translate(411.99,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>02/12/2024<\/text>\n   <text transform='translate(443.20,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>02/19/2024<\/text>\n   <text x='257.72' y='341.61' font-size='10.5pt' font-weight='bold' font-family='Arial'>Date<\/text>\n   <text transform='translate(15.50,174.17) rotate(-90.00)' font-size='10.5pt' font-weight='bold' font-family='Arial'>Weight (g)<\/text>\n  <\/g>\n <\/g>\n<\/svg>","js":null,"uid":"svg_75a9fa36_8adb_498c_a72e_89454c06fd2f","ratio":1.4,"settings":{"tooltip":{"css":".tooltip_SVGID_ { padding:5px;background:black;color:white;border-radius:2px;text-align:left; ; position:absolute;pointer-events:none;z-index:999;}","placement":"doc","opacity":0.9,"offx":10,"offy":10,"use_cursor_pos":true,"use_fill":false,"use_stroke":false,"delay_over":200,"delay_out":500},"hover":{"css":".hover_data_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_data_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_data_SVGID_ { fill:orange;stroke:black; }\nline.hover_data_SVGID_, polyline.hover_data_SVGID_ { fill:none;stroke:orange; }\nrect.hover_data_SVGID_, polygon.hover_data_SVGID_, path.hover_data_SVGID_ { fill:orange;stroke:none; }\nimage.hover_data_SVGID_ { stroke:orange; }","reactive":true,"nearest_distance":null},"hover_inv":{"css":""},"hover_key":{"css":".hover_key_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_key_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_key_SVGID_ { fill:orange;stroke:black; }\nline.hover_key_SVGID_, polyline.hover_key_SVGID_ { fill:none;stroke:orange; }\nrect.hover_key_SVGID_, polygon.hover_key_SVGID_, path.hover_key_SVGID_ { fill:orange;stroke:none; }\nimage.hover_key_SVGID_ { stroke:orange; }","reactive":true},"hover_theme":{"css":".hover_theme_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_theme_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_theme_SVGID_ { fill:orange;stroke:black; }\nline.hover_theme_SVGID_, polyline.hover_theme_SVGID_ { fill:none;stroke:orange; }\nrect.hover_theme_SVGID_, polygon.hover_theme_SVGID_, path.hover_theme_SVGID_ { fill:orange;stroke:none; }\nimage.hover_theme_SVGID_ { stroke:orange; }","reactive":true},"select":{"css":".select_data_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_data_SVGID_ { stroke:none;fill:red; }\ncircle.select_data_SVGID_ { fill:red;stroke:black; }\nline.select_data_SVGID_, polyline.select_data_SVGID_ { fill:none;stroke:red; }\nrect.select_data_SVGID_, polygon.select_data_SVGID_, path.select_data_SVGID_ { fill:red;stroke:none; }\nimage.select_data_SVGID_ { stroke:red; }","type":"multiple","only_shiny":true,"selected":[]},"select_inv":{"css":""},"select_key":{"css":".select_key_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_key_SVGID_ { stroke:none;fill:red; }\ncircle.select_key_SVGID_ { fill:red;stroke:black; }\nline.select_key_SVGID_, polyline.select_key_SVGID_ { fill:none;stroke:red; }\nrect.select_key_SVGID_, polygon.select_key_SVGID_, path.select_key_SVGID_ { fill:red;stroke:none; }\nimage.select_key_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"select_theme":{"css":".select_theme_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_theme_SVGID_ { stroke:none;fill:red; }\ncircle.select_theme_SVGID_ { fill:red;stroke:black; }\nline.select_theme_SVGID_, polyline.select_theme_SVGID_ { fill:none;stroke:red; }\nrect.select_theme_SVGID_, polygon.select_theme_SVGID_, path.select_theme_SVGID_ { fill:red;stroke:none; }\nimage.select_theme_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"zoom":{"min":1,"max":1,"duration":300},"toolbar":{"position":"topright","pngname":"diagram","tooltips":null,"hidden":[],"delay_over":200,"delay_out":500},"sizing":{"rescale":true,"width":1}}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>clam_growth <span class="ot">&lt;-</span> dfs<span class="sc">$</span>clam_growth_data </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(clam_growth, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> weight, <span class="at">group =</span> grouping_variable)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> blue_color, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point_interactive</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">size =</span> weight, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> light_brown_color,  <span class="co"># Set the color for the points</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">tooltip =</span> <span class="fu">paste0</span>(<span class="st">"Weight: "</span>, </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">round</span>(weight, <span class="dv">2</span>), </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                         <span class="st">" ("</span>, </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                         weight_unit, </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                         <span class="st">")"</span>), </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">data_id =</span> date),</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.9</span>,  <span class="co"># Set transparency of the points</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">hover_css =</span> <span class="fu">paste0</span>(<span class="st">"fill: "</span>, dark_brown_color, <span class="st">";"</span>),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span>  <span class="co"># This argument removes the size legend</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">10</span>)) <span class="sc">+</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># title = "Growth of Small Oysters Over Time",</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">paste0</span>(<span class="st">"Weight"</span>, <span class="st">" ("</span>, weight_unit, <span class="st">")"</span>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">max</span>(clam_growth<span class="sc">$</span>weight) <span class="sc">*</span> <span class="fl">1.1</span>)) <span class="sc">+</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%m/%d/%Y"</span>, <span class="at">date_breaks =</span> <span class="st">"1 week"</span>) <span class="sc">+</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>), </span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>, <span class="at">b =</span> <span class="dv">10</span>)), </span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>, <span class="at">r =</span> <span class="dv">10</span>)), </span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),  <span class="co"># Axis labels size 10</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>  <span class="co"># This will remove all legends</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_identity</span>()</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>            <span class="co"># theme(</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1, size = 14),</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   axis.text.y = element_text(margin = margin(r = 10), size = 14),</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   axis.title.x = element_text(margin = margin(t = 20), face = "bold", size = 18),</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   axis.title.y = element_text(face = "bold", margin = margin(r = 5), size = 18),</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   plot.title = element_text(hjust = 0.5, face = "bold", size = 22),</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   legend.position = "bottom",</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   legend.title = element_text(face = "bold", size = 14),</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   legend.text = element_text(size = 14),</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   plot.margin = margin(20, 20, 20, 20),</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   panel.spacing = unit(1.5, "lines")</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ) </span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>          <span class="co"># ylim(input$y_min, input$y_max)</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="visualizations_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ggplot object to ggiraph</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>interactive_plot2 <span class="ot">&lt;-</span> <span class="fu">girafe</span>(<span class="at">ggobj =</span> p2)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the interactive plot</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>interactive_plot2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="girafe html-widget html-fill-item" id="htmlwidget-527465d3b714b3761756" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-527465d3b714b3761756">{"x":{"html":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='ggiraph-svg' role='graphics-document' id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56' viewBox='0 0 504 360'>\n <style><![CDATA[.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-03-14\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-02-06\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-02-13\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-02-08\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-02-07\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-09-12\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-12-06\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-09-13\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-01-10\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-03-19\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-10-17\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-10-31\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-12-12\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-12-05\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-12-26\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-01-24\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-01-02\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2023-11-30\"] { fill: #C18748; }.hover_data_svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56[data-id = \"2024-01-31\"] { fill: #C18748; }]]><\/style>\n <defs id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_defs'>\n  <clipPath id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_c1'>\n   <rect x='0' y='0' width='504' height='360'/>\n  <\/clipPath>\n  <clipPath id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_c2'>\n   <rect x='66.73' y='5.48' width='431.79' height='269.25'/>\n  <\/clipPath>\n <\/defs>\n <g id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_rootg' class='ggiraph-svg-rootg'>\n  <g clip-path='url(#svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_c1)'>\n   <rect x='0' y='0' width='504' height='360' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.75' stroke-linejoin='round' stroke-linecap='round' class='ggiraph-svg-bg'/>\n  <\/g>\n  <g clip-path='url(#svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_c2)'>\n   <polyline points='66.73,243.94 498.52,243.94' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='66.73,177.24 498.52,177.24' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='66.73,110.55 498.52,110.55' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='66.73,43.85 498.52,43.85' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='77.02,274.73 77.02,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='91.55,274.73 91.55,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='106.09,274.73 106.09,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='120.63,274.73 120.63,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='135.17,274.73 135.17,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='149.71,274.73 149.71,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='164.24,274.73 164.24,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='178.78,274.73 178.78,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='193.32,274.73 193.32,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='207.86,274.73 207.86,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='222.40,274.73 222.40,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='236.94,274.73 236.94,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='251.47,274.73 251.47,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='266.01,274.73 266.01,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='280.55,274.73 280.55,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='295.09,274.73 295.09,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='309.63,274.73 309.63,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='324.17,274.73 324.17,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='338.70,274.73 338.70,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='353.24,274.73 353.24,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='367.78,274.73 367.78,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='382.32,274.73 382.32,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='396.86,274.73 396.86,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='411.39,274.73 411.39,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='425.93,274.73 425.93,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='440.47,274.73 440.47,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='455.01,274.73 455.01,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='469.55,274.73 469.55,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='484.09,274.73 484.09,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='66.73,210.59 498.52,210.59' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='66.73,143.89 498.52,143.89' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='66.73,77.20 498.52,77.20' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='66.73,10.50 498.52,10.50' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='69.75,274.73 69.75,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='84.28,274.73 84.28,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='98.82,274.73 98.82,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='113.36,274.73 113.36,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='127.90,274.73 127.90,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='142.44,274.73 142.44,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='156.98,274.73 156.98,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='171.51,274.73 171.51,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='186.05,274.73 186.05,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='200.59,274.73 200.59,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='215.13,274.73 215.13,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='229.67,274.73 229.67,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='244.20,274.73 244.20,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='258.74,274.73 258.74,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='273.28,274.73 273.28,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='287.82,274.73 287.82,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='302.36,274.73 302.36,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='316.90,274.73 316.90,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='331.43,274.73 331.43,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='345.97,274.73 345.97,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='360.51,274.73 360.51,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='375.05,274.73 375.05,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='389.59,274.73 389.59,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='404.13,274.73 404.13,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='418.66,274.73 418.66,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='433.20,274.73 433.20,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='447.74,274.73 447.74,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='462.28,274.73 462.28,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='476.82,274.73 476.82,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='491.36,274.73 491.36,5.48' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='88.44,64.05 159.05,43.37' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='86.36,223.98 262.90,223.98' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='188.13,262.49 275.36,182.88' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='250.44,171.56 318.97,183.28' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='260.82,261.96 335.59,257.29' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='318.97,204.20 364.66,245.17' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='260.82,260.23 379.20,210.96' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='304.43,232.91 393.74,249.05' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='304.43,232.86 395.82,201.88' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='335.59,257.29 335.59,257.12' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='406.20,237.41 406.20,236.95' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='391.66,260.14 468.51,195.60' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='391.66,169.38 478.89,41.32' fill='none' stroke='#0A9F9D' stroke-opacity='1' stroke-width='4.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e1' cx='88.44' cy='64.05' r='7.97pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 95913.73 (g)' data-id='2023-09-13'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e2' cx='159.05' cy='43.37' r='8.24pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 105215.36 (g)' data-id='2023-10-17'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e3' cx='86.36' cy='223.98' r='5pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 23978.43 (g)' data-id='2023-09-12'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e4' cx='262.9' cy='223.98' r='5pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 23978.43 (g)' data-id='2023-12-06'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e5' cx='188.13' cy='262.49' r='2.67pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 6654.01 (g)' data-id='2023-10-31'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e6' cx='275.36' cy='182.88' r='6.03pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 42461.81 (g)' data-id='2023-12-12'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e7' cx='250.44' cy='171.56' r='6.26pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 47557.22 (g)' data-id='2023-11-30'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e8' cx='318.97' cy='183.28' r='6.02pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 42281.97 (g)' data-id='2024-01-02'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e9' cx='260.82' cy='261.96' r='2.94pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 6893.8 (g)' data-id='2023-12-05'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e10' cx='335.59' cy='257.29' r='3.53pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 8991.91 (g)' data-id='2024-01-10'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e11' cx='318.97' cy='204.2' r='5.54pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 32874.43 (g)' data-id='2024-01-02'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e12' cx='364.66' cy='245.17' r='4.23pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 14443.49 (g)' data-id='2024-01-24'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e13' cx='260.82' cy='260.23' r='3.23pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 7673.1 (g)' data-id='2023-12-05'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e14' cx='379.2' cy='210.96' r='5.37pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 29831.17 (g)' data-id='2024-01-31'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e15' cx='304.43' cy='232.91' r='4.71pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 19958.05 (g)' data-id='2023-12-26'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e16' cx='393.74' cy='249.05' r='4.05pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 12700.58 (g)' data-id='2024-02-07'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e17' cx='304.43' cy='232.86' r='4.72pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 19982.03 (g)' data-id='2023-12-26'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e18' cx='395.82' cy='201.88' r='5.6pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 33919.49 (g)' data-id='2024-02-08'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e19' cx='335.59' cy='257.29' r='3.53pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 8991.91 (g)' data-id='2024-01-10'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e20' cx='335.59' cy='257.12' r='3.54pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 9071.84 (g)' data-id='2024-01-10'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e21' cx='406.2' cy='237.41' r='4.55pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 17933.87 (g)' data-id='2024-02-13'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e22' cx='406.2' cy='236.95' r='4.57pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 18143.68 (g)' data-id='2024-02-13'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e23' cx='391.66' cy='260.14' r='3.24pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 7711.06 (g)' data-id='2024-02-06'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e24' cx='468.51' cy='195.6' r='5.75pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 36740.95 (g)' data-id='2024-03-14'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e25' cx='391.66' cy='169.38' r='6.3pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 48534.34 (g)' data-id='2024-02-06'/>\n   <circle id='svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_e26' cx='478.89' cy='41.32' r='8.27pt' fill='#CEB175' fill-opacity='0.9' stroke='#CEB175' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Weight: 106140.53 (g)' data-id='2024-03-19'/>\n  <\/g>\n  <g clip-path='url(#svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56_c1)'>\n   <text x='33.97' y='214.17' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>30000<\/text>\n   <text x='33.97' y='147.48' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>60000<\/text>\n   <text x='33.97' y='80.78' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>90000<\/text>\n   <text x='28.41' y='14.08' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>120000<\/text>\n   <text transform='translate(39.40,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>09/04/2023<\/text>\n   <text transform='translate(54.46,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>09/11/2023<\/text>\n   <text transform='translate(68.47,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>09/18/2023<\/text>\n   <text transform='translate(83.01,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>09/25/2023<\/text>\n   <text transform='translate(97.55,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>10/02/2023<\/text>\n   <text transform='translate(112.09,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>10/09/2023<\/text>\n   <text transform='translate(126.63,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>10/16/2023<\/text>\n   <text transform='translate(141.17,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>10/23/2023<\/text>\n   <text transform='translate(155.70,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>10/30/2023<\/text>\n   <text transform='translate(170.77,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>11/06/2023<\/text>\n   <text transform='translate(185.30,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>11/13/2023<\/text>\n   <text transform='translate(199.84,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>11/20/2023<\/text>\n   <text transform='translate(214.38,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>11/27/2023<\/text>\n   <text transform='translate(228.39,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>12/04/2023<\/text>\n   <text transform='translate(243.46,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>12/11/2023<\/text>\n   <text transform='translate(257.47,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>12/18/2023<\/text>\n   <text transform='translate(272.01,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>12/25/2023<\/text>\n   <text transform='translate(286.55,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/01/2024<\/text>\n   <text transform='translate(301.09,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/08/2024<\/text>\n   <text transform='translate(315.62,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/15/2024<\/text>\n   <text transform='translate(330.16,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/22/2024<\/text>\n   <text transform='translate(344.70,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>01/29/2024<\/text>\n   <text transform='translate(359.24,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>02/05/2024<\/text>\n   <text transform='translate(373.78,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>02/12/2024<\/text>\n   <text transform='translate(388.32,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>02/19/2024<\/text>\n   <text transform='translate(402.85,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>02/26/2024<\/text>\n   <text transform='translate(417.39,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>03/04/2024<\/text>\n   <text transform='translate(432.45,319.62) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>03/11/2024<\/text>\n   <text transform='translate(446.47,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>03/18/2024<\/text>\n   <text transform='translate(461.01,320.14) rotate(-45.00)' font-size='7.5pt' font-family='Arial' fill='#4D4D4D' fill-opacity='1'>03/25/2024<\/text>\n   <text x='267.46' y='341.61' font-size='10.5pt' font-weight='bold' font-family='Arial'>Date<\/text>\n   <text transform='translate(15.50,174.17) rotate(-90.00)' font-size='10.5pt' font-weight='bold' font-family='Arial'>Weight (g)<\/text>\n  <\/g>\n <\/g>\n<\/svg>","js":null,"uid":"svg_ebf6ee54_57e7_430e_8fa7_0db9fe419c56","ratio":1.4,"settings":{"tooltip":{"css":".tooltip_SVGID_ { padding:5px;background:black;color:white;border-radius:2px;text-align:left; ; position:absolute;pointer-events:none;z-index:999;}","placement":"doc","opacity":0.9,"offx":10,"offy":10,"use_cursor_pos":true,"use_fill":false,"use_stroke":false,"delay_over":200,"delay_out":500},"hover":{"css":".hover_data_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_data_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_data_SVGID_ { fill:orange;stroke:black; }\nline.hover_data_SVGID_, polyline.hover_data_SVGID_ { fill:none;stroke:orange; }\nrect.hover_data_SVGID_, polygon.hover_data_SVGID_, path.hover_data_SVGID_ { fill:orange;stroke:none; }\nimage.hover_data_SVGID_ { stroke:orange; }","reactive":true,"nearest_distance":null},"hover_inv":{"css":""},"hover_key":{"css":".hover_key_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_key_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_key_SVGID_ { fill:orange;stroke:black; }\nline.hover_key_SVGID_, polyline.hover_key_SVGID_ { fill:none;stroke:orange; }\nrect.hover_key_SVGID_, polygon.hover_key_SVGID_, path.hover_key_SVGID_ { fill:orange;stroke:none; }\nimage.hover_key_SVGID_ { stroke:orange; }","reactive":true},"hover_theme":{"css":".hover_theme_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_theme_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_theme_SVGID_ { fill:orange;stroke:black; }\nline.hover_theme_SVGID_, polyline.hover_theme_SVGID_ { fill:none;stroke:orange; }\nrect.hover_theme_SVGID_, polygon.hover_theme_SVGID_, path.hover_theme_SVGID_ { fill:orange;stroke:none; }\nimage.hover_theme_SVGID_ { stroke:orange; }","reactive":true},"select":{"css":".select_data_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_data_SVGID_ { stroke:none;fill:red; }\ncircle.select_data_SVGID_ { fill:red;stroke:black; }\nline.select_data_SVGID_, polyline.select_data_SVGID_ { fill:none;stroke:red; }\nrect.select_data_SVGID_, polygon.select_data_SVGID_, path.select_data_SVGID_ { fill:red;stroke:none; }\nimage.select_data_SVGID_ { stroke:red; }","type":"multiple","only_shiny":true,"selected":[]},"select_inv":{"css":""},"select_key":{"css":".select_key_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_key_SVGID_ { stroke:none;fill:red; }\ncircle.select_key_SVGID_ { fill:red;stroke:black; }\nline.select_key_SVGID_, polyline.select_key_SVGID_ { fill:none;stroke:red; }\nrect.select_key_SVGID_, polygon.select_key_SVGID_, path.select_key_SVGID_ { fill:red;stroke:none; }\nimage.select_key_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"select_theme":{"css":".select_theme_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_theme_SVGID_ { stroke:none;fill:red; }\ncircle.select_theme_SVGID_ { fill:red;stroke:black; }\nline.select_theme_SVGID_, polyline.select_theme_SVGID_ { fill:none;stroke:red; }\nrect.select_theme_SVGID_, polygon.select_theme_SVGID_, path.select_theme_SVGID_ { fill:red;stroke:none; }\nimage.select_theme_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"zoom":{"min":1,"max":1,"duration":300},"toolbar":{"position":"topright","pngname":"diagram","tooltips":null,"hidden":[],"delay_over":200,"delay_out":500},"sizing":{"rescale":true,"width":1}}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set dynamic limits based on both datasets</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>date_min <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">min</span>(oyster_growth<span class="sc">$</span>date, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="fu">min</span>(clam_growth<span class="sc">$</span>date, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>date_max <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">max</span>(oyster_growth<span class="sc">$</span>date, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="fu">max</span>(clam_growth<span class="sc">$</span>date, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply consistent scales</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">scale_x_date</span>(<span class="at">limits =</span> <span class="fu">c</span>(date_min, date_max))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for x is already present.
+Adding another scale for x, which will replace the existing scale.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> p2 <span class="sc">+</span> <span class="fu">scale_x_date</span>(<span class="at">limits =</span> <span class="fu">c</span>(date_min, date_max))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for x is already present.
+Adding another scale for x, which will replace the existing scale.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine plots</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>combined_plot <span class="ot">&lt;-</span> p <span class="sc">/</span> p2 </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding shared titles and labels</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>final_plot <span class="ot">&lt;-</span> combined_plot <span class="sc">+</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">""</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Shared Subtitle Information"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Shared Data Source or Caption"</span>,</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">tag_levels =</span> <span class="st">'A'</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">&amp;</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),   <span class="co"># Center the title</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>) <span class="co"># Center the subtitle</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Only show x-axis labels on the bottom plot</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>final_plot <span class="ot">&lt;-</span> final_plot <span class="sc">&amp;</span> </span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>color_palette <span class="ot">&lt;-</span> <span class="fu">wes_palette</span>(<span class="st">"AsteroidCity1"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>shuffled_colors <span class="ot">&lt;-</span> <span class="fu">sample</span>(color_palette)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(shuffled_colors) <span class="ot">&lt;-</span> <span class="fu">levels</span>(cell_growth_changes<span class="sc">$</span>depth)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>base_size <span class="ot">&lt;-</span> <span class="dv">18</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>line_chart <span class="ot">&lt;-</span> cell_growth_changes <span class="sc">%&gt;%</span>  </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> heterotrophic_bacteria <span class="sc">/</span> <span class="fl">1e6</span>, <span class="at">col =</span> depth, <span class="at">data_id =</span> depth)) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line_interactive</span>(<span class="at">linewidth =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point_interactive</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> base_size) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> location) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Heterotrophic Bacteria (in millions)"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Depth"</span>,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">'grey20'</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span>),  </span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>)),  </span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r =</span> <span class="dv">10</span>))</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_labels =</span> <span class="st">"%b %Y"</span>,  </span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_breaks =</span> <span class="st">"1 month"</span>    </span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="cf">function</span>(x) scales<span class="sc">::</span><span class="fu">label_comma</span>()(x <span class="sc">*</span> <span class="fl">1e6</span>)</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> shuffled_colors)</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>line_chart</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="fu">girafe</span>(</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">ggobj =</span> line_chart,</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">opts_hover</span>(<span class="at">css =</span> <span class="st">''</span>), <span class="do">## CSS code of line we're hovering over</span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">opts_hover_inv</span>(<span class="at">css =</span> <span class="st">"opacity:0.1;"</span>), <span class="do">## CSS code of all other lines</span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">opts_sizing</span>(<span class="at">rescale =</span> <span class="cn">FALSE</span>) <span class="do">## Fixes sizes to dimensions below</span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_svg =</span> <span class="dv">6</span>,</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">width_svg =</span> <span class="dv">9</span></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -47,3 +47,4 @@ data/raw/*.RData
 data/tidied/
 www/img/all-photos/
 misc/
+code/trash/
