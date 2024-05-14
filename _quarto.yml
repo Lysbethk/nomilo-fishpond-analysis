@@ -22,9 +22,7 @@ website:
     
 format:
   html:
-    theme: 
-      - simplex
-      - styles.scss
+    theme: [simplex, styles.scss]
     toc: true
     fontsize: 12pt
     page-layout: full
