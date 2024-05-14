@@ -13,6 +13,13 @@
     ]
   },
   "Packages": {
+    "BH": {
+      "Package": "BH",
+      "Version": "1.84.0-0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a8235afbcd6316e6e91433ea47661013"
+    },
     "DBI": {
       "Package": "DBI",
       "Version": "1.2.2",
@@ -23,6 +30,23 @@
         "methods"
       ],
       "Hash": "164809cd72e1d5160b4cb3aa57f510fe"
+    },
+    "DT": {
+      "Package": "DT",
+      "Version": "0.32",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "crosstalk",
+        "htmltools",
+        "htmlwidgets",
+        "httpuv",
+        "jquerylib",
+        "jsonlite",
+        "magrittr",
+        "promises"
+      ],
+      "Hash": "0d3ab8abbb0c3e3daa47d4dc8e17bbae"
     },
     "Formula": {
       "Package": "Formula",
@@ -164,6 +188,30 @@
         "utils"
       ],
       "Hash": "5ea2700d21e038ace58269ecdbeb9ec0"
+    },
+    "and": {
+      "Package": "and",
+      "Version": "0.1.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "glue",
+        "rlang"
+      ],
+      "Hash": "2250394d1dfdff8494d11851939f1412"
+    },
+    "anytime": {
+      "Package": "anytime",
+      "Version": "0.3.9",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "BH",
+        "R",
+        "Rcpp"
+      ],
+      "Hash": "74a64813f17b492da9c6afda6b128e3d"
     },
     "askpass": {
       "Package": "askpass",
@@ -562,6 +610,27 @@
         "rlang"
       ],
       "Hash": "bb0eec2fe32e88d9e2836c2f73ea2077"
+    },
+    "epoxy": {
+      "Package": "epoxy",
+      "Version": "1.0.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "and",
+        "glue",
+        "htmltools",
+        "knitr",
+        "lifecycle",
+        "purrr",
+        "rlang",
+        "rmarkdown",
+        "scales",
+        "tools",
+        "whisker"
+      ],
+      "Hash": "23fe5bf25c9a1acf330a9ceab49fc4da"
     },
     "evaluate": {
       "Package": "evaluate",
@@ -1891,6 +1960,24 @@
       ],
       "Hash": "54b26646816af9960a4c64d8ceec75d6"
     },
+    "shinyWidgets": {
+      "Package": "shinyWidgets",
+      "Version": "0.8.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "anytime",
+        "bslib",
+        "grDevices",
+        "htmltools",
+        "jsonlite",
+        "rlang",
+        "sass",
+        "shiny"
+      ],
+      "Hash": "bc918b6911c4e928e24a9928295de834"
+    },
     "snakecase": {
       "Package": "snakecase",
       "Version": "0.11.1",
@@ -2263,6 +2350,13 @@
         "R"
       ],
       "Hash": "f0d5ebcc72b5d6d2f338be8d80d39004"
+    },
+    "whisker": {
+      "Package": "whisker",
+      "Version": "0.4.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c6abfa47a46d281a7d5159d0a8891e88"
     },
     "withr": {
       "Package": "withr",

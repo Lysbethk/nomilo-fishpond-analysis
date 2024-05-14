@@ -1,5 +1,8 @@
 ---
 format: html
+execute:
+  echo: false
+  eval: false
 ---
 
 [Creating interactive visualizations with {ggiraph} (with or without Shiny) by Albert Rapp](https://albert-rapp.de/posts/ggplot2-tips/17_ggiraph/17_ggiraph#combine-ggirafe-and-patchwork)
@@ -38,68 +41,13 @@ dfs <- final_dataset_paths %>%
 Conversions: clams lbs > g
 
 ```{r}
-dfs$clam_growth_data <- dfs$clam_growth_data %>% 
+clam_growth <- dfs$clam_growth_data %>% 
   mutate(weight = weight * 453.592)
 ```
 
 - Create units vector and add to dfs
 - Subset each df to specified columns
 - Format values
-
-```{r}
-# Define a function to create named vectors
-create_units_vector <- function(names, unit) {
-  setNames(rep(unit, length(names)), names)
-}
-
-# Define names and units
-names_units <- list(
-  "cells/ml" = c(
-    "heterotrophic_bacteria",
-    "large_phytoplankton",
-    "synechococcus_population_1",
-    "synechococcus_population_2",
-    "prochlorococcus",
-    "myster_cells_events"
-  ),
-  "mol/L" = c(
-    "phosphate",
-    "silicate",
-    "nitrate_nitrite",
-    "ammonia"
-  ),
-  "ug/L" = c(
-    "chlorophyll_a"
-  ),
-  "mg/L" = c(
-    "dissolved_oxygen",
-    "ksf_rdo_concentration",
-    "ksf_rdo_saturation",
-    "ksf_ammonium"
-    ),
-  "C" = c(
-    "water_temperature",
-    "outdoor_temperature"
-    ),
-  "g" = "weight",
-  "mS/cm" = "salinity",
-  "ft" = "visibility",
-  "PSU" = "ksf_salinity",
-  "g/cm3" = "ksf_density",
-  "PPT" = "ksf_total_dissolved_solids",
-  "RFU" = "ksf_chlorophyll_a_fluorescence",
-  "mph" = "wind_speed_mph",
-  "in/hr" = "hourly_rain_inch_hr"
-)
-
-# Create the named vector using map and flatten from purrr
-units_vector <- names_units %>%
-  imap(create_units_vector) %>%
-  flatten_chr()
-
-# Print the result
-units_vector
-```
 
 ```{r}
 #| eval: false
@@ -168,6 +116,302 @@ location_coords <- data.frame(
 ```
 
 ```{r}
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+
+pacman::p_load(
+  fs,
+  here,
+  rio,
+  tidyverse,
+  ggplot2,
+  patchwork,
+  ggiraph,
+  shiny,
+  wesanderson,
+  epoxy,
+  scales,
+  shinyWidgets,
+  plotly
+  )
+```
+
+```{r}
+base_dir <- here("data", "output")
+
+final_dataset_paths <- dir_ls(base_dir)
+
+date_specific_files <- final_dataset_paths[str_detect(final_dataset_paths, "2024-05-05")]
+
+dfs <- map(date_specific_files, ~ suppressMessages(read_csv(.x))) %>%
+  set_names(map(date_specific_files, ~ str_replace(.x, ".*_(.*)-final\\.csv$", "\\1") %>%
+                  str_replace_all(., "-", "_")))
+```
+
+```{r}
+oyster_growth <- dfs$oyster_growth_data %>% 
+  select(-oyster_chlorophyll)
+
+clam_growth <- dfs$clam_growth_data %>% 
+  mutate(weight = round(weight * 453.592, 2)) %>% 
+  arrange(grouping_variable, date) %>%
+  group_by(grouping_variable) %>% 
+  na.omit() %>%
+  mutate(weight_change = sign(diff(weight, differences = 1)),  # -1 = decrease, 0 = no change, 1 = increase
+         weight_change = if_else(is.na(weight_change), 0, weight_change)) %>%
+  ungroup()
+
+ksf_water_quality <- dfs$ksf_data %>% 
+  select(-ksf_barometric_pressure)
+
+ksf_weather <- dfs$weather
+
+water_samples <- dfs$water_samples_data %>% 
+  rename("mystery_cells" = lysbeths_mystery_cells_events) %>% 
+  mutate(location = if_else(location == "Mid Buoy", "Middle Buoy", location))
+
+water_profiles <- dfs$water_profiles_data %>% 
+  mutate(location = if_else(location == "Mid Buoy", "Middle Buoy", location))
+```
+
+```{r}
+# Create named vectors
+create_units_vector <- function(names, unit) {
+  setNames(rep(unit, length(names)), names)
+}
+
+# Define names and units
+names_units <- list(
+  "cells/ml" = c(
+    "heterotrophic_bacteria",
+    "large_phytoplankton",
+    "synechococcus_population_1",
+    "synechococcus_population_2",
+    "prochlorococcus",
+    "myster_cells_events"
+  ),
+  "mol/L" = c(
+    "phosphate",
+    "silicate",
+    "nitrate_nitrite",
+    "ammonia"
+  ),
+  "ug/L" = c(
+    "chlorophyll_a"
+  ),
+  "mg/L" = c(
+    "dissolved_oxygen",
+    "ksf_rdo_concentration",
+    "ksf_rdo_saturation",
+    "ksf_ammonium"
+  ),
+  "°C" = c(
+    "water_temperature",
+    "outdoor_temperature"
+  ),
+  "g" = "weight",
+  "mS/cm" = "salinity",
+  "ft" = "visibility",
+  "PSU" = "ksf_salinity",
+  "g/cm³" = "ksf_density",
+  "PPT" = "ksf_total_dissolved_solids",
+  "RFU" = "ksf_chlorophyll_a_fluorescence",
+  "mi/h" = "wind_speed_mph",
+  "in/h" = "hourly_rain_inch_hr",
+  "mV" = "ksf_ammonium_m_v"
+)
+
+# Create the named vector using map and flatten from purrr
+units_vector <- names_units %>%
+  imap(create_units_vector) %>%
+  flatten_chr()
+
+get_unit <- function(var, names_units) {
+  # cat("Checking variable:", var, "\n")
+  unit <- NULL
+  for (u in names(names_units)) {
+    if (var %in% names_units[[u]]) {
+      unit <- u
+      break
+    }
+  }
+  if (!is.null(unit)) {
+    # cat("Unit for variable", var, "is:", unit, "\n")
+    return(unit)
+  } else {
+    # cat("No unit available for variable", var, "\n")
+    return(NA)
+  }
+}
+
+create_plot_labels <- function(var_name) {
+  if (var_name == "ksf_rdo_concentration") {
+    return("RDO Concentration")
+  } else if (var_name == "ksf_rdo_saturation") {
+    return("RDO Saturation")
+  } else if (var_name == "ksf_ammonium_m_v") {
+    return("Ammonium")
+  } else if (var_name == "wind_speed_mph") {
+    return("Wind Speed")
+  } else if (var_name == "hourly_rain_inch_hr") {
+    return("Hourly Rain")
+  } else if (var_name == "wind_direction") {
+    return("Wind Direction")
+  } else {
+    label <- str_remove(var_name, "^[^_]+_")  # Remove everything before and including the first underscore
+    label <- str_replace_all(label, "_", " ") # Replace all underscores with spaces
+    label <- str_to_title(label)              # Convert to title case
+    return(label)
+  }
+}
+
+create_scatter_line_plot <- function(df, var_name, names_units) {
+  start_date <- min(df$date)
+  end_date <- max(df$date)
+  var_unit <- get_unit(var_name, names_units)
+  plot_label <- create_plot_labels(var_name)
+  y_var_title_label <- if (!is.na(var_unit)) {
+    paste0(
+      plot_label, 
+      " (", 
+      var_unit, ")"
+      )
+  } else {
+    plot_label
+  }
+  
+  # print(y_var_title_label)  # Debugging: Print the title label
+  
+  p <- ggplot(df, aes_string(x = "date", y = var_name)) +
+    geom_line(aes_string(group = 1, colour = var_name)) +
+    geom_point(aes_string(y = var_name), size = 2, shape = 21, fill = "white") +
+    labs(
+      title = y_var_title_label, 
+      y = y_var_title_label,
+      x = "Date") +
+    scale_x_date(date_labels = "%m/%d/%Y", date_breaks = "1 week", limits = c(start_date, end_date)) +
+    scale_y_continuous(
+    labels = scales::label_number(accuracy = 0.01)
+    ) +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      axis.text.x = element_text(angle = 45, hjust = 1), 
+      axis.title.x = element_text(size = 14, margin = margin(t = 10, b = 10)),
+      axis.title.y = element_text(size = 14, margin = margin(t = 10, r = 10)),
+      axis.text = element_text(size = 10),
+      legend.position = "none",
+      plot.margin = unit(c(0.5,0.5,0,0.5), "cm")
+    )
+  
+  return(p)
+}
+```
+
+```{r}
+variable_names <- names(oyster_growth)[-1]  # Exclude 'date' column
+
+plots <- map(variable_names, ~create_scatter_line_plot(oyster_growth, .x, names_units))
+```
+
+```{r}
+combined_plots <- wrap_plots(plots)
+
+combined_plots
+```
+
+
+```{r}
+# Create the initial plot
+var_name <- "ksf_rdo_concentration"
+var_unit <- get_unit(var_name, names_units)
+plot_label <- create_plot_labels(var_name)
+y_var_title_label <- if (!is.na(var_unit)) {
+  paste0(plot_label, " (", var_unit, ")")
+} else {
+  plot_label
+}
+
+p <- plot_ly(df, x = ~date, y = as.formula(paste0("~", var_name)), type = 'scatter', mode = 'lines+markers',
+             marker = list(size = 5)) %>%
+  layout(
+    # title = y_var_title_label,
+         xaxis = list(title = "Date"),
+         yaxis = list(title = y_var_title_label))
+
+# Create dropdown menu
+dropdown <- list(
+  x = 1.1,
+  y = 1,
+  buttons = lapply(names(df)[-1], function(var) {
+    list(
+      method = "restyle",
+      args = list("y", list(as.formula(paste0("~", var)))),
+      label = create_plot_labels(var)
+    )
+  })
+)
+
+p <- p %>% layout(updatemenus = list(dropdown))
+
+# Display the plot
+p
+```
+
+
+
+```{r}
+# Define a function to create named vectors
+create_units_vector <- function(names, unit) {
+  setNames(rep(unit, length(names)), names)
+}
+
+# Define names and units
+names_units <- list(
+  "cells/ml" = c(
+    "heterotrophic_bacteria",
+    "large_phytoplankton",
+    "synechococcus_population_1",
+    "synechococcus_population_2",
+    "prochlorococcus",
+    "myster_cells_events"
+  ),
+  "mol/L" = c(
+    "phosphate",
+    "silicate",
+    "nitrate_nitrite",
+    "ammonia"
+  ),
+  "ug/L" = c(
+    "chlorophyll_a"
+  ),
+  "mg/L" = c(
+    "dissolved_oxygen",
+    "ksf_rdo_concentration",
+    "ksf_rdo_saturation",
+    "ksf_ammonium"
+    ),
+  "C" = c(
+    "water_temperature",
+    "outdoor_temperature"
+    ),
+  "g" = "weight",
+  "mS/cm" = "salinity",
+  "ft" = "visibility",
+  "PSU" = "ksf_salinity",
+  "g/cm3" = "ksf_density",
+  "PPT" = "ksf_total_dissolved_solids",
+  "RFU" = "ksf_chlorophyll_a_fluorescence",
+  "mph" = "wind_speed_mph",
+  "in/hr" = "hourly_rain_inch_hr"
+)
+
+# Create the named vector using map and flatten from purrr
+units_vector <- names_units %>%
+  imap(create_units_vector) %>%
+  flatten_chr()
+
 get_unit <- function(var, names_units) {
   unit <- names(names_units)[detect_index(names_units, ~ var %in% .)]
   if (!is.null(unit)) {
@@ -179,81 +423,126 @@ get_unit <- function(var, names_units) {
 
 weight_unit <- get_unit("weight", names_units)
 
-oyster_growth <- dfs$oyster_growth_data %>% 
-  select(-oyster_chlorophyll)
-
 # Define colors from the palette
 blue_color <- "#0A9F9D"  # A blue-like color from your palette
 dark_brown_color <- "#C18748"  # A dark brown color from your palette
 light_brown_color <- "#CEB175"
+greencol <- "#6C8645"
 
-# Set dynamic limits based on both datasets
-date_min <- min(min(oyster_growth$date, na.rm = TRUE), min(clam_growth$date, na.rm = TRUE))
-date_max <- max(max(oyster_growth$date, na.rm = TRUE), max(clam_growth$date, na.rm = TRUE))
+max_weight <- max(oyster_growth$weight, na.rm = TRUE)
+buffer <- 0.25  # Define a buffer to add above the maximum weight
 
-breaks_dates = seq(date_min, date_max, by = "1 week")
-labels_dates = format(breaks_dates, "%m/%d/%Y")
+start_date <- min(clam_growth$date)
+end_date <- max(clam_growth$date)
 
-# Plotting code using specified colors
-p <- ggplot(oyster_growth, aes(x = date, y = weight)) +
-  geom_line(color = blue_color, size = 2) +  
-  # geom_text(aes(label = round(weight, 2)),
-  #           vjust = -2, 
-  #           hjust = 0.65,
-  #           color = "black",
-  #           size = 3) +
+# Create a plot
+oyster_plot <- ggplot(oyster_growth, aes(x = date, y = weight)) +
+  geom_line(linewidth = 1.5, color = greencol) +
   geom_point_interactive(
     aes(size = weight, 
-        color = light_brown_color,  # Set the color for the points
-        tooltip = paste0("Weight: ", 
-                         round(weight, 2), 
-                         " (", 
-                         weight_unit, 
-                         ")"), 
-        data_id = date),
-    alpha = 0.9,  # Set transparency of the points
-    hover_css = paste0("fill: ", dark_brown_color, ";"),
-    show.legend = FALSE  # This argument removes the size legend
+        tooltip = sprintf("Weight: %.2f (%s)", weight, weight_unit),
+        data_id = as.character(date)),
+    color = greencol,  # Set point color outside of aes
+    hover_css = paste0("fill: ", greencol, ";"),
+    show.legend = FALSE
+  ) +
+  labs(
+    x = "",
+    y = "",
+    title = "Oysters"
+      # paste0("Weight (", weight_unit, ")")
+    ) +
+  scale_x_date(date_labels = "%m/%d/%Y", date_breaks = "1 week", limits = c(start_date, end_date)) +
+  scale_y_continuous(
+    breaks = seq(from = floor(min(oyster_growth$weight, na.rm = TRUE)), 
+                 to = ceiling(max_weight + buffer), by = 0.25),
+    labels = label_number(accuracy = 0.01),
+    limits = c(NA, max_weight + buffer)  # Extend the upper limit by the buffer
   ) +
   scale_size_continuous(range = c(3, 10)) +
-  labs(
-    title = "Small Oysters",
-    x = "Date",
-    y = paste0("Weight", " (", weight_unit, ")")
-  ) +
-  scale_y_continuous(limits = c(NA, max(oyster_growth$weight) * 1.1)) +
-  scale_x_date(
-    breaks = breaks_dates,
-    labels = labels_dates,
-    limits = c(date_min, date_max)
-  ) +
-  theme_minimal() +
+  theme_minimal(
+    # base_size = 18
+    ) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1), 
-    axis.title.x = element_text(size = 14, face = "bold", margin = margin(t = 10, b = 10)), 
-  axis.title.y = element_text(size = 14, face = "bold", margin = margin(t = 10, r = 10)), 
-    axis.text = element_text(size = 10),  # Axis labels size 10
-    legend.position = "none"  # This will remove all legends
-  ) +
-  scale_color_identity()  # Ensure that the color values are taken literally 
+    axis.title.x = element_text(size = 14, face = "bold", margin = margin(t = 10, b = 10)),
+    axis.title.y = element_text(size = 14, face = "bold", margin = margin(t = 10, r = 10)),
+    axis.text = element_text(size = 10),
+    legend.position = "none",
+    plot.margin = unit(c(0.5,0.5,0,0.5), "cm")
+  )
 
-p
+oyster_plot 
 
 # Convert ggplot object to ggiraph
-interactive_plot <- girafe(ggobj = p)
+oyster_interactive_plot <- girafe(
+      ggobj = oyster_plot,
+      options = list(
+        opts_toolbar(
+          pngname = "aquacultural-prod-viz",
+          tooltips = list(
+        saveaspng = "Download as PNG"
+      )
+        ),
+        opts_hover(css = ''), ## CSS code of line we're hovering over
+        opts_hover_inv(css = "opacity:0.1;"), ## CSS code of all other lines
+        opts_sizing(rescale = FALSE) ## Fixes sizes to dimensions below
+      ),
+      height_svg = 4.08,
+      width_svg = 6.72
+    )
 
-# Print the interactive plot
-interactive_plot
+oyster_interactive_plot
 ```
 
 ```{r}
-clam_growth <- dfs$clam_growth_data 
+# Calculate breaks appropriately for large values, assuming thousands or ten thousands intervals
+clam_min_weight <- min(clam_growth$weight)
+clam_max_weight <- max(clam_growth$weight)
+clam_breaks <- seq(from = floor(clam_min_weight/10000)*10000, to = ceiling(clam_max_weight/10000)*10000, by = 25000)  # Adjust the 'by' as needed
+clam_buffer <- clam_max_weight * 0.05  # 5% buffer
+
+clam_plot <- ggplot(clam_growth, aes(x = date, y = weight, group = grouping_variable)) +
+  geom_line(linewidth = 1.5, aes(color = factor(weight_change))) +  # Color lines based on weight change
+  geom_point(aes(size = weight, color = factor(weight_change))) +  # Color points
+  scale_color_manual(values = c("-1" = "#E54E21", "0" = "grey", "1" = "#6C8645"),
+                     labels = c("-1" = "Weight Decrease", "0" = "No Change", "1" = "Weight Increase")) +
+  scale_size_continuous(range = c(3, 10)) +
+  guides(color = guide_legend(title = "Weight Change"), size = FALSE) +
+  labs(
+    x = "",
+    y = "",
+    title = "Clams"
+    ) +
+  scale_x_date(date_labels = "%m/%d/%Y", date_breaks = "1 week") +
+  scale_y_continuous(
+    labels = label_comma(accuracy = 0.01),
+    limits = c(0, clam_max_weight + clam_buffer)
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 45, hjust = 1), 
+        axis.title.x = element_text(size = 14, face = "bold",
+                                    margin = margin(t = 5)
+                                    ),
+    axis.title.y = element_text(size = 14, face = "bold",
+                                margin = margin(t = 10, 
+                                                r = 10)),
+    axis.text = element_text(size = 10),
+    plot.margin = unit(c(0.5,0.5,0,0.5), "cm"))
 ```
 
-
 ```{r}
-p2 <- ggplot(clam_growth, aes(x = date, y = weight, group = grouping_variable)) +
-  geom_line(color = blue_color, size = 2) +
+p2 <- ggplot(clam_growth, aes(
+  x = date, 
+  y = weight, 
+  group = grouping_variable)
+  ) +
+  geom_line(
+    aes(linewidth = weight),
+    color = blue_color,
+    alpha = 0.75,
+    ) +
   geom_point_interactive(
     aes(size = weight, 
         color = light_brown_color,  # Set the color for the points
@@ -267,18 +556,14 @@ p2 <- ggplot(clam_growth, aes(x = date, y = weight, group = grouping_variable)) 
     hover_css = paste0("fill: ", dark_brown_color, ";"),
     show.legend = FALSE  # This argument removes the size legend
   ) +
-  scale_size_continuous(range = c(3, 10)) +
+  # scale_size_continuous(range = c(3, 10)) +
   labs(
     title = "Clams",
     x = "Date",
     y = paste0("Weight", " (", weight_unit, ")")
   ) +
   scale_y_continuous(limits = c(NA, max(clam_growth$weight) * 1.1)) +
-  scale_x_date(
-    breaks = breaks_dates,
-    labels = labels_dates,
-    limits = c(date_min, date_max)
-  ) +
+  scale_x_date(date_labels = "%m/%d/%Y", date_breaks = "1 week") +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1), 
@@ -311,24 +596,100 @@ interactive_plot2
 ```
 
 ```{r}
-# Combine plots
-combined_plot <- p / p2 
+# Combining the plots
+combined_plot <- oyster_plot / clam_plot  # Using patchwork to stack the plots
 
+# Final plot with annotations and unified axis labels
 final_plot <- combined_plot + 
   plot_annotation(
     title = "Comparison of Growth Over Time",
-    subtitle = "This figure shows the growth trends for oysters and clams."
-    # tag_levels = 'A',
-    # tag_suffix = ""
+    subtitle = "This figure shows the growth trends for oysters and clams.",
+    caption = "Data source: Marine Biology Department",
+    theme = theme(
+      plot.title = element_text(hjust = 0.5),
+      plot.subtitle = element_text(hjust = 0.5),
+      plot.caption = element_text(hjust = 0.5)
+    )
+  ) +
+  theme(
+    plot.title.position = "plot",
+    plot.subtitle.position = "plot",
+    plot.caption.position = "plot"
   ) &
   theme(
-    plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust = 0.5),
-    plot.tag = element_text(face = "bold", size = 12, hjust = -0.1) # Customizing tag appearance
+    # Apply unified axis titles across the combined plot
+    plot.margin = unit(c(1,1,1,1), "cm"),  # Adjust margins to ensure labels fit
+    axis.title.x = element_text(face = "bold", size = 14, margin = margin(t = 10), vjust = -0.5),
+    axis.title.y = element_text(face = "bold", size = 14, margin = margin(r = 10), angle = 90)
+  ) &
+  labs(
+    x = "Date",  # Unified X-axis label
+    y = "Weight (g)"  # Unified Y-axis label
   )
+
+final_plot
 ```
 
 
+```{r}
+# Define the UI
+ui <- fluidPage(
+  titlePanel("Air Date Picker Examples"),
+  fluidRow(
+    column(4,
+           airDatepickerInput(
+             inputId = "singleDate",
+             label = "Select a single date:",
+             inline = TRUE,
+             clearButton = TRUE
+           ),
+           verbatimTextOutput("singleDateOutput")
+    ),
+    column(4,
+           airDatepickerInput(
+             inputId = "multipleDates",
+             label = "Select multiple dates:",
+             multiple = TRUE,
+             inline = TRUE,
+             clearButton = TRUE
+           ),
+           verbatimTextOutput("multipleDatesOutput")
+    ),
+    column(4,
+           airDatepickerInput(
+             inputId = "dateRange",
+             label = "Select a date range:",
+             range = TRUE,
+             inline = TRUE,
+             clearButton = TRUE
+           ),
+           verbatimTextOutput("dateRangeOutput")
+    )
+  )
+)
+
+# Define the server logic
+server <- function(input, output, session) {
+  # Output the selected single date
+  output$singleDateOutput <- renderPrint({
+    input$singleDate
+  })
+  
+  # Output the selected multiple dates
+  output$multipleDatesOutput <- renderPrint({
+    input$multipleDates
+  })
+  
+  # Output the selected date range
+  output$dateRangeOutput <- renderPrint({
+    input$dateRange
+  })
+}
+
+# Run the application
+shinyApp(ui, server)
+
+```
 
 
 

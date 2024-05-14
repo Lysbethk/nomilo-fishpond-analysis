@@ -20,87 +20,7 @@ quarto_file <- "code/dashboard-modules/README.qmd"
 capture.output(quarto_render(quarto_file), type = "message")
 ```
 
-# Interactive Visualizations
-
-## Sidebar {.sidebar}
-
 ```{r}
-htmltools::includeMarkdown(here::here("code/dashboard-modules/README.md"))
-```
-
-## Column
-
-```{r}
-#| title: "Cell Growth Changes"
-
-print("Plot")
-```
-
-```{r}
-#| title: "Nutrient Fluctuations"
-print("Plot")
-```
-
-```{r}
-#| title: "Water Stratification"
-print("Plot")
-```
-
-## Columm
-
-```{r}
-#| title: "Data Collection Sites at Nomilo Fishpond Located in Kauaʻi, Hawaiʻi"
-#| echo: false
-#| padding: 0px
-library(leaflet)
-library(tidyverse)
-
-location_coords <- data.frame(
-  location = c("Back Buoy", "Middle Buoy",
-               "Production Dock", "Auwai"),
-  lat = c(21.8875, 21.8865556, 21.8851, 21.885),
-  lon = c(-159.5268, -159.5273056, -159.5276, -159.5281)
-)
-
-lat <- 21.88625
-long <- -159.52725
-
-m <- leaflet(location_coords) %>%
-  addProviderTiles("Esri.WorldImagery") %>%
-  setView(long, lat, zoom = 17) %>%
-  addCircleMarkers(
-    ~lon, ~lat, 
-    radius = 5, 
-    color = "orange", 
-    fillOpacity = 0.8
-  )
-
-m <- purrr::reduce(1:nrow(location_coords), function(map, i) {
-  map %>% addLabelOnlyMarkers(
-    location_coords$lon[i], 
-    location_coords$lat[i], 
-    label = location_coords$location[i],
-    labelOptions = labelOptions(
-      noHide = TRUE, 
-      textOnly = TRUE, 
-      direction = "right",
-      offset = c(10, 10),  
-      style = list(color = "white", fontWeight = "bold", fontSize = "13px") 
-    )
-  )
-}, .init = m)
-
-m
-```
-
-```{r}
-#| title: "Clam Growth Trends"
-print("Plot")
-```
-
-```{r}
-#| title: "Oyster Growth Trends"
-#| echo: false
 if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
 }
@@ -115,21 +35,56 @@ pacman::p_load(
   ggiraph,
   shiny,
   wesanderson,
-  epoxy
+  epoxy,
+  scales,
+  shinyWidgets,
+  plotly,
+  htmlwidgets,
+  webshot,
+  viridis
   )
+```
 
-final_dataset_paths <- dir_ls(here("data", "output"))
+```{r}
+base_dir <- here("data", "output")
 
-dfs <- final_dataset_paths %>%
-  map(import) %>%
-  set_names(map(names(.), ~ str_replace(.x, ".*_(.*)-final\\.csv$", "\\1") %>%
-              str_replace_all(., "-", "_")))
+final_dataset_paths <- dir_ls(base_dir)
 
-# Define a function to create named vectors
-create_units_vector <- function(names, unit) {
-  setNames(rep(unit, length(names)), names)
-}
+date_specific_files <- final_dataset_paths[str_detect(final_dataset_paths, "2024-05-05")]
 
+dfs <- map(date_specific_files, ~ suppressMessages(read_csv(.x))) %>%
+  set_names(map(date_specific_files, ~ str_replace(.x, ".*_(.*)-final\\.csv$", "\\1") %>%
+                  str_replace_all(., "-", "_")))
+```
+
+```{r}
+oyster_growth <- dfs$oyster_growth_data %>% 
+  select(-oyster_chlorophyll)
+
+clam_growth <- dfs$clam_growth_data %>% 
+  mutate(weight = round(weight * 453.592, 2)) %>% 
+  arrange(grouping_variable, date) %>%
+  group_by(grouping_variable) %>% 
+  na.omit() %>%
+  mutate(weight_change = sign(diff(weight, differences = 1)),  # -1 = decrease, 0 = no change, 1 = increase
+         weight_change = if_else(is.na(weight_change), 0, weight_change)) %>%
+  ungroup()
+
+ksf_water_quality <- dfs$ksf_data %>% 
+  select(-ksf_barometric_pressure)
+
+ksf_weather <- dfs$weather
+
+water_samples <- dfs$water_samples_data %>% 
+  rename("mystery_cells" = lysbeths_mystery_cells_events) %>% 
+  mutate(location = if_else(location == "Mid Buoy", "Middle Buoy", location))
+
+water_profiles <- dfs$water_profiles_data %>% 
+  mutate(location = if_else(location == "Mid Buoy", "Middle Buoy", location))
+```
+
+```{r}
+#| echo: false
 # Define names and units
 names_units <- list(
   "cells/ml" = c(
@@ -154,29 +109,37 @@ names_units <- list(
     "ksf_rdo_concentration",
     "ksf_rdo_saturation",
     "ksf_ammonium"
-    ),
-  "C" = c(
+  ),
+  "°C" = c(
     "water_temperature",
     "outdoor_temperature"
-    ),
+  ),
   "g" = "weight",
   "mS/cm" = "salinity",
   "ft" = "visibility",
   "PSU" = "ksf_salinity",
-  "g/cm3" = "ksf_density",
+  "g/cm³" = "ksf_density",
   "PPT" = "ksf_total_dissolved_solids",
   "RFU" = "ksf_chlorophyll_a_fluorescence",
-  "mph" = "wind_speed_mph",
-  "in/hr" = "hourly_rain_inch_hr"
+  "mi/h" = "wind_speed_mph",
+  "in/h" = "hourly_rain_inch_hr",
+  "mV" = "ksf_ammonium_m_v"
 )
 
 # Create the named vector using map and flatten from purrr
 units_vector <- names_units %>%
-  imap(create_units_vector) %>%
+  imap(~ setNames(rep(.y, length(.x)), .x)) %>%
   flatten_chr()
 
+# Function to get units
 get_unit <- function(var, names_units) {
-  unit <- names(names_units)[detect_index(names_units, ~ var %in% .)]
+  unit <- NULL
+  for (u in names(names_units)) {
+    if (var %in% names_units[[u]]) {
+      unit <- u
+      break
+    }
+  }
   if (!is.null(unit)) {
     return(unit)
   } else {
@@ -184,75 +147,427 @@ get_unit <- function(var, names_units) {
   }
 }
 
-weight_unit <- get_unit("weight", names_units)
+# Function to create plot labels
+create_plot_labels <- function(var_name) {
+  if (var_name == "ksf_rdo_concentration") {
+    return("RDO Concentration")
+  } else if (var_name == "ksf_rdo_saturation") {
+    return("RDO Saturation")
+  } else if (var_name == "ksf_ammonium_m_v") {
+    return("Ammonium")
+  } else if (var_name == "wind_speed_mph") {
+    return("Wind Speed")
+  }
+  else if (var_name == "wind_direction") {
+    return("Wind Direction")
+  }
+  else if (var_name == "hourly_rain_inch_hr") {
+    return("Hourly Rain")
+  }
+  else {
+    label <- str_remove(var_name, "^[^_]+_")  # Remove everything before and including the first underscore
+    label <- str_replace_all(label, "_", " ") # Replace all underscores with spaces
+    label <- str_to_title(label)              # Convert to title case
+    return(label)
+  }
+}
 
-oyster_growth <- dfs$oyster_growth_data %>% 
-  select(-oyster_chlorophyll)
+# Function to create the y-axis title with units
+create_y_var_title_label <- function(var_name, names_units) {
+  plot_label <- create_plot_labels(var_name)
+  var_unit <- get_unit(var_name, names_units)
+  y_var_title_label <- if (!is.na(var_unit)) {
+    paste0(plot_label, " (", var_unit, ")")
+  } else {
+    plot_label
+  }
+  return(y_var_title_label)
+}
 
-# Define colors from the palette
-blue_color <- "#0A9F9D"  # A blue-like color from your palette
-dark_brown_color <- "#C18748"  # A dark brown color from your palette
-light_brown_color <- "#CEB175"
+# Function to create plot labels
+create_plot_labels <- function(var_name) {
+  if (var_name == "ksf_rdo_concentration") {
+    return("RDO Concentration")
+  } else if (var_name == "ksf_rdo_saturation") {
+    return("RDO Saturation")
+  } else if (var_name == "ksf_ammonium_m_v") {
+    return("Ammonium")
+  } else if (var_name == "wind_speed_mph") {
+    return("Wind Speed")
+  } else if (var_name == "hourly_rain_inch_hr") {
+    return("Hourly Rain")
+  } else if (var_name == "wind_direction") {
+    return("Wind Direction")
+  } else {
+    label <- str_remove(var_name, "^[^_]+_")  # Remove everything before and including the first underscore
+    label <- str_replace_all(label, "_", " ") # Replace all underscores with spaces
+    label <- str_to_title(label)              # Convert to title case
+    return(label)
+  }
+}
 
-# Plotting code using specified colors
-p <- ggplot(oyster_growth, aes(x = date, y = weight)) +
-  geom_line(color = blue_color, size = 2) +  
-  # geom_text(aes(label = round(weight, 2)),
-  #           vjust = -2,
-  #           hjust = 0.65,
-  #           color = "black",
-  #           size = 3) +
-  geom_point_interactive(
-    aes(size = weight, 
-        color = light_brown_color,  # Set the color for the points
-        tooltip = paste0("Weight: ", 
-                         round(weight, 2), 
-                         " (", 
-                         weight_unit, 
-                         ")"), 
-        data_id = date),
-    alpha = 0.9,  # Set transparency of the points
-    hover_css = paste0("fill: ", dark_brown_color, ";"),
-    show.legend = FALSE  # This argument removes the size legend
-  ) +
-  scale_size_continuous(range = c(3, 10)) +
-  labs(
-    # title = "Growth of Small Oysters Over Time",
-    x = "Date",
-    y = paste0("Weight", " (", weight_unit, ")")
-  ) +
-  scale_y_continuous(limits = c(NA, max(oyster_growth$weight) * 1.1)) +
-  scale_x_date(date_labels = "%m/%d/%Y", date_breaks = "1 week") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1), 
-    axis.title.x = element_text(size = 14, face = "bold", margin = margin(t = 10, b = 10)), 
-  axis.title.y = element_text(size = 14, face = "bold", margin = margin(t = 10, r = 10)), 
-    axis.text = element_text(size = 10),  # Axis labels size 10
-    legend.position = "none",
-    plot.margin = unit(c(0,0,0,0), "cm")
-  ) +
-  scale_color_identity()  # Ensure that the color values are taken literally
+# Function to create the y-axis title with units
+create_y_var_title_label <- function(var_name, names_units) {
+  plot_label <- create_plot_labels(var_name)
+  var_unit <- get_unit(var_name, names_units)
+  y_var_title_label <- if (!is.na(var_unit)) {
+    paste0(plot_label, " (", var_unit, ")")
+  } else {
+    plot_label
+  }
+  return(y_var_title_label)
+}
 
-# p
+# Function to create hover text dynamically
+create_hover_text <- function(data, var_name, names_units) {
+  if (identical(data, clam_growth)) {
+    hover_text <- paste0(
+      "Date: ", format(data$date, "%b %d, %Y"), "<br>",
+      create_y_var_title_label(var_name, names_units), ": ", round(data[[var_name]], 2), "<br>",
+      "Change: ", ifelse(data$weight_change == 1, "Weight Increase", 
+                         ifelse(data$weight_change == -1, "Weight Decrease", "No Change"))
+    )
+  } else {
+    hover_text <- paste0(
+      "Date: ", format(data$date, "%b %d, %Y"), "<br>",
+      create_y_var_title_label(var_name, names_units), ": ", round(data[[var_name]], 2)
+    )
+  }
+  return(hover_text)
+}
 
-# Convert ggplot object to ggiraph
-interactive_plot <- girafe(ggobj = p)
+# Create the interactive plot for display
+ksf_weather_water_quality_interactive_plot <- function(df, var_name, y_var_title_label, names_units) {
+  df$hover_text <- create_hover_text(df, var_name, names_units)
 
-# Print the interactive plot
-interactive_plot
+  # Exclude any unintended columns
+  valid_columns <- setdiff(names(df), c("date", "hover_text"))
+
+  plot <- plot_ly(df, x = ~date, y = as.formula(paste0("~", var_name)), type = 'scatter', mode = 'lines+markers',
+          text = ~hover_text, hoverinfo = "text",
+          marker = list(size = 5)) %>%
+    layout(
+      xaxis = list(title = "Date"),
+      yaxis = list(title = y_var_title_label),
+      margin = list(
+        t = 70 
+        # b = 70
+        ),  # Adjust the top margin to make room for the annotation and dropdown
+      annotations = list(
+        list(
+          x = 0.5,
+          y = 1.3,
+          xref = "paper",
+          yref = "paper",
+          showarrow = FALSE,
+          text = "Select a Variable:",
+          xanchor = "center",
+          yanchor = "bottom",
+          font = list(size = 14)
+        )
+      ),
+      updatemenus = list(
+        list(
+          x = 0.5,  # Center the dropdown menu horizontally
+          y = 1.28,  # Place the dropdown menu above the plot
+          xanchor = "center",  # Anchor the dropdown menu at its center
+          yanchor = "top",     # Anchor the dropdown menu at its top
+          buttons = lapply(valid_columns, function(var) {
+            list(
+              method = "update",
+              args = list(
+                list(y = list(as.formula(paste0("~", var))), 
+                     text = list(create_hover_text(df, var, names_units))),
+                list(yaxis = list(title = create_y_var_title_label(var, names_units)),
+                     hoverinfo = "text"
+                )
+              ),
+              label = create_y_var_title_label(var, names_units)
+            )
+          })
+        )
+      )
+    )
+  plot
+}
+```
+
+# Interactive Visualizations
+
+## Sidebar {.sidebar}
+
+```{r}
+htmltools::includeMarkdown(here::here("code/dashboard-modules/README.md"))
 ```
 
 ## Column
 
 ```{r}
-#| title: "Water Quality Data Collected by KSF"
+#| title: "Cell Growth Changes"
 print("Plot")
 ```
 
 ```{r}
-#| title: "Weather Data Collected by KSF"
+#| title: "Cell Growth Changes"
+#| eval: false
+# Example data
+# water_profiles <- data.frame(
+#   depth = runif(100, 0, 100),
+#   water_temperature = runif(100, 10, 25),
+#   dissolved_oxygen = runif(100, 5, 10),
+#   salinity = runif(100, 30, 35),
+#   visibility = runif(100, 5, 20),
+#   location = sample(c("Location1", "Location2", "Location3", "Location4"), 100, replace = TRUE),
+#   date = seq.Date(from = as.Date('2023-01-01'), by = 'days', length.out = 100)
+# )
+
+# Define y_var and make_title_case function
+input <- list(y_var = "salinity")
+make_title_case <- function(s) {
+  s <- gsub("_", " ", s)
+  s <- tolower(s)
+  return(tools::toTitleCase(s))
+}
+
+# Create hover text
+create_hover_text <- function(df, var_name) {
+  paste("Date: ", df$date, "<br>", make_title_case(var_name), ": ", round(df[[var_name]], 2))
+}
+
+# Define y_var_title_label
+y_var_title_label <- make_title_case(input$y_var)
+
+# Split the data by location
+locations <- split(water_profiles, water_profiles$location)
+
+# Create individual plots for each location
+plot_list <- lapply(names(locations), function(location) {
+  df <- locations[[location]]
+  df$hover_text <- create_hover_text(df, input$y_var)
+  
+  plot_ly(df, x = ~date, y = ~get(input$y_var), type = 'scatter', mode = 'lines+markers',
+          color = ~as.factor(depth), colors = viridis(10), text = ~hover_text, hoverinfo = "text",
+          marker = list(size = 5, opacity = 0.8), line = list(width = 1, opacity = 0.6)) %>%
+    layout(title = list(text = location, x = 0.5),
+           xaxis = list(title = "", tickformat = "%b %d, %Y"),
+           yaxis = list(title = ""),
+           showlegend = ifelse(location == "Auwai", TRUE, FALSE))  # Only show legend for the first plot
+})
+
+# Combine the individual plots into a subplot with 2 rows and 2 columns
+facet_plot <- subplot(plot_list, nrows = 2, shareX = TRUE, shareY = TRUE) %>%
+  layout(
+    xaxis = list(title = "Date", titlefont = list(size = 14), tickangle = 45),
+    yaxis = list(title = "Salinity", titlefont = list(size = 14)),
+    legend = list(orientation = 'h', x = 0.5, xanchor = 'center', y = -0.15),
+    margin = list(t = 50, b = 100)  # Ensure there's enough space for the legend
+  )
+
+facet_plot
+```
+
+```{r}
+#| title: "Nutrient Fluctuations"
 print("Plot")
+```
+
+```{r}
+#| title: "Water Stratification"
+print("Plot")
+```
+
+## Columm
+
+```{r}
+#| title: "Data Collection Sites at Nomilo Fishpond Located in Kauaʻi, Hawaiʻi"
+#| echo: false
+library(leaflet)
+library(tidyverse)
+
+location_coords_labels <- data.frame(
+  location = c("Back Buoy", "Middle Buoy",
+               "Production Dock", "Auwai"),
+  lat = c(21.8875, 21.8865556, 21.8851, 21.885),
+  lon = c(-159.5268, -159.5273056, -159.5276, -159.5281),
+  label_lat = c(21.88751252394746, 21.88653568391198, 21.885103433131395, 21.885002796138988),
+  label_lon = c(-159.52663500591817, -159.5271768548277, -159.52745, -159.52948)
+)
+
+lat <- 21.88625
+long <- -159.52725
+
+m <- leaflet(location_coords_labels) %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  setView(long, lat, zoom = 16) %>%
+  addCircleMarkers(
+    ~lon, ~lat, 
+    radius = 5, 
+    color = "orange", 
+    fillOpacity = 0.8
+  )
+
+m <- purrr::reduce(1:nrow(location_coords_labels), function(map, i) {
+  map %>% addLabelOnlyMarkers(
+    location_coords_labels$label_lon[i], 
+    location_coords_labels$label_lat[i], 
+    label = location_coords_labels$location[i],
+    labelOptions = labelOptions(
+      noHide = TRUE, 
+      textOnly = TRUE, 
+      direction = "right",
+      offset = c(10, 0),
+      style = list(color = "white", fontWeight = "bold", fontSize = "13px", WebkitTextStroke = "0.5px black") 
+    )
+  )
+}, .init = m)
+
+m
+```
+
+```{r}
+#| title: "Aquacultural Productivity"
+#| echo: false
+# Assume var_name and names_units are defined
+var_name <- "weight"
+y_var_title_label <- create_y_var_title_label(var_name, names_units)
+
+# Update hover_text in clam_growth and oyster_growth dataframes
+clam_growth$hover_text <- create_hover_text(clam_growth, var_name, names_units)
+oyster_growth$hover_text <- create_hover_text(oyster_growth, var_name, names_units)
+
+# Define the color scale
+color_scale <- c("-1" = "#E54E21", "0" = "grey", "1" = "#6C8645")
+
+# Create clam growth plot
+clam_growth_plot <- plot_ly(
+  data = clam_growth,
+  x = ~date,
+  y = ~weight,
+  split = ~grouping_variable,
+  type = 'scatter',
+  mode = 'lines+markers',
+  text = ~hover_text,
+  hoverinfo = 'text',
+  color = ~factor(weight_change),  # Color lines and markers based on weight_change
+  colors = color_scale,  # Apply the defined color scale
+  marker = list(size = 5)
+) %>%
+  layout(
+    xaxis = list(title = 'Date'),
+    yaxis = list(title = y_var_title_label),
+    showlegend = FALSE  # Remove the legend
+  )
+
+# Create oyster growth plot with green color
+oyster_growth_plot <- plot_ly(
+  data = oyster_growth,
+  x = ~date,
+  y = ~weight,
+  type = 'scatter',
+  mode = 'lines+markers',
+  text = ~hover_text,
+  hoverinfo = 'text',
+  line = list(color = "#6C8645"),  # Set line color to green
+  marker = list(color = "#6C8645", size = 5)  # Set marker color to green
+) %>%
+  layout(
+    xaxis = list(title = 'Date', range = range(clam_growth$date)),  # Sync x-axis range
+    yaxis = list(title = y_var_title_label),
+    showlegend = FALSE  # Remove the legend
+  )
+
+# Combine plots with space in between and synced x-axis
+combined_plot <- subplot(
+  oyster_growth_plot, clam_growth_plot,
+  nrows = 2, margin = 0.05, shareX = TRUE,
+  titleX = TRUE, titleY = TRUE
+) %>%
+  layout(
+    annotations = list(
+      list(
+        x = 0.5,
+        y = 1.15,
+        xref = 'paper',
+        yref = 'paper',
+        text = 'Oysters',
+        showarrow = FALSE,
+        font = list(size = 16)
+      ),
+      list(
+        x = 0.5,
+        y = 0.5,
+        xref = 'paper',
+        yref = 'paper',
+        text = 'Clams',
+        showarrow = FALSE,
+        font = list(size = 16)
+      ),
+      # Custom legend title
+      list(
+        x = 0,
+        y = 1.4,
+        xref = 'paper',
+        yref = 'paper',
+        text = 'Weight Change',
+        showarrow = FALSE,
+        font = list(size = 14)
+      ),
+      # Custom legend entries
+      list(
+        x = 0.4,
+        y = 1.4,
+        xref = 'paper',
+        yref = 'paper',
+        text = '<span style="color:#E54E21">Decrease</span>',
+        showarrow = FALSE,
+        font = list(size = 13.5)
+      ),
+      list(
+        x = 0.7,
+        y = 1.4,
+        xref = 'paper',
+        yref = 'paper',
+        text = '<span style="color:grey">Constant</span>',
+        showarrow = FALSE,
+        font = list(size = 13.5)
+      ),
+      list(
+        x = 0.9,
+        y = 1.4,
+        xref = 'paper',
+        yref = 'paper',
+        text = '<span style="color:#6C8645">Increase</span>',
+        showarrow = FALSE,
+        font = list(size = 13.5)
+      )
+    ),
+    # yaxis = list(title = y_var_title_label),
+    margin = list(t = 70)  # Increase bottom margin to ensure space for legend
+  )
+
+combined_plot
+```
+
+## Column
+
+```{r}
+#| title: Weather Data Collected by KSF
+#| echo: false
+df <- ksf_weather
+var_name <- "outdoor_temperature"
+y_var_title_label <- create_y_var_title_label(var_name, names_units)
+
+ksf_weather_water_quality_interactive_plot(df, var_name, y_var_title_label, names_units)
+```
+
+```{r}
+#| title: Water Quality Data Collected by KSF
+#| echo: false
+df <- ksf_water_quality
+var_name <- "ksf_rdo_concentration"
+y_var_title_label <- create_y_var_title_label(var_name, names_units)
+
+ksf_weather_water_quality_interactive_plot(df, var_name, y_var_title_label, names_units)
 ```
 
 # Data Dictionaries 
