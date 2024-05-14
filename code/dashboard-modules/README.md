@@ -1,9 +1,14 @@
+---
+editor: 
+  markdown: 
+    wrap: 72
+---
+
 # Welcome: Data Exploration Tool
 
-
 This dashboard visualizes the biogeochemical, physical, and aquacultural
-productivity data of the Nomilo fishpond, operated by [Kauaʻi Sea Farm
-(KSF)](https://kauaiseafarm.com/), to monitor its ecosystem and make
+productivity data of the Nomilo fishpond, operated by [**Kauaʻi Sea Farm
+(KSF)**](https://kauaiseafarm.com/), to monitor its ecosystem and make
 informed management decisions aimed at restoring the fishpond and
 improving aquacultural productivity amid climate change. This fieldwork
 was performed as part of Research Question 2 of the Master thesis
@@ -51,16 +56,12 @@ linked to the increased availability of phytoplankton. <br><br>
 conditions and aquacultural productivity, underscoring the necessity for
 more comprehensive studies on fishpond ecosystems.
 
-<center>
-<img src="www/logos/uhm-logo.png" alt="" align="center" width="200">
+<center><img src="www/logos/uhm-logo.png" align="center" width="200"/>
+<br><br> <img src="www/logos/wur-logo.png" align="center" width="200"/>
 <br><br>
-<img src="www/logos/wur-logo.png" alt="" align="center" width="200">
-<br><br>
-<img src="www/logos/pac-risa-logo.png" alt="" align="center" width="200">
-<br><br>
-<img src="www/logos/ksf-logo.png" alt="" align="center" width="200">
-<br><br>
-</center>
+<img src="www/logos/pac-risa-logo.png" align="center" width="200"/>
+<br><br> <img src="www/logos/ksf-logo.png" align="center" width="200"/>
+<br><br></center>
 
 **Created By**: Alemarie Ceria <br> **Date Created:** 05/05/2024 <br>
 **Last Updated**: 05/14/2024

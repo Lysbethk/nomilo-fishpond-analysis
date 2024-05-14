@@ -1,24 +1,28 @@
 /*-- scss:defaults --*/
 // Base document colors
-$body-bg: #181818;
-$body-color: #d3d3d3;
-$link-color: orange;
-$code-color: #2a2a2a; 
-$code-bg: #f7faff;   
-$navbar-bg: rgba(211, 211, 211, 0.7);
-$navbar-fg: #181818;
+//$body-bg: #f7faff;
+//$body-color: #181818;
+$link-color: #20B2AA;
+//$code-color: #2a2a2a; 
+//$code-bg: #f7faff;   
+//$navbar-bg: rgba(211, 211, 211, 0.7);
+//$navbar-fg: #181818;
 
 // Code 
-$code-block-bg-alpha: -.8;
-$btn-code-copy-color: yellow;
-$btn-code-copy-color-active: gold;
+//$code-block-bg-alpha: -.8;
+//-code-copy-color: yellow;
+//$btn-code-copy-color-active: gold;
 
-.cell-output {
-  background-color: rgba(208, 232, 242, 0.5);
-  border-radius: 4px;
-}
+//.cell-output {
+//  background-color: rgba(30, 159, 153, 0.2);
+//  border-radius: 4px;
+//}
 
 .panel-tabset .nav-item .nav-link.active {
-  color: #181818; 
-  background-color: rgba(255, 165, 0, 0.75); 
+  color: white; 
+  background-color: #20B2AA; 
+}
+
+i.bi.bi-github {
+  color: #20B2AA;
 }

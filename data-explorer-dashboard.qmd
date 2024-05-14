@@ -236,6 +236,18 @@ create_hover_text <- function(data, var_name, names_units) {
   return(hover_text)
 }
 
+color_palette <- list(
+  blue = "#0A9F9D",
+  green = "#6C8645",
+  red = "#8B0000",
+  orange = "#D9230F",
+  yellow = "#FFD700",
+  teal = "#20B2AA",
+  gray = "#696969",
+  light_gray = "#D3D3D3",
+  sea_green = "#2E8B57"
+)
+
 # Create the interactive plot for display
 ksf_weather_water_quality_interactive_plot <- function(df, var_name, y_var_title_label, names_units) {
   df$hover_text <- create_hover_text(df, var_name, names_units)
@@ -243,9 +255,13 @@ ksf_weather_water_quality_interactive_plot <- function(df, var_name, y_var_title
   # Exclude any unintended columns
   valid_columns <- setdiff(names(df), c("date", "hover_text"))
 
-  plot <- plot_ly(df, x = ~date, y = as.formula(paste0("~", var_name)), type = 'scatter', mode = 'lines+markers',
+  plot <- plot_ly(df, 
+                  x = ~date, 
+                  y = as.formula(paste0("~", var_name)), 
+                  type = 'scatter', mode = 'lines+markers',
           text = ~hover_text, hoverinfo = "text",
-          marker = list(size = 5)) %>%
+          line = list(color = color_palette$blue),
+          marker = list(color = color_palette$blue, size = 5)) %>%
     layout(
       xaxis = list(title = "Date"),
       yaxis = list(title = y_var_title_label),
@@ -256,7 +272,7 @@ ksf_weather_water_quality_interactive_plot <- function(df, var_name, y_var_title
       annotations = list(
         list(
           x = 0.5,
-          y = 1.3,
+          y = 1.28,
           xref = "paper",
           yref = "paper",
           showarrow = FALSE,
@@ -269,7 +285,7 @@ ksf_weather_water_quality_interactive_plot <- function(df, var_name, y_var_title
       updatemenus = list(
         list(
           x = 0.5,  # Center the dropdown menu horizontally
-          y = 1.28,  # Place the dropdown menu above the plot
+          y = 1.26,  # Place the dropdown menu above the plot
           xanchor = "center",  # Anchor the dropdown menu at its center
           yanchor = "top",     # Anchor the dropdown menu at its top
           buttons = lapply(valid_columns, function(var) {
@@ -402,8 +418,8 @@ m <- leaflet(location_coords_labels) %>%
   addCircleMarkers(
     ~lon, ~lat, 
     radius = 5, 
-    color = "orange", 
-    fillOpacity = 0.8
+    color = color_palette$teal, 
+    fillOpacity = 1
   )
 
 m <- purrr::reduce(1:nrow(location_coords_labels), function(map, i) {
@@ -436,7 +452,9 @@ clam_growth$hover_text <- create_hover_text(clam_growth, var_name, names_units)
 oyster_growth$hover_text <- create_hover_text(oyster_growth, var_name, names_units)
 
 # Define the color scale
-color_scale <- c("-1" = "#E54E21", "0" = "grey", "1" = "#6C8645")
+color_scale <- c("-1" = color_palette$red, 
+                 "0" = color_palette$light_gray,
+                 "1" = color_palette$sea_green)
 
 # Create clam growth plot
 clam_growth_plot <- plot_ly(
@@ -467,8 +485,8 @@ oyster_growth_plot <- plot_ly(
   mode = 'lines+markers',
   text = ~hover_text,
   hoverinfo = 'text',
-  line = list(color = "#6C8645"),  # Set line color to green
-  marker = list(color = "#6C8645", size = 5)  # Set marker color to green
+  line = list(color = color_palette$sea_green),  # Set line color to green
+  marker = list(color = color_palette$sea_green, size = 5)  # Set marker color to green
 ) %>%
   layout(
     xaxis = list(title = 'Date', range = range(clam_growth$date)),  # Sync x-axis range
@@ -518,7 +536,7 @@ combined_plot <- subplot(
         y = 1.4,
         xref = 'paper',
         yref = 'paper',
-        text = '<span style="color:#E54E21">Decrease</span>',
+        text = '<span style="color:#8B0000">Decrease</span>',
         showarrow = FALSE,
         font = list(size = 13.5)
       ),
@@ -527,7 +545,7 @@ combined_plot <- subplot(
         y = 1.4,
         xref = 'paper',
         yref = 'paper',
-        text = '<span style="color:grey">Constant</span>',
+        text = '<span style="color:#D3D3D3">Constant</span>',
         showarrow = FALSE,
         font = list(size = 13.5)
       ),
@@ -536,7 +554,7 @@ combined_plot <- subplot(
         y = 1.4,
         xref = 'paper',
         yref = 'paper',
-        text = '<span style="color:#6C8645">Increase</span>',
+        text = '<span style="color:#2E8B57">Increase</span>',
         showarrow = FALSE,
         font = list(size = 13.5)
       )

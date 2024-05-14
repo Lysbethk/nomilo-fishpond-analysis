@@ -3,7 +3,7 @@ title: "Welcome: Data Exploration Tool"
 format: gfm
 ---
 
-This dashboard visualizes the biogeochemical, physical, and aquacultural productivity data of the Nomilo fishpond, operated by [Kauaʻi Sea Farm (KSF)](https://kauaiseafarm.com/), to monitor its ecosystem and make informed management decisions aimed at restoring the fishpond and improving aquacultural productivity amid climate change. This fieldwork was performed as part of Research Question 2 of the Master thesis research. 
+This dashboard visualizes the biogeochemical, physical, and aquacultural productivity data of the Nomilo fishpond, operated by [**Kauaʻi Sea Farm (KSF)**](https://kauaiseafarm.com/), to monitor its ecosystem and make informed management decisions aimed at restoring the fishpond and improving aquacultural productivity amid climate change. This fieldwork was performed as part of Research Question 2 of the Master thesis research. 
 
 In the interactive elements you can select parameters for each datasets. Positioning various parameters side-by-side can help visualize possible trends. For example, observe how increase of large phytoplankton count (Water Samples Data) only occurs after a change in wind direction (Weather Data). Explore yourself or read on about the results of the fieldwork below. 
 
